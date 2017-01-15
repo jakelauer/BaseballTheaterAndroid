@@ -1,4 +1,4 @@
-package com.jakelauer.baseballtheater.MlbDataServer;
+package com.jakelauer.baseballtheater.MlbDataServer.Utils;
 
 /**
  * Created by Jake on 1/12/2017.

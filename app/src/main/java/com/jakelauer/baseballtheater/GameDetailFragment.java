@@ -1,15 +1,15 @@
 package com.jakelauer.baseballtheater;
 
 import android.app.Activity;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jakelauer.baseballtheater.dummy.DummyContent;
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 
 /**
  * A fragment representing a single Game detail screen.
@@ -22,12 +22,17 @@ public class GameDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
-    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ITEM_ID = "gamePk";
+    public static final String ARG_GAME_SUMMARY = "gamePk";
 
     /**
      * The dummy content this fragment is presenting.
      */
-    private DummyContent.DummyItem mItem;
+    public GameSummary getGameSummary(){
+        return (GameSummary) getArguments().getSerializable(ARG_GAME_SUMMARY);
+    }
+
+    private int gamePk;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -39,15 +44,6 @@ public class GameDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
-
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle("Games");
-            }
-        }
     }
 
     @Override
@@ -55,9 +51,22 @@ public class GameDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.game_detail, container, false);
 
+        Bundle args = getArguments();
+
+        GameSummary gameSummary = this.getGameSummary();
+
+        if (args.containsKey(ARG_ITEM_ID)) {
+            this.gamePk = args.getInt(ARG_ITEM_ID);
+        }
         // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.game_detail)).setText(mItem.details);
+        if (gameSummary != null) {
+            ((TextView) rootView.findViewById(R.id.game_detail)).setText(gameSummary.homeTeamName);
+
+            Activity activity = this.getActivity();
+            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            if (appBarLayout != null) {
+                appBarLayout.setTitle(gameSummary.awayTeamName + "@" + gameSummary.homeTeamName);
+            }
         }
 
         return rootView;

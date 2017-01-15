@@ -1,14 +1,17 @@
-package com.jakelauer.baseballtheater.MlbDataServer;
+package com.jakelauer.baseballtheater.MlbDataServer.DataStructures;
 
 import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+
+import java.io.Serializable;
 
 /**
  * Created by Jake on 1/13/2017.
  */
 
-@Root(name = "game")
-public class GameSummary {
+@Root(name = "game", strict = false)
+public class GameSummary implements Serializable {
     @Attribute
     public String id;
 
@@ -30,14 +33,11 @@ public class GameSummary {
     @Attribute(name = "time_zone")
     public String timeZone;
 
-    //[XmlElement("status")
-    //public GameStatus status;
+    @Element
+    public GameStatus status;
 
     @Attribute
     public String league;
-
-    @Attribute
-    public String inning;
 
     @Attribute(name = "away_name_abbrev")
     public String awayTeamNameAbbr;
@@ -60,6 +60,6 @@ public class GameSummary {
     @Attribute(name = "game_data_directory")
     public String gameDataDirectory;
 
-    //@JsonProperty
-    //public Linescore linescore;
+    @Element
+    public Linescore linescore;
 }

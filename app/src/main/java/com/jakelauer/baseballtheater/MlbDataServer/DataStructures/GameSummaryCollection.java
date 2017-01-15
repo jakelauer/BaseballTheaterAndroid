@@ -1,10 +1,9 @@
 package com.jakelauer.baseballtheater.MlbDataServer.DataStructures;
 
-import com.jakelauer.baseballtheater.MlbDataServer.GameSummary;
-
-import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,7 +11,7 @@ import java.util.List;
  */
 
 @Root(name = "games", strict = false)
-public class GameSummaryCollection {
-    @Element(name="game", required = false)
+public class GameSummaryCollection implements Serializable {
+    @ElementList(name="game", inline = true)
     public List<GameSummary> GameSummaries;
 }

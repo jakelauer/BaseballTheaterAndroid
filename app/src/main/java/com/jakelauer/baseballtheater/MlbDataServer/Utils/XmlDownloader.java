@@ -1,18 +1,18 @@
-package com.jakelauer.baseballtheater.MlbDataServer;
+package com.jakelauer.baseballtheater.MlbDataServer.Utils;
 
 import android.os.AsyncTask;
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
-class XmlDownloader extends AsyncTask<String, Integer, String>
+/**
+ * Created by Jake on 1/14/2017.
+ */
+
+public class XmlDownloader extends AsyncTask<String, Integer, String>
 {
-
     @Override
     protected String doInBackground(String... params) {
         URL u;
@@ -48,31 +48,5 @@ class XmlDownloader extends AsyncTask<String, Integer, String>
             result.write(buffer, 0, length);
         }
         return result.toString("UTF-8");
-    }
-}
-
-public class XmlLoader<T> {
-    public T GetXml(String url, Class<T> typeClass) {
-        XmlDownloader xmlDownloader = new XmlDownloader();
-        String xmlString = null;
-        try {
-            xmlString = xmlDownloader.execute(url).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        if(xmlString != null) {
-            Serializer serializer = new Persister();
-
-            try {
-                return serializer.read(typeClass, xmlString);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return null;
     }
 }

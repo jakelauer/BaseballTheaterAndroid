@@ -1,6 +1,7 @@
 package com.jakelauer.baseballtheater.MlbDataServer;
 
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummaryCollection;
+import com.jakelauer.baseballtheater.MlbDataServer.Utils.XmlLoader;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -28,7 +29,6 @@ public class GameSummaryCreator {
 
         XmlLoader<GameSummaryCollection> xmlLoader = new XmlLoader();
         gameSummaryCollection = xmlLoader.GetXml(url, GameSummaryCollection.class);
-        //gameSummaryCollection = xmlLoader.GetXml(url, GameSummaryCollection.class);
 
         return gameSummaryCollection;
     }

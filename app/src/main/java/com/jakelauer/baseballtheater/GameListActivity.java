@@ -14,12 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummaryCollection;
-import com.jakelauer.baseballtheater.MlbDataServer.GameSummary;
 import com.jakelauer.baseballtheater.MlbDataServer.GameSummaryCreator;
 
 import java.io.IOException;
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -80,10 +81,15 @@ public class GameListActivity extends AppCompatActivity {
         GameSummaryCreator gsCreator = new GameSummaryCreator();
         GameSummaryCollection gsCollection = null;
         try {
-            gsCollection = gsCreator.GetSummaryCollection(new Date());
+            String dateString = "2016/06/16";
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+
+            gsCollection = gsCreator.GetSummaryCollection(formatter.parse(dateString));
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
@@ -110,16 +116,17 @@ public class GameListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).id);
+            GameSummary gameItem = mValues.get(position);
+
+            holder.mItem = gameItem;
+            holder.mIdView.setText(gameItem.homeTeamName + " @ " + gameItem.awayTeamName);
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(GameDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        arguments.putInt(GameDetailFragment.ARG_ITEM_ID, holder.mItem.gamePk);
                         GameDetailFragment fragment = new GameDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -128,7 +135,8 @@ public class GameListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, GameDetailActivity.class);
-                        intent.putExtra(GameDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        intent.putExtra(GameDetailFragment.ARG_ITEM_ID, holder.mItem.gamePk);
+                        intent.putExtra(GameDetailFragment.ARG_GAME_SUMMARY, holder.mItem);
 
                         context.startActivity(intent);
                     }
