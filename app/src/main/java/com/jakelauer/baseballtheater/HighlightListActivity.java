@@ -34,19 +34,46 @@ import java.util.concurrent.ExecutionException;
  * An activity representing a list of Games. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link HighlightListFragment} representing
+ * lead to a {@link HighlightListActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class GameListActivity extends AppCompatActivity {
+public class HighlightListActivity extends AppCompatActivity {
 
-	private String openingDay2016String = "20160403";
-	private String openingDay2017String = "20170402";
-	private Date openingDay2016;
-	private Date openingDay2017;
-	private Date today = new Date();
-	private Date date;
-	private Calendar cal = Calendar.getInstance();
+	public Date date = new Date();
+
+	public static class DatePickerFragment extends DialogFragment
+			implements DatePickerDialog.OnDateSetListener {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current date as the default date in the picker
+			final Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+
+			// Create a new instance of DatePickerDialog and return it
+			return new DatePickerDialog(getActivity(), this, year, month, day);
+		}
+
+		public void onDateSet(DatePicker view, int year, int month, int day) {
+			String dateString = year + "/" + (month + 1) + "/" + day;
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+
+			try {
+				HighlightListActivity gameListActivity = (HighlightListActivity) getActivity();
+				gameListActivity.date = formatter.parse(dateString);
+				gameListActivity.setupRecyclerView((RecyclerView) gameListActivity.findViewById(R.id.game_list));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			} catch (java.text.ParseException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -54,26 +81,15 @@ public class GameListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-		try {
-			openingDay2016 = new SimpleDateFormat("yyyyMMdd").parse(openingDay2016String);
-			openingDay2017 = new SimpleDateFormat("yyyyMMdd").parse(openingDay2017String);
-
-			this.setDate(today.after(openingDay2017) ? openingDay2017 : openingDay2016);
-		} catch (java.text.ParseException e) {
-			e.printStackTrace();
-		}
-
-		setContentView(R.layout.activity_game_list);
+        setContentView(R.layout.activity_game_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-		String titleDate = new SimpleDateFormat("MMMM d, yyyy").format(date);
-		getSupportActionBar().setTitle(getTitle() + " - " + titleDate);
-
+        toolbar.setTitle(getTitle());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +109,12 @@ public class GameListActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+		// Show the Up button in the action bar.
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
+
         if (findViewById(R.id.game_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -102,16 +124,16 @@ public class GameListActivity extends AppCompatActivity {
         }
     }
 
-	public void setDate(Date newdate){
-		date = newdate;
-		cal.setTime(newdate);
-	}
-
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) throws IOException {
 
         GameSummaryCreator gsCreator = new GameSummaryCreator();
         GameSummaryCollection gsCollection = null;
         try {
+            //String dateString = "2016/06/16";
+            //SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+			//Date date = formatter.parse(dateString);
+			Date date = this.date;
+
             gsCollection = gsCreator.GetSummaryCollection(date);
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -122,9 +144,6 @@ public class GameListActivity extends AppCompatActivity {
         if(gsCollection != null && gsCollection.GameSummaries != null) {
             recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(gsCollection.GameSummaries));
         }
-
-		String titleDate = new SimpleDateFormat("MMMM d, yyyy").format(date);
-		getSupportActionBar().setTitle(getTitle() + " - " + titleDate);
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -156,7 +175,7 @@ public class GameListActivity extends AppCompatActivity {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
                         arguments.putInt(HighlightListFragment.ARG_ITEM_ID, holder.mItem.gamePk);
-                        HighlightListFragment fragment = new HighlightListFragment();
+						HighlightListFragment fragment = new HighlightListFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.game_detail_container, fragment)
@@ -197,38 +216,4 @@ public class GameListActivity extends AppCompatActivity {
             }
         }
     }
-
-	public static class DatePickerFragment extends DialogFragment
-			implements DatePickerDialog.OnDateSetListener {
-
-		@Override
-		public Dialog onCreateDialog(Bundle savedInstanceState) {
-			GameListActivity gameListActivity = (GameListActivity) getActivity();
-
-			// Use the current date as the default date in the picker
-			int year = gameListActivity.cal.get(Calendar.YEAR);
-			int month = gameListActivity.cal.get(Calendar.MONTH);
-			int day = gameListActivity.cal.get(Calendar.DAY_OF_MONTH);
-
-			// Create a new instance of DatePickerDialog and return it
-			return new DatePickerDialog(getActivity(), this, year, month, day);
-		}
-
-		public void onDateSet(DatePicker view, int year, int month, int day) {
-			String dateString = year + "/" + (month + 1) + "/" + day;
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-
-			try {
-				GameListActivity gameListActivity = (GameListActivity) getActivity();
-				gameListActivity.date = formatter.parse(dateString);
-				gameListActivity.setupRecyclerView((RecyclerView) gameListActivity.findViewById(R.id.game_list));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (java.text.ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 }

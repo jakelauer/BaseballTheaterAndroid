@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GameDetailActivity"
+            android:name=".HighlightListActivity"
             android:label="@string/title_game_detail"
             android:parentActivityName=".GameListActivity"
             android:theme="@style/AppTheme.NoActionBar">

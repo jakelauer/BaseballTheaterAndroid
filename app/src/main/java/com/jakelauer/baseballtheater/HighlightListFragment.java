@@ -1,8 +1,6 @@
 package com.jakelauer.baseballtheater;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +12,10 @@ import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 /**
  * A fragment representing a single Game detail screen.
  * This fragment is either contained in a {@link GameListActivity}
- * in two-pane mode (on tablets) or a {@link GameDetailActivity}
+ * in two-pane mode (on tablets) or a {@link HighlightListActivity}
  * on handsets.
  */
-public class GameDetailFragment extends Fragment {
+public class HighlightListFragment extends Fragment {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -38,7 +36,7 @@ public class GameDetailFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public GameDetailFragment() {
+    public HighlightListFragment() {
     }
 
     @Override
@@ -49,7 +47,7 @@ public class GameDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.game_detail, container, false);
+        View rootView = inflater.inflate(R.layout.highlight_list, container, false);
 
         Bundle args = getArguments();
 
@@ -60,13 +58,13 @@ public class GameDetailFragment extends Fragment {
         }
         // Show the dummy content as text in a TextView.
         if (gameSummary != null) {
-            ((TextView) rootView.findViewById(R.id.game_detail)).setText(gameSummary.homeTeamName);
+            ((TextView) rootView.findViewById(R.id.highlight_list)).setText(gameSummary.homeTeamName);
 
-            Activity activity = this.getActivity();
+          /*  Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(gameSummary.awayTeamName + "@" + gameSummary.homeTeamName);
-            }
+            }*/
         }
 
         return rootView;

@@ -12,6 +12,6 @@ import java.util.List;
 
 @Root(name = "games", strict = false)
 public class GameSummaryCollection implements Serializable {
-    @ElementList(name="game", inline = true)
+    @ElementList(name="game", inline = true, required = false)
     public List<GameSummary> GameSummaries;
 }
