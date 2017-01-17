@@ -12,6 +12,6 @@ import java.util.List;
 
 @Root(name = "highlights", strict = false)
 public class HighlightsCollection  implements Serializable {
-	@ElementList(name = "media")
+	@ElementList(name = "media", inline = true)
 	public List<Highlight> highlights;
 }

@@ -10,4 +10,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.jakelauer.baseballtheater.HighlightListActivity"
-    tools:listitem="@layout/game_list_content" />
+    tools:listitem="@layout/highlight_list_content" />

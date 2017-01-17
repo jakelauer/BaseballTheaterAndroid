@@ -14,41 +14,41 @@ import java.util.List;
 
 @Root(name = "media", strict = false)
 public class Highlight implements Serializable {
-	@Attribute
+	@Attribute(required = false)
 	public String type;
 
-	@Attribute
+	@Attribute(required = false)
 	public long id;
 
-	@Attribute
+	@Attribute(required = false)
 	public String date;
 
-	@Element
+	@Element(required = false)
 	public String headline;
 
-	@Element
+	@Element(required = false)
 	public String blurb;
 
-	@Element
+	@Element(required = false)
 	public String duration;
 
-	@ElementList(name = "url", inline = true)
+	@ElementList(entry = "url", inline = true)
 	public List<String> urls;
 
-	@Element
-	public String thumb;
+	//@Element(required = false)
+	//public String thumb;
 
-/*	[XmlArray("thumbnails")
-			[XmlArrayItem("thumb")
-	public String[] Thumbs;
+	@Element(name = "thumbnails")
+	public Thumbs thumbs;
 
-	[XmlArray("keywords")
+	/*[XmlArray("keywords")
 			[XmlArrayItem("keyword")
 	public Keyword[] Keywords;*/
 
-	@Attribute
+	@Attribute(required = false)
 	public Boolean condensed;
 
-	@Attribute
+	@Attribute(required = false)
 	public Boolean recap;
 }
+
