@@ -10,10 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.net.ParseException;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +38,9 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * An activity representing a list of Games. This activity
@@ -53,6 +53,7 @@ import java.util.List;
 public class HighlightListActivity extends AppCompatActivity {
 
 	public Date date = new Date();
+	public Map<String, Drawable> cachedImages = new HashMap<String, Drawable>();
 
 	public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -135,25 +136,6 @@ public class HighlightListActivity extends AppCompatActivity {
 		if(highlightsCollection != null && highlightsCollection.highlights != null) {
 			recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(highlightsCollection.highlights));
 		}
-/*
-        GameSummaryCreator gsCreator = new GameSummaryCreator();
-        GameSummaryCollection gsCollection = null;
-        try {
-            //String dateString = "2016/06/16";
-            //SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-			//Date date = formatter.parse(dateString);
-			Date date = this.date;
-
-            gsCollection = gsCreator.GetSummaryCollection(date);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if(gsCollection != null && gsCollection.GameSummaries != null) {
-            recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(gsCollection.GameSummaries));
-        }*/
     }
 
     public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
@@ -172,16 +154,26 @@ public class HighlightListActivity extends AppCompatActivity {
             return new ViewHolder(view);
         }
 
-        @Override
+		@Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             Highlight highlight = mValues.get(position);
 
             holder.mItem = highlight;
             holder.mIdView.setText(highlight.headline);
+			holder.mImageView.setImageDrawable(null);
 
 			if(highlight.thumbs != null && highlight.thumbs.thumbs != null && highlight.thumbs.thumbs.size() > 0) {
+
 				String thumb = highlight.thumbs.thumbs.get(highlight.thumbs.thumbs.size() - 1);
-				downloadImage(thumb, holder.mImageView);
+				Drawable cachedImage = cachedImages.get(thumb);
+
+				if (cachedImage == null) {
+					downloadImage(thumb, holder.mImageView);
+				}
+				else
+				{
+					setImage(cachedImage, holder.mImageView);
+				}
 			}
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -195,10 +187,9 @@ public class HighlightListActivity extends AppCompatActivity {
         }
 
 		private void downloadImage(String url, ImageView mImageView){
-			new DownloadImage(mImageView).execute(url);
+			new DownloadImage(mImageView, url).execute(url);
 		}
 
-		@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 		public void setImage(Drawable drawable, ImageView mImageView) {
 			if (mImageView != null) {
 				mImageView.setImageDrawable(drawable);
@@ -227,10 +218,12 @@ public class HighlightListActivity extends AppCompatActivity {
 		public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
 
 			private ImageView mImageView;
+			private String url;
 
-			public DownloadImage(ImageView mImageView){
+			public DownloadImage(ImageView mImageView, String url){
 				super();
 				this.mImageView = mImageView;
+				this.url = url;
 			}
 
 			@Override
@@ -239,10 +232,10 @@ public class HighlightListActivity extends AppCompatActivity {
 				return downloadImage(arg0[0]);
 			}
 
-			@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 			protected void onPostExecute(Drawable image)
 			{
 				setImage(image, this.mImageView);
+				cachedImages.put(this.url, image);
 			}
 
 			private Drawable downloadImage(String _url)
