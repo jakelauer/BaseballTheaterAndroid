@@ -180,7 +180,7 @@ public class HighlightListActivity extends AppCompatActivity {
             holder.mIdView.setText(highlight.headline);
 
 			if(highlight.thumbs != null && highlight.thumbs.thumbs != null && highlight.thumbs.thumbs.size() > 0) {
-				String thumb = highlight.thumbs.thumbs.get(0);
+				String thumb = highlight.thumbs.thumbs.get(highlight.thumbs.thumbs.size() - 1);
 				downloadImage(thumb, holder.mImageView);
 			}
 
@@ -201,7 +201,7 @@ public class HighlightListActivity extends AppCompatActivity {
 		@RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
 		public void setImage(Drawable drawable, ImageView mImageView) {
 			if (mImageView != null) {
-				mImageView.setBackground(drawable);
+				mImageView.setImageDrawable(drawable);
 			}
 		}
 
