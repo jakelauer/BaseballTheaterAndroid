@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 
+import com.jakelauer.baseballtheater.GameList.GameListActivity;
+
 /**
  * A fragment representing a single Game detail screen.
  * This fragment is either contained in a {@link GameListActivity}
@@ -21,7 +23,7 @@ public class HighlightListFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "gamePk";
-    public static final String ARG_GAME_SUMMARY = "gamePk";
+    public static final String ARG_GAME_SUMMARY = "gameSummary";
 
     /**
      * The dummy content this fragment is presenting.
@@ -31,6 +33,7 @@ public class HighlightListFragment extends Fragment {
     }
 
     private int gamePk;
+    private GameSummary gameSummary;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the

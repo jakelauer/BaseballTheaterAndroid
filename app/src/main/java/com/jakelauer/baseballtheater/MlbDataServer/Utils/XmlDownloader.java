@@ -13,40 +13,58 @@ import java.net.URL;
 
 public class XmlDownloader extends AsyncTask<String, Integer, String>
 {
+    public XmlDownloadListener mListener;
+
+    public XmlDownloader(XmlDownloadListener listener){
+		mListener = listener;
+    }
+
     @Override
     protected String doInBackground(String... params) {
         URL u;
         InputStream is = null;
 
+        String xmlString = "";
         try {
             u = new URL(params[0]);
             is = u.openStream();
 
-            String xmlString = this.getStringFromInputStream(is);
+            xmlString = this.getStringFromInputStream(is);
 
-            return xmlString;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
-            if(is != null) {
-                is.close();
-            }
+			is.close();
         } catch (IOException ioe) {
             // just going to ignore this one
         }
 
-        return null;
+
+        return xmlString;
     }
 
-    private String getStringFromInputStream(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream result = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = inputStream.read(buffer)) != -1) {
-            result.write(buffer, 0, length);
-        }
-        return result.toString("UTF-8");
-    }
+	private String getStringFromInputStream(InputStream inputStream) throws IOException {
+		ByteArrayOutputStream result = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = inputStream.read(buffer)) != -1) {
+			result.write(buffer, 0, length);
+			onProgressUpdate(length);
+		}
+		return result.toString("UTF-8");
+	}
+
+	@Override
+	protected void onProgressUpdate(Integer... values){
+		super.onProgressUpdate(values);
+		double progress = 1 - ((double)values[0] / (double)1024);
+		mListener.onXmlDownloadProgress(progress);
+	}
+
+	protected void onPostExecute(String xmlString){
+		mListener.onXmlDownloadComplete(xmlString);
+	}
 }
+

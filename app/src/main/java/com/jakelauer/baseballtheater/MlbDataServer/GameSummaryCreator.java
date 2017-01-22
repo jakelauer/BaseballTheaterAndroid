@@ -23,13 +23,10 @@ public class GameSummaryCreator {
         return GameSummaryCreator.UrlBase + "/components/game/mlb/" + dateFolders + "/master_scoreboard.xml";
     }
 
-    public GameSummaryCollection GetSummaryCollection(Date date) throws IOException, ExecutionException, InterruptedException {
+    public void GetSummaryCollection(Date date, ProgressActivity progressActivity) throws IOException, ExecutionException, InterruptedException {
         String url = BuildUrl(date);
-        GameSummaryCollection gameSummaryCollection = null;
 
         XmlLoader<GameSummaryCollection> xmlLoader = new XmlLoader();
-        gameSummaryCollection = xmlLoader.GetXml(url, GameSummaryCollection.class);
-
-        return gameSummaryCollection;
+        xmlLoader.GetXml(url, progressActivity, GameSummaryCollection.class);
     }
 }

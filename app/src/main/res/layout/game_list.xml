@@ -7,5 +7,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.jakelauer.baseballtheater.GameListActivity"
+    tools:context="com.jakelauer.baseballtheater.GameList.GameListActivity"
     tools:listitem="@layout/game_list_content" />

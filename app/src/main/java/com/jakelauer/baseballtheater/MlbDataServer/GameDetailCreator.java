@@ -30,22 +30,20 @@ public class GameDetailCreator {
         this.gameSummaryXmlUrl = this.directoryUrl + "/linescore.xml";
     }
 
-    public HighlightsCollection getHighlights(){
-        return this.getDetailItem(this.highlightsXmlUrl, HighlightsCollection.class);
+    public void getHighlights(ProgressActivity progressActivity){
+        getDetailItem(this.highlightsXmlUrl, progressActivity, HighlightsCollection.class);
     }
 
-    public GameCenter getGameCenter(){
-        return this.getDetailItem(this.gameCenterXmlUrl, GameCenter.class);
+    public void getGameCenter(ProgressActivity progressActivity){
+        getDetailItem(this.gameCenterXmlUrl, progressActivity, GameCenter.class);
     }
 
-    public GameSummary getGameSummary(){
-        return this.getDetailItem(this.gameSummaryXmlUrl, GameSummary.class);
+    public void getGameSummary(ProgressActivity progressActivity){
+        getDetailItem(this.gameSummaryXmlUrl, progressActivity, GameSummary.class);
     }
 
-    private <T> T getDetailItem(String url, Class<T> classType){
+    private <T> void getDetailItem(String url, ProgressActivity progressActivity, Class<T> classType){
 		XmlLoader<T> xmlLoader = new XmlLoader();
-        T thing = xmlLoader.GetXml(url, classType);
-
-        return thing;
+        xmlLoader.GetXml(url, progressActivity, classType);
     }
 }

@@ -2,58 +2,186 @@ package com.jakelauer.baseballtheater;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ParseException;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection;
 import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator;
+import com.jakelauer.baseballtheater.MlbDataServer.ProgressActivity;
+import com.squareup.picasso.Picasso;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-/**
- * An activity representing a list of Games. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link HighlightListActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
-public class HighlightListActivity extends AppCompatActivity {
+import icepick.Icepick;
+
+public class HighlightListActivity extends AppCompatActivity implements ProgressActivity {
 
 	public Date date = new Date();
-	public Map<String, Drawable> cachedImages = new HashMap<String, Drawable>();
+	private RecyclerView recyclerView;
+	private ProgressBar progressBar;
+	private ProgressDialog progressDialog;
+
+	private boolean mTwoPane;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Icepick.restoreInstanceState(this, savedInstanceState);
+
+		setContentView(R.layout.activity_game_list);
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+
+		GameSummary gameSummary = (GameSummary) getIntent().getSerializableExtra(HighlightListFragment.ARG_GAME_SUMMARY);
+
+		String titleDate = new SimpleDateFormat("MMMM d, yyyy").format(date);
+		getSupportActionBar().setTitle(gameSummary.homeTeamName + " @ " + gameSummary.awayTeamName + " - " + titleDate);
+
+		recyclerView = (RecyclerView) findViewById(R.id.game_list);
+		assert recyclerView != null;
+		try {
+			setupRecyclerView(recyclerView);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
+
+		if (findViewById(R.id.game_detail_container) != null) {
+			mTwoPane = true;
+		}
+
+		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+		fab.setVisibility(View.GONE);
+
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setTitle("Loading");
+		progressDialog.setCancelable(false);
+		progressDialog.show();
+	}
+
+	@Override
+	public void onProgressUpdate(double progress) {
+		Integer progressInt = (int) progress * 100;
+		if (progressBar != null) {
+			progressBar.setProgress(progressInt);
+		}
+	}
+
+	@Override
+	public void onProgressFinished(Object objectInstance) {
+		HighlightsCollection highlightsCollection = (HighlightsCollection) objectInstance;
+
+		if(highlightsCollection != null && highlightsCollection.highlights != null) {
+			recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(highlightsCollection.highlights));
+		}
+
+		progressDialog.dismiss();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState){
+		super.onSaveInstanceState(outState);
+		Icepick.saveInstanceState(this, outState);
+	}
+
+	private void setupRecyclerView(@NonNull final RecyclerView recyclerView) throws IOException {
+		GameSummary gameSummary = (GameSummary) getIntent().getSerializableExtra(HighlightListFragment.ARG_GAME_SUMMARY);
+
+		GameDetailCreator detailCreator = new GameDetailCreator(gameSummary.gameDataDirectory, false);
+
+		detailCreator.getHighlights(this);
+	}
+
+	public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+
+		private final List<Highlight> mValues;
+
+		public SimpleItemRecyclerViewAdapter(List<Highlight> highlights) {
+			mValues = highlights;
+		}
+
+		@Override
+		public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+			View view = LayoutInflater.from(parent.getContext())
+					.inflate(R.layout.highlight_list_content, parent, false);
+
+			return new ViewHolder(view);
+		}
+
+		@Override
+		public void onBindViewHolder(final ViewHolder holder, int position) {
+			Highlight highlight = mValues.get(position);
+
+			holder.mItem = highlight;
+			holder.mIdView.setText(highlight.headline);
+			holder.mImageView.setImageDrawable(null);
+
+			if (highlight.thumbs != null && highlight.thumbs.thumbs != null && highlight.thumbs.thumbs.size() > 0) {
+				String thumb = highlight.thumbs.thumbs.get(highlight.thumbs.thumbs.size() - 3);
+
+				Picasso.with(getApplicationContext())
+						.load(thumb)
+						.placeholder(R.color.colorPlaceholder)
+						.into(holder.mImageView);
+			}
+
+			holder.mView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					String url = holder.mItem.urls.get(0);
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					startActivity(browserIntent);
+				}
+			});
+		}
+
+		@Override
+		public int getItemCount() {
+			return mValues.size();
+		}
+
+		public class ViewHolder extends RecyclerView.ViewHolder {
+			public final View mView;
+			public final TextView mIdView;
+			public final ImageView mImageView;
+			public Highlight mItem;
+
+			public ViewHolder(View view) {
+				super(view);
+				mView = view;
+				mIdView = (TextView) view.findViewById(R.id.id);
+				mImageView = (ImageView) view.findViewById(R.id.highlight_list_thumb);
+			}
+		}
+	}
 
 	public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -65,8 +193,9 @@ public class HighlightListActivity extends AppCompatActivity {
 			int month = c.get(Calendar.MONTH);
 			int day = c.get(Calendar.DAY_OF_MONTH);
 
+
 			// Create a new instance of DatePickerDialog and return it
-			return new DatePickerDialog(getActivity(), this, year, month, day);
+			return new DatePickerDialog(getActivity(), R.style.DialogStyle, this, year, month, day);
 		}
 
 		public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -75,204 +204,13 @@ public class HighlightListActivity extends AppCompatActivity {
 
 			try {
 				HighlightListActivity gameListActivity = (HighlightListActivity) getActivity();
+				RecyclerView recyclerView = (RecyclerView) gameListActivity.findViewById(R.id.game_list);
+
 				gameListActivity.date = formatter.parse(dateString);
-				gameListActivity.setupRecyclerView((RecyclerView) gameListActivity.findViewById(R.id.game_list));
-			} catch (ParseException e) {
-				e.printStackTrace();
-			} catch (java.text.ParseException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+				gameListActivity.setupRecyclerView(recyclerView);
+			} catch (ParseException | java.text.ParseException | IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_list);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(getTitle());
-
-        View recyclerView = findViewById(R.id.game_list);
-        assert recyclerView != null;
-        try {
-            setupRecyclerView((RecyclerView) recyclerView);
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-
-		// Show the Up button in the action bar.
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-		}
-
-        if (findViewById(R.id.game_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
-    }
-
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) throws IOException {
-		GameSummary gameSummary = (GameSummary) getIntent().getSerializableExtra(HighlightListFragment.ARG_GAME_SUMMARY);
-
-		GameDetailCreator detailCreator = new GameDetailCreator(gameSummary.gameDataDirectory, false);
-		HighlightsCollection highlightsCollection = detailCreator.getHighlights();
-
-		if(highlightsCollection != null && highlightsCollection.highlights != null) {
-			recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(highlightsCollection.highlights));
-		}
-    }
-
-    public class SimpleItemRecyclerViewAdapter extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
-
-        private final List<Highlight> mValues;
-
-        public SimpleItemRecyclerViewAdapter(List<Highlight> highlights) {
-            mValues = highlights;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.highlight_list_content, parent, false);
-
-            return new ViewHolder(view);
-        }
-
-		@Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            Highlight highlight = mValues.get(position);
-
-            holder.mItem = highlight;
-            holder.mIdView.setText(highlight.headline);
-			holder.mImageView.setImageDrawable(null);
-
-			if(highlight.thumbs != null && highlight.thumbs.thumbs != null && highlight.thumbs.thumbs.size() > 0) {
-
-				String thumb = highlight.thumbs.thumbs.get(highlight.thumbs.thumbs.size() - 1);
-				Drawable cachedImage = cachedImages.get(thumb);
-
-				if (cachedImage == null) {
-					downloadImage(thumb, holder.mImageView);
-				}
-				else
-				{
-					setImage(cachedImage, holder.mImageView);
-				}
-			}
-
-            holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-					String url = holder.mItem.urls.get(0);
-					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-					startActivity(browserIntent);
-                }
-            });
-        }
-
-		private void downloadImage(String url, ImageView mImageView){
-			new DownloadImage(mImageView, url).execute(url);
-		}
-
-		public void setImage(Drawable drawable, ImageView mImageView) {
-			if (mImageView != null) {
-				mImageView.setImageDrawable(drawable);
-			}
-		}
-
-        @Override
-        public int getItemCount() {
-            return mValues.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final TextView mIdView;
-			public final ImageView mImageView;
-            public Highlight mItem;
-
-            public ViewHolder(View view) {
-                super(view);
-                mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-				mImageView = (ImageView) view.findViewById(R.id.highlight_list_thumb);
-            }
-        }
-
-		public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
-
-			private ImageView mImageView;
-			private String url;
-
-			public DownloadImage(ImageView mImageView, String url){
-				super();
-				this.mImageView = mImageView;
-				this.url = url;
-			}
-
-			@Override
-			protected Drawable doInBackground(String... arg0) {
-				// This is done in a background thread
-				return downloadImage(arg0[0]);
-			}
-
-			protected void onPostExecute(Drawable image)
-			{
-				setImage(image, this.mImageView);
-				cachedImages.put(this.url, image);
-			}
-
-			private Drawable downloadImage(String _url)
-			{
-				//Prepare to download image
-				URL url;
-				BufferedOutputStream out;
-				InputStream in;
-				BufferedInputStream buf;
-
-				//BufferedInputStream buf;
-				try {
-					url = new URL(_url);
-					in = url.openStream();
-
-					// Read the inputstream
-					buf = new BufferedInputStream(in);
-
-					// Convert the BufferedInputStream to a Bitmap
-					Bitmap bMap = BitmapFactory.decodeStream(buf);
-					if (in != null) {
-						in.close();
-					}
-					if (buf != null) {
-						buf.close();
-					}
-
-					return new BitmapDrawable(bMap);
-
-				} catch (Exception e) {
-					Log.e("Error reading file", e.toString());
-				}
-
-				return null;
-			}
-
-		}
-    }
-
 }

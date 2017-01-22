@@ -60,6 +60,6 @@ public class GameSummary implements Serializable {
     @Attribute(name = "game_data_directory")
     public String gameDataDirectory;
 
-    @Element
+    @Element(required = false)
     public Linescore linescore;
 }

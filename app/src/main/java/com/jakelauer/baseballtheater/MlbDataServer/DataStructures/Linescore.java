@@ -1,6 +1,5 @@
 package com.jakelauer.baseballtheater.MlbDataServer.DataStructures;
 
-import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
@@ -25,34 +24,4 @@ public class Linescore implements Serializable {
 
 	@Element(name = "e")
 	public Errors errors;
-}
-
-@Root(strict = false)
-class Inning extends HomeAway{
-
-}
-
-@Root(strict = false)
-class Runs extends HomeAway{
-
-}
-
-@Root(strict = false)
-class Hits extends HomeAway{
-
-}
-
-@Root(strict = false)
-class Errors extends HomeAway{
-
-}
-
-@Root(strict = false)
-class HomeAway implements Serializable
-{
-	@Attribute(name = "home", required = false)
-	public String home;
-
-	@Attribute(name = "away", required = false)
-	public String away;
 }

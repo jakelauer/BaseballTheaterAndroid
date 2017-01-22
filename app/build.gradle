@@ -33,7 +33,12 @@ dependencies {
     compile 'com.android.support:support-v4:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.android.support:design:25.1.0'
-    compile ('org.simpleframework:simple-xml:2.7.1'){
+    compile('org.simpleframework:simple-xml:2.7.1') {
         exclude module: 'stax-api'
     }
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'dk.nodes.utils:okhttp:0.8'
+    compile 'com.github.frankiesardo:icepick:2.3.6'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.f2prateek.dart:dart:2.0.1'
 }
