@@ -12,10 +12,15 @@ public class XmlLoader<T> {
             public void onXmlDownloadComplete(String response) {
                 Serializer serializer = new Persister();
 
-                try {
-                    progressActivity.onProgressFinished(serializer.read(classType, response));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (response != null && !response.isEmpty()) {
+                    try {
+                        T objInstance = serializer.read(classType, response);
+                        progressActivity.onProgressFinished(objInstance);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    progressActivity.onProgressFinished(null);
                 }
             }
 

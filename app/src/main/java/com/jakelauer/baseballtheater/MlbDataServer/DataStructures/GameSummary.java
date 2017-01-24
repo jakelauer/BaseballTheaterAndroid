@@ -5,6 +5,9 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Jake on 1/13/2017.
@@ -20,6 +23,10 @@ public class GameSummary implements Serializable {
 
     @Attribute(name = "time_date")
     public String date;
+
+    public Date dateObj() throws ParseException {
+		return new SimpleDateFormat("yyyy/MM/dd h:m").parse(date);
+    }
 
     @Attribute(name = "game_type")
     public String gameType;

@@ -27,20 +27,20 @@ public class XmlDownloader extends AsyncTask<String, Integer, String>
         String xmlString = "";
         try {
             u = new URL(params[0]);
+
             is = u.openStream();
-
             xmlString = this.getStringFromInputStream(is);
-
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+			e.printStackTrace();
+		}
 
         try {
-			is.close();
+			if(is != null){
+				is.close();
+			}
         } catch (IOException ioe) {
             // just going to ignore this one
         }
-
 
         return xmlString;
     }

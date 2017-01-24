@@ -15,7 +15,8 @@
     <style name="Dialog.Theme" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="colorButtonNormal">@color/accent</item>
+        <item name="colorAccent">@color/primary</item>
+        <item name="colorButtonNormal">@color/primary</item>
+        <item name="colorControlNormal">@color/primary</item>
     </style>
 </resources>

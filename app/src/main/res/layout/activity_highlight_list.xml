@@ -4,7 +4,7 @@
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:fitsSystemWindows="true"
-     tools:context="com.jakelauer.baseballtheater.HighlightListActivity">
+     tools:context="com.jakelauer.baseballtheater.HighlightList.HighlightListActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -19,23 +19,6 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
 
-        <!--<LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <ProgressBar
-                android:id="@+id/progress_loader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@android:style/Widget.ProgressBar.Small"
-                android:layout_marginRight="5dp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Loading" />
-        </LinearLayout>-->
-
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
@@ -43,6 +26,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:id="@+id/no_highlights_found"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:text="No highlights found for this game."
+            android:visibility="gone"/>
 
         <include layout="@layout/highlight_list" />
 
