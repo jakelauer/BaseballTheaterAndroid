@@ -7,9 +7,10 @@ android {
         applicationId "com.jakelauer.baseballtheater"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 5
-        versionName "1.04"
+        versionCode 6
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -29,16 +30,18 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile('org.simpleframework:simple-xml:2.7.1') {
+        exclude module: 'stax-api'
+    }
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:support-v4:25.1.0'
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.android.support:design:25.1.0'
-    compile('org.simpleframework:simple-xml:2.7.1') {
-        exclude module: 'stax-api'
-    }
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'dk.nodes.utils:okhttp:0.8'
     compile 'com.github.frankiesardo:icepick:2.3.6'
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.f2prateek.dart:dart:2.0.1'
+    compile 'com.android.support:support-vector-drawable:25.1.0'
+    compile 'joda-time:joda-time:2.9.7'
 }

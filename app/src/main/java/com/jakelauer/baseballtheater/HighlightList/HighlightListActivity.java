@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,8 +19,6 @@ import com.jakelauer.baseballtheater.MlbDataServer.ProgressActivity;
 import com.jakelauer.baseballtheater.R;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import icepick.Icepick;
 
@@ -64,12 +61,7 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 	private void setTitleBar(GameSummary gameSummary) {
 		ActionBar actionBar = getSupportActionBar();
 
-		String titleDate = null;
-		try {
-			titleDate = new SimpleDateFormat("MMMM d, yyyy").format(gameSummary.dateObj());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		String titleDate = gameSummary.dateObj().toString("MMMM d, yyyy");
 
 		if (actionBar != null) {
 			actionBar.setTitle(gameSummary.homeTeamName + " @ " + gameSummary.awayTeamName + " - " + titleDate);

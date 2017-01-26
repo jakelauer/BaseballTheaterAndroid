@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
-
     <application
         android:name=".BaseballTheater"
         android:allowBackup="true"
@@ -34,6 +33,15 @@
         <activity
             android:name=".GameList.GameListActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Settings.SettingsActivity"
+            android:label="@string/title_activity_settings">
+        </activity>
+        <activity
+            android:name=".About.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

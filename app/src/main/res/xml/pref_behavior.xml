@@ -1,0 +1,16 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="behavior_hide_todays_scores"
+        android:title="@string/pref_title_hide_today_scores"/>
+
+    <ListPreference
+        android:defaultValue="none"
+        android:key="behavior_favorite_team"
+        android:title="@string/pref_title_behavior_favorite_team"
+        android:entries="@array/teams_list_keys"
+        android:entryValues="@array/teams_list_values"
+        />
+
+</PreferenceScreen>

@@ -3,10 +3,12 @@
     <color name="colorPrimary">#ce0f0f</color>
     <color name="colorPrimaryDark">#9b0a0b</color>
     <color name="colorAccent">#ce0f0f</color>
-    <color name="colorPlaceholder">#EEEEEE</color>
-    <color name="colorSeparator">#CCCCCC</color>
+    <color name="colorPlaceholder">#11000000</color>
+    <color name="colorAccent2">#33000000</color>
     <color name="primary">#ce0f0f</color>
     <color name="primary_dark">#9b0a0b</color>
     <color name="accent">#ce0f0f</color>
     <color name="textDefault">#000000</color>
+    <color name="menuButton">#FFFFFF</color>
+    <color name="link">#0000FF</color>
 </resources>

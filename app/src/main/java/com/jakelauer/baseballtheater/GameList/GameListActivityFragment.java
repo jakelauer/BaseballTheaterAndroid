@@ -2,7 +2,9 @@ package com.jakelauer.baseballtheater.GameList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -26,6 +28,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import icepick.Icepick;
+
+import static dk.nodes.okhttputils.error.HttpErrorManager.context;
 
 /**
  * Created by Jake on 1/22/2017.
@@ -52,10 +58,7 @@ public class GameListActivityFragment extends Fragment implements ProgressActivi
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(null);
-
-		if (!mForceReplace) {
-			//Icepick.restoreInstanceState(this, savedInstanceState);
-		}
+		Icepick.restoreInstanceState(this, savedInstanceState);
 	}
 
 	@Override
@@ -109,12 +112,22 @@ public class GameListActivityFragment extends Fragment implements ProgressActivi
 		if(gsCollection != null && gsCollection.GameSummaries != null) {
 			noGamesFoundView.setVisibility(View.GONE);
 
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+			final String favTeamCode = prefs.getString("behavior_favorite_team", "none");
 			Collections.sort(gsCollection.GameSummaries, new Comparator<GameSummary>() {
 				@Override
 				public int compare(GameSummary o1, GameSummary o2) {
-					int o1v = o1.linescore != null ? 0 : 1;
-					int o2v = o2.linescore != null ? 0 : 1;
-					return o1v - o2v;
+					int o1FavTeam = o1.homeFileCode.equals(favTeamCode) || o1.awayFileCode.equals(favTeamCode) ? 0 : 1;
+					int o2FavTeam = o2.homeFileCode.equals(favTeamCode) || o2.awayFileCode.equals(favTeamCode) ? 0 : 1;
+
+					if(o1FavTeam == 0 || o2FavTeam == 0){
+						return o1FavTeam - o2FavTeam;
+					}
+
+					int o1NullSort = o1.linescore != null ? 0 : 1;
+					int o2NullSort = o2.linescore != null ? 0 : 1;
+
+					return o1NullSort - o2NullSort;
 				}
 			});
 

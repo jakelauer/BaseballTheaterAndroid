@@ -1,7 +1,9 @@
 package com.jakelauer.baseballtheater.GameList;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -16,9 +18,14 @@ import com.jakelauer.baseballtheater.BaseballTheater;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HomeAway;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Inning;
+import com.jakelauer.baseballtheater.Utility;
 import com.jakelauer.baseballtheater.R;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
+import org.joda.time.Hours;
+
+import static com.jakelauer.baseballtheater.Utility.bold;
 import static dk.nodes.okhttputils.error.HttpErrorManager.context;
 
 /**
@@ -28,8 +35,20 @@ import static dk.nodes.okhttputils.error.HttpErrorManager.context;
 public class GameListLineScore {
 
 	private final float mScale = context.getResources().getDisplayMetrics().density;
+	private boolean hideScores;
 
 	public TableLayout generateLinescore(TableLayout lineScoreTableLayout, GameSummary gameItem){
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		DateTime today = new DateTime();
+		int hoursBetween = Hours.hoursBetween(gameItem.dateObj(), today).getHours();
+		boolean hide_todays_scores = prefs.getBoolean("behavior_hide_todays_scores", false);
+		hideScores = hide_todays_scores && hoursBetween < 24;
+
+		String favTeamCode = prefs.getString("behavior_favorite_team", "");
+		if(gameItem.awayFileCode.equals(favTeamCode) || gameItem.homeFileCode.equals(favTeamCode)){
+			lineScoreTableLayout.setBackgroundResource(R.color.colorPlaceholder);
+		}
+
 		TableRow labels = new TableRow(context);
 		TableRow teamAway = new TableRow(context);
 		TableRow teamHome = new TableRow(context);
@@ -121,10 +140,11 @@ public class GameListLineScore {
 				inningLabel.setText(Integer.toString(currentInning));
 
 				LineScoreTextView inningAway = new LineScoreTextView(context);
-				inningAway.setText(inningData.away);
+				inningAway.setText(hideScores ? "X" : inningData.away);
 
 				LineScoreTextView inningHome = new LineScoreTextView(context);
-				inningHome.setText(inningData.home != null ? inningData.home : "X");
+				String inningValue = inningData.home != null ? inningData.home : "X";
+				inningHome.setText(hideScores ? "X" : inningValue);
 
 				labels.addView(inningLabel);
 				teamAway.addView(inningAway);
@@ -140,9 +160,9 @@ public class GameListLineScore {
 		LineScoreTextView hitsLabel = new LineScoreTextView(context);
 		LineScoreTextView errorsLabel = new LineScoreTextView(context);
 
-		bold(runsLabel);
-		bold(hitsLabel);
-		bold(errorsLabel);
+		Utility.bold(runsLabel);
+		Utility.bold(hitsLabel);
+		Utility.bold(errorsLabel);
 
 		labels.addView(runsLabel);
 		labels.addView(hitsLabel);
@@ -172,13 +192,9 @@ public class GameListLineScore {
 		tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
 	}
 
-	private void bold(LineScoreTextView textView){
-		textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-	}
-
 	private void setHomeAwayText(LineScoreTextView homeText, LineScoreTextView awayText, HomeAway values, TableRow rowHome, TableRow rowAway){
-		homeText.setText(values.home);
-		awayText.setText(values.away);
+		homeText.setText(hideScores ? "X" : values.home);
+		awayText.setText(hideScores ? "X" : values.away);
 
 		rowHome.addView(homeText);
 		rowAway.addView(awayText);
@@ -186,7 +202,7 @@ public class GameListLineScore {
 
 	private void addSeparator(TableRow row){
 		ImageView separator = new ImageView(context);
-		separator.setBackgroundResource(R.color.colorSeparator);
+		separator.setBackgroundResource(R.color.colorAccent2);
 
 		row.addView(separator);
 
@@ -196,7 +212,7 @@ public class GameListLineScore {
 	}
 
 	private int getPixels(int dps){
-		return (int) (dps * mScale + 0.5f);
+		return Utility.getPixels(dps);
 	}
 
 	class LineScoreTextView extends TextView

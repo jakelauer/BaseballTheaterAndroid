@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
+        android:layout_marginBottom="8dp"
         android:background="?attr/selectableItemBackground">
 
         <TextView
@@ -33,6 +33,46 @@
             android:scaleType="centerCrop"
             android:backgroundTint="#000"
             />
-    </LinearLayout>
 
+
+        <TableLayout
+            android:id="@+id/video_quality_options"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:visibility="visible"
+            android:stretchColumns="*">
+
+            <TableRow
+                android:id="@+id/video_quality_options_row"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                >
+                <TextView
+                    android:id="@+id/video_quality_option_1200K"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    />
+                <TextView
+                    android:id="@+id/video_quality_option_1800K"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    />
+                <TextView
+                    android:id="@+id/video_quality_option_2500K"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    />
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
 </LinearLayout>

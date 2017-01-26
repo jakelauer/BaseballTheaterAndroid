@@ -11,6 +11,7 @@ import java.util.Date;
 public class BaseballTheater extends Application {
 	private Date gameListDate;
 	private static Boolean mSmallDevice = false;
+	private static Boolean mSettingsChanged = false;
 
 	public Date getGameListDate(){
 		return gameListDate;
@@ -26,5 +27,13 @@ public class BaseballTheater extends Application {
 
 	public static void setIsSmallDevice(Boolean isSmallDevice){
 		mSmallDevice = isSmallDevice;
+	}
+
+	public static Boolean getSettingsChanged(){
+		return mSettingsChanged;
+	}
+
+	public static void setSettingsChanged(Boolean settingsChanged){
+		mSettingsChanged = settingsChanged;
 	}
 }
