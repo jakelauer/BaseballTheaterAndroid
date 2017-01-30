@@ -74,7 +74,8 @@
 
     <string name="pref_title_show_quality_options">Show Video Quality Options</string>
 
-    <string name="pref_title_video_quality">Highlight Video Quality</string>
+    <string name="pref_title_video_quality_mobile">Video Quality (Mobile Data)</string>
+    <string name="pref_title_video_quality_wifi">Video Quality (Wifi)</string>
     <string-array name="video_quality_values">
         <item>0</item>
         <item>1</item>
@@ -87,7 +88,8 @@
     </string-array>
 
 
-    <string name="pref_title_thumbnail_quality">Highlight Thumbnail Quality</string>
+    <string name="pref_title_thumbnail_quality_mobile">Thumbnail Quality (Mobile Data)</string>
+    <string name="pref_title_thumbnail_quality_wifi">Thumbnail Quality (Wifi)</string>
     <string-array name="thumbnail_quality_values">
         <item>0</item>
         <item>1</item>
@@ -95,7 +97,7 @@
     </string-array>
     <string-array name="thumbnail_quality_keys">
         <item>Lowest</item>
-        <item>Medium (Recommended)</item>
+        <item>Medium</item>
         <item>Highest (Warning: High data usage)</item>
     </string-array>
 
@@ -114,7 +116,7 @@
         <item>mia</item>
         <item>hou</item>
         <item>kc</item>
-        <item>laa,ana</item>
+        <item>ana</item>
         <item>la</item>
         <item>mil</item>
         <item>min</item>
@@ -130,7 +132,7 @@
         <item>tb</item>
         <item>tex</item>
         <item>tor</item>
-        <item>was,wsh</item>
+        <item>was</item>
     </string-array>
 
 

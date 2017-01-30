@@ -45,8 +45,9 @@ public class GameListLineScore {
 		hideScores = hide_todays_scores && hoursBetween < 24;
 
 		String favTeamCode = prefs.getString("behavior_favorite_team", "");
+		lineScoreTableLayout.setBackground(null);
 		if(gameItem.awayFileCode.equals(favTeamCode) || gameItem.homeFileCode.equals(favTeamCode)){
-			lineScoreTableLayout.setBackgroundResource(R.color.colorPlaceholder);
+			lineScoreTableLayout.setBackgroundResource(R.color.colorFeaturedGame);
 		}
 
 		TableRow labels = new TableRow(context);

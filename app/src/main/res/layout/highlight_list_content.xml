@@ -39,7 +39,7 @@
             android:id="@+id/video_quality_options"
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:layout_marginTop="@dimen/text_margin"
+            android:layout_marginTop="8dp"
             android:textAppearance="?attr/textAppearanceListItem"
             android:visibility="visible"
             android:stretchColumns="*">
@@ -55,6 +55,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:textSize="11dp"
+                    android:textAlignment="center"
+                    android:text="LOW"
                     android:background="?attr/selectableItemBackground"
                     />
                 <TextView
@@ -62,6 +65,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:textSize="11dp"
+                    android:textAlignment="center"
+                    android:text="MED"
                     android:background="?attr/selectableItemBackground"
                     />
                 <TextView
@@ -69,6 +75,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:textSize="11dp"
+                    android:textAlignment="center"
+                    android:text="HIGH"
                     android:background="?attr/selectableItemBackground"
                     />
             </TableRow>

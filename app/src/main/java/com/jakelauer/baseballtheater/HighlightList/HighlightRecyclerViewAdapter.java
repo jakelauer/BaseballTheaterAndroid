@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.jakelauer.baseballtheater.BaseballTheater;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight;
 import com.jakelauer.baseballtheater.R;
+import com.jakelauer.baseballtheater.Utility;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -57,20 +58,7 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 		holder.mImageView.setImageDrawable(null);
 
 		if (highlight.thumbs != null && highlight.thumbs.thumbs != null && highlight.thumbs.thumbs.size() > 0) {
-			int thumbIndex = 0;
-			String thumbQualitySetting = mPrefs.getString("display_thumbnail_quality", "1");
-
-			switch(thumbQualitySetting){
-				case "0":
-					thumbIndex = 0;
-					break;
-				case "1":
-					thumbIndex = highlight.thumbs.thumbs.size() - 3;
-					break;
-				case "2":
-					thumbIndex = highlight.thumbs.thumbs.size() - 4;
-					break;
-			}
+			int thumbIndex = this.getThumbIndex(highlight);
 
 			String thumb = highlight.thumbs.thumbs.get(thumbIndex);
 
@@ -103,7 +91,29 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 
 		holder.mIdView.setOnClickListener(defaultListener);
 		holder.mImageView.setOnClickListener(defaultListener);
+	}
 
+	private int getThumbIndex(Highlight highlight){
+		int thumbIndex = highlight.thumbs.thumbs.size() - 4;
+
+		String prefKey = Utility.isWifiAvailable(context)
+				? "display_thumbnail_quality_wifi"
+				: "display_thumbnail_quality_mobile";
+
+		String thumbQualitySetting = mPrefs.getString(prefKey, "1");
+		switch (thumbQualitySetting) {
+			case "0":
+				thumbIndex = 0;
+				break;
+			case "1":
+				thumbIndex = highlight.thumbs.thumbs.size() - 3;
+				break;
+			case "2":
+				thumbIndex = highlight.thumbs.thumbs.size() - 4;
+				break;
+		}
+
+		return thumbIndex;
 	}
 
 	private void setupVideoQualityLinks(Highlight highlight, ViewHolder holder){
@@ -140,7 +150,6 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 			}
 
 			if(qualityTextView != null && kValue != ""){
-				qualityTextView.setText(kValue);
 				qualityTextView.setTag(url);
 				qualityTextView.setOnClickListener(qualityListener);
 			}
@@ -153,24 +162,34 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 	}
 
 	private void openLink(ViewHolder holder){
-		String qualitySetting = mPrefs.getString("display_video_quality", "2");
-		Integer getValueWithSetting = 0;
-		switch(qualitySetting){
+		Integer urlIndex = this.getVideoUrlIndex(holder.mItem);
+		String url = holder.mItem.urls.get(urlIndex);
+		openLink(url);
+	}
+
+	private int getVideoUrlIndex(Highlight highlight){
+		int urlIndex = 2;
+
+		String prefKey = Utility.isWifiAvailable(context)
+				? "display_video_quality_wifi"
+				: "display_video_quality_mobile";
+
+		String qualitySetting = mPrefs.getString(prefKey, "1");
+		switch (qualitySetting) {
 			case "0":
-				getValueWithSetting = 0;
+				urlIndex = 0;
 				break;
 
 			case "1":
-				getValueWithSetting = (int) Math.floor(holder.mItem.urls.size() / 2);
+				urlIndex = (int) Math.floor(highlight.urls.size() / 2);
 				break;
 
 			case "2":
-				getValueWithSetting = holder.mItem.urls.size() - 1;
+				urlIndex = highlight.urls.size() - 1;
 				break;
 		}
 
-		String url = holder.mItem.urls.get(getValueWithSetting);
-		openLink(url);
+		return urlIndex;
 	}
 
 	@Override

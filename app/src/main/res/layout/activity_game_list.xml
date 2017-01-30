@@ -83,12 +83,28 @@
         android:orientation="vertical"
         >
 
-        <ImageView
-            android:id="@+id/left_drawer_image"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            />
+            android:layout_height="200dp">
+
+            <ImageView
+                android:id="@+id/left_drawer_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                />
+
+            <TextView
+                android:id="@+id/set_favorite_team"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:textAlignment="center"
+                android:layout_marginTop="170dp"
+                android:textColor="@color/menuButton"
+                android:text="Set Favorite Team"/>
+
+        </RelativeLayout>
 
         <ListView android:id="@+id/left_drawer_list"
                   android:layout_width="match_parent"

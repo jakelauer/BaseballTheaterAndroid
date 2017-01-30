@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ParseException;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
@@ -20,10 +21,12 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jakelauer.baseballtheater.BaseballTheater;
 import com.jakelauer.baseballtheater.MlbDataServer.ProgressActivity;
 import com.jakelauer.baseballtheater.R;
+import com.jakelauer.baseballtheater.Settings.SettingsActivity;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -35,6 +38,8 @@ import java.util.List;
 
 import icepick.Icepick;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static dk.nodes.okhttputils.error.HttpErrorManager.context;
 
 public class GameListActivity extends AppCompatActivity implements ProgressActivity {
@@ -153,6 +158,10 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 		String imageName = "team_splash_" + favTeamCode;
 		int teamLogoResourceId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
 
+		TextView setFavoriteTeam = (TextView) findViewById(R.id.set_favorite_team);
+		boolean hideSetFavoriteTeam = !favTeamCode.equals("none");
+		setFavoriteTeam.setVisibility(hideSetFavoriteTeam ? GONE : VISIBLE);
+
 		Picasso.with(context)
 				.load(teamLogoResourceId)
 				.placeholder(R.color.colorPlaceholder)
@@ -164,6 +173,16 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 				new DrawerRowItem("Feedback", R.drawable.ic_feedback),
 				new DrawerRowItem("Buy Me a Beer", R.drawable.ic_beer)
 		));
+
+		mDrawerImage.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(context, SettingsActivity.class);
+				intent.putExtra( PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.BehaviorPreferenceFragment.class.getName() );
+				intent.putExtra( PreferenceActivity.EXTRA_NO_HEADERS, true );
+				context.startActivity(intent);
+			}
+		});
 
 		mDrawerList.setAdapter(new DrawerArrayAdapter(this, R.layout.drawer_list_item, listItems));
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
