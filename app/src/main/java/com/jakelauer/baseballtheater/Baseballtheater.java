@@ -8,7 +8,7 @@ import java.util.Date;
  * Created by Jake on 1/21/2017.
  */
 
-public class BaseballTheater extends Application {
+public class Baseballtheater extends Application {
 	private Date gameListDate;
 	private static Boolean mSmallDevice = false;
 	private static Boolean mSettingsChanged = false;

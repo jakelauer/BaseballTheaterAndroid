@@ -18,7 +18,7 @@ import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import com.jakelauer.baseballtheater.BaseballTheater;
+import com.jakelauer.baseballtheater.Baseballtheater;
 import com.jakelauer.baseballtheater.R;
 
 import java.util.List;
@@ -122,7 +122,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 		super.onCreate(savedInstanceState);
 		setupActionBar();
 
-		BaseballTheater.setSettingsChanged(true);
+		Baseballtheater.setSettingsChanged(true);
 	}
 
 	/**

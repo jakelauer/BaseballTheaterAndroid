@@ -14,7 +14,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.jakelauer.baseballtheater.BaseballTheater;
+import com.jakelauer.baseballtheater.Baseballtheater;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HomeAway;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Inning;
@@ -47,7 +47,7 @@ public class GameListLineScore {
 		String favTeamCode = prefs.getString("behavior_favorite_team", "");
 		lineScoreTableLayout.setBackground(null);
 		if(gameItem.awayFileCode.equals(favTeamCode) || gameItem.homeFileCode.equals(favTeamCode)){
-			lineScoreTableLayout.setBackgroundResource(R.color.colorFeaturedGame);
+			lineScoreTableLayout.setBackgroundResource(R.color.featuredGame);
 		}
 
 		TableRow labels = new TableRow(context);
@@ -92,7 +92,7 @@ public class GameListLineScore {
 		linearLayout.setGravity(Gravity.CENTER_VERTICAL);
 
 		LineScoreTextView teamNameView = new LineScoreTextView(context);
-		String teamDisplayName = BaseballTheater.isSmallDevice()
+		String teamDisplayName = Baseballtheater.isSmallDevice()
 				? teamCode.toUpperCase()
 				: teamName;
 		teamNameView.setText(teamDisplayName);
@@ -115,7 +115,7 @@ public class GameListLineScore {
 		row.addView(linearLayout);
 
 		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) linearLayout.getLayoutParams();
-		lp.width = getPixels(BaseballTheater.isSmallDevice() ? 55 : 90);
+		lp.width = getPixels(Baseballtheater.isSmallDevice() ? 55 : 90);
 		lp.setMargins(0, 0, getPixels(5), 0);
 		linearLayout.setLayoutParams(lp);
 
@@ -222,7 +222,7 @@ public class GameListLineScore {
 			super(context);
 
 			setTextColor(ContextCompat.getColor(context, R.color.textDefault));
-			setTextSize(TypedValue.COMPLEX_UNIT_PX, getPixels(BaseballTheater.isSmallDevice() ? 11 : 12));
+			setTextSize(TypedValue.COMPLEX_UNIT_PX, getPixels(Baseballtheater.isSmallDevice() ? 11 : 12));
 		}
 	}
 }

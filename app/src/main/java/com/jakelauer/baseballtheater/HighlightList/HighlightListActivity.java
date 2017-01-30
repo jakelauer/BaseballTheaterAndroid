@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.jakelauer.baseballtheater.BaseballTheater;
+import com.jakelauer.baseballtheater.Baseballtheater;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection;
 import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator;
@@ -95,7 +95,7 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 		recyclerView = (RecyclerView) findViewById(R.id.highlight_list);
 		recyclerView.setAdapter(new HighlightRecyclerViewAdapter(this, highlightsCollection.highlights));
 
-		GridLayoutManager glm = new GridLayoutManager(this, BaseballTheater.isSmallDevice() ? 1 : 2);
+		GridLayoutManager glm = new GridLayoutManager(this, Baseballtheater.isSmallDevice() ? 1 : 2);
 		recyclerView.setLayoutManager(glm);
 	}
 

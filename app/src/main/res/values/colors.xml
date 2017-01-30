@@ -11,5 +11,6 @@
     <color name="textDefault">#000000</color>
     <color name="menuButton">#FFFFFF</color>
     <color name="link">#0000FF</color>
-    <color name="colorFeaturedGame">#f7eed2</color>
+    <color name="featuredGame">#d2ebf7</color>
+    <color name="featuredGameCorner">#ffc400</color>
 </resources>

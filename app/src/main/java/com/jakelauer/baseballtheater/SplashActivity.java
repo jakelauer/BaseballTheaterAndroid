@@ -29,6 +29,6 @@ public class SplashActivity extends AppCompatActivity {
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 
 		int width = dm.widthPixels;
-		BaseballTheater.setIsSmallDevice(width < 1000);
+		Baseballtheater.setIsSmallDevice(width < 1000);
 	}
 }

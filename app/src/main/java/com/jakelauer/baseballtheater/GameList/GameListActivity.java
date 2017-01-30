@@ -23,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jakelauer.baseballtheater.BaseballTheater;
+import com.jakelauer.baseballtheater.Baseballtheater;
 import com.jakelauer.baseballtheater.MlbDataServer.ProgressActivity;
 import com.jakelauer.baseballtheater.R;
 import com.jakelauer.baseballtheater.Settings.SettingsActivity;
@@ -100,12 +100,12 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 	}
 
 	protected Date getDate() {
-		BaseballTheater application = (BaseballTheater) getApplication();
+		Baseballtheater application = (Baseballtheater) getApplication();
 		return application.getGameListDate();
 	}
 
 	private void setDate(Date newdate) {
-		BaseballTheater application = (BaseballTheater) getApplication();
+		Baseballtheater application = (Baseballtheater) getApplication();
 		application.setGameListDate(newdate);
 		cal.setTime(newdate);
 	}
@@ -180,6 +180,7 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 				Intent intent = new Intent(context, SettingsActivity.class);
 				intent.putExtra( PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.BehaviorPreferenceFragment.class.getName() );
 				intent.putExtra( PreferenceActivity.EXTRA_NO_HEADERS, true );
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 				context.startActivity(intent);
 			}
 		});
@@ -277,12 +278,12 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 	protected void onResume(){
 		super.onResume();
 
-		if(BaseballTheater.getSettingsChanged()) {
+		if(Baseballtheater.getSettingsChanged()) {
 			Intent intent = getIntent();
 			finish();
 			startActivity(intent);
 
-			BaseballTheater.setSettingsChanged(false);
+			Baseballtheater.setSettingsChanged(false);
 		}
 	}
 
