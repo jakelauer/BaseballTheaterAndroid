@@ -48,6 +48,8 @@ import java.util.Locale;
 
 import icepick.Icepick;
 
+import static android.support.v4.view.ViewPager.SCROLL_STATE_DRAGGING;
+import static android.support.v4.view.ViewPager.SCROLL_STATE_IDLE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static dk.nodes.okhttputils.error.HttpErrorManager.context;
@@ -59,6 +61,7 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 
 	private SharedPreferences mPrefs;
 	private GameListStatePagerAdapter mGameListStatePagerAdapter;
+	public int mLastValidNoGamesVisibilityState = GONE;
 
 	private ViewPager mViewPager;
 	private DrawerLayout mDrawerLayout;
@@ -66,6 +69,7 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ImageView mDrawerImage;
+	private TextView mNoGamesFoundView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -75,6 +79,7 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 		setContentView(R.layout.activity_game_list);
+		mNoGamesFoundView = (TextView) this.findViewById(R.id.no_games_found);
 
 		initializeDrawer();
 		initializeRefreshView();
@@ -141,6 +146,7 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 
 			final float[] lastPositionOffset = {0};
 			final boolean[] alreadySetDate = {false};
+			final boolean[] alreadySetNoGamesFoundView = {false};
 			mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
 			{
 				@Override
@@ -152,7 +158,8 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 					boolean isIncrease = diff > 0.0;
 					boolean crossedThreshold = (positionOffset > 0.5 && lastPositionOffset[0] <= 0.5) || (positionOffset < 0.5 && lastPositionOffset[0] >= 0.5);
 
-					if(crossedThreshold){
+					if (crossedThreshold)
+					{
 						DateTime newDate = new DateTime(initialDate);
 						alreadySetDate[0] = true;
 						if (isIncrease)
@@ -183,7 +190,18 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 				@Override
 				public void onPageScrollStateChanged(int state)
 				{
-					enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+					if (state == SCROLL_STATE_DRAGGING && !alreadySetNoGamesFoundView[0])
+					{
+						mNoGamesFoundView.setVisibility(GONE);
+						alreadySetNoGamesFoundView[0] = true;
+					}
+
+					if(state == SCROLL_STATE_IDLE){
+						alreadySetNoGamesFoundView[0] = false;
+						mNoGamesFoundView.setVisibility(mLastValidNoGamesVisibilityState);
+					}
+
+					enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
 				}
 			});
 		}
@@ -196,8 +214,10 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 		setTitle();
 	}
 
-	private void enableDisableSwipeRefresh(boolean enable) {
-		if (mSwipeRefreshLayout != null) {
+	private void enableDisableSwipeRefresh(boolean enable)
+	{
+		if (mSwipeRefreshLayout != null)
+		{
 			mSwipeRefreshLayout.setEnabled(enable);
 		}
 	}
@@ -313,7 +333,7 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 
 			// Use the current date as the default date in the picker
 			int year = gameListActivity.getDate().getYear();
-			int month = gameListActivity.getDate().getMonthOfYear();
+			int month = gameListActivity.getDate().getMonthOfYear() - 1;
 			int day = gameListActivity.getDate().getDayOfMonth();
 
 			// Create a new instance of DatePickerDialog and return it

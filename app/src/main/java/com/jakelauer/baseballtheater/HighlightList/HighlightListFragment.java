@@ -15,12 +15,6 @@ public class HighlightListFragment extends Fragment {
     public static final String ARG_ITEM_ID = "gamePk";
     public static final String ARG_GAME_SUMMARY = "gameSummary";
 
-    private GameSummary gameSummary;
-
-    public GameSummary getGameSummary(){
-        return (GameSummary) getArguments().getSerializable(ARG_GAME_SUMMARY);
-    }
-
     public HighlightListFragment() {
     }
 

@@ -13,6 +13,7 @@ import java.util.Date;
 public class BaseballTheater extends Application {
 	private DateTime gameListDate;
 	private static Boolean mSmallDevice = false;
+	private static Boolean mLargeDevice = false;
 	private static Boolean mSettingsChanged = false;
 
 	public DateTime getGameListDate(){
@@ -29,6 +30,14 @@ public class BaseballTheater extends Application {
 
 	public static void setIsSmallDevice(Boolean isSmallDevice){
 		mSmallDevice = isSmallDevice;
+	}
+
+	public static Boolean isLargeDevice(){
+		return mLargeDevice;
+	}
+
+	public static void setIsLargeDevice(Boolean isLargeDevice){
+		mLargeDevice = isLargeDevice;
 	}
 
 	public static Boolean getSettingsChanged(){

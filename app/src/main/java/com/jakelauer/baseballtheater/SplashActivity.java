@@ -30,5 +30,7 @@ public class SplashActivity extends AppCompatActivity {
 
 		int width = dm.widthPixels;
 		BaseballTheater.setIsSmallDevice(width < 1000);
+
+		BaseballTheater.setIsLargeDevice(width > 1500);
 	}
 }

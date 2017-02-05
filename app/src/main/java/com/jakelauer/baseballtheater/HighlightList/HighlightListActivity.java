@@ -24,13 +24,15 @@ import java.io.IOException;
 
 import icepick.Icepick;
 
-public class HighlightListActivity extends AppCompatActivity implements ProgressActivity {
+public class HighlightListActivity extends AppCompatActivity implements ProgressActivity
+{
 
 	private RecyclerView recyclerView;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		Icepick.restoreInstanceState(this, savedInstanceState);
 
@@ -48,7 +50,8 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 		this.refresh();
 	}
 
-	private void refresh(){
+	private void refresh()
+	{
 		mSwipeRefreshLayout.setRefreshing(true);
 
 		GameSummary gameSummary = (GameSummary) getIntent().getSerializableExtra(HighlightListFragment.ARG_GAME_SUMMARY);
@@ -56,12 +59,14 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 		detailCreator.getHighlights(this);
 	}
 
-	private void setTitleBar(GameSummary gameSummary) {
+	private void setTitleBar(GameSummary gameSummary)
+	{
 		ActionBar actionBar = getSupportActionBar();
 
 		String titleDate = gameSummary.dateObj().toString("MMMM d, yyyy");
 
-		if (actionBar != null) {
+		if (actionBar != null)
+		{
 			actionBar.setTitle(gameSummary.homeTeamName + " @ " + gameSummary.awayTeamName + " - " + titleDate);
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
@@ -82,38 +87,55 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 	}
 
 	@Override
-	public void onProgressUpdate(double progress) {
+	public void onProgressUpdate(double progress)
+	{
 	}
 
 	@Override
-	public void onProgressFinished(Object objectInstance) {
+	public void onProgressFinished(Object objectInstance)
+	{
 
 		HighlightsCollection highlightsCollection = (HighlightsCollection) objectInstance;
 
 		TextView noHighlightsFoundView = (TextView) findViewById(R.id.no_highlights_found);
 
-		if (highlightsCollection != null && highlightsCollection.highlights != null) {
+		if (highlightsCollection != null && highlightsCollection.highlights != null)
+		{
 			noHighlightsFoundView.setVisibility(View.GONE);
 
 			showHighlights(highlightsCollection);
-		} else {
+		}
+		else
+		{
 			noHighlightsFoundView.setVisibility(View.VISIBLE);
 		}
 
 		mSwipeRefreshLayout.setRefreshing(false);
 	}
 
-	private void showHighlights(HighlightsCollection highlightsCollection){
+	private void showHighlights(HighlightsCollection highlightsCollection)
+	{
 		recyclerView = (RecyclerView) findViewById(R.id.highlight_list);
 		recyclerView.setAdapter(new HighlightRecyclerViewAdapter(this, highlightsCollection.highlights));
 
-		GridLayoutManager glm = new GridLayoutManager(this, BaseballTheater.isSmallDevice() ? 1 : 2);
+		int columns = 2;
+		if (BaseballTheater.isSmallDevice())
+		{
+			columns = 1;
+		}
+		else if (BaseballTheater.isLargeDevice())
+		{
+			columns = 3;
+		}
+
+		GridLayoutManager glm = new GridLayoutManager(this, columns);
 		recyclerView.setLayoutManager(glm);
 	}
 
 
 	@Override
-	public void onSaveInstanceState(Bundle outState){
+	public void onSaveInstanceState(Bundle outState)
+	{
 		super.onSaveInstanceState(outState);
 	}
 
