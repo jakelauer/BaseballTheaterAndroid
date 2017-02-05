@@ -22,6 +22,8 @@ import com.jakelauer.baseballtheater.MlbDataServer.GameSummaryCreator;
 import com.jakelauer.baseballtheater.MlbDataServer.ProgressActivity;
 import com.jakelauer.baseballtheater.R;
 
+import org.joda.time.DateTime;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,10 +46,9 @@ public class GameListActivityFragment extends Fragment implements ProgressActivi
 	private GameListActivity mActivity;
 	private RecyclerView mRecyclerView;
 	private GameListLineScore lineScore;
-	private Date mDate;
-	private Boolean mForceReplace = false;
+	private DateTime mDate;
 
-	public static GameListActivityFragment newInstance(Date date, Boolean forceReplace){
+	public static GameListActivityFragment newInstance(DateTime date, Boolean forceReplace){
 		GameListActivityFragment newFrag = new GameListActivityFragment();
 		Bundle args = new Bundle();
 		args.putSerializable(GameListActivityFragment.ARG_DATE, date);
@@ -72,8 +73,7 @@ public class GameListActivityFragment extends Fragment implements ProgressActivi
 		mActivity = (GameListActivity) getActivity();
 
 		Bundle args = getArguments();
-		mDate = (Date) args.getSerializable(GameListActivityFragment.ARG_DATE);
-		mForceReplace = args.getBoolean(GameListActivityFragment.ARG_FORCE_REPLACE);
+		mDate = (DateTime) args.getSerializable(GameListActivityFragment.ARG_DATE);
 
 		try {
 			setupRecyclerView(mRecyclerView);

@@ -3,6 +3,7 @@ package com.jakelauer.baseballtheater.HighlightList;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,7 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.jakelauer.baseballtheater.Baseballtheater;
+import com.jakelauer.baseballtheater.BaseballTheater;
+import com.jakelauer.baseballtheater.GameList.GameListActivity;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection;
 import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator;
@@ -25,7 +27,7 @@ import icepick.Icepick;
 public class HighlightListActivity extends AppCompatActivity implements ProgressActivity {
 
 	private RecyclerView recyclerView;
-	private ProgressDialog progressDialog;
+	private SwipeRefreshLayout mSwipeRefreshLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,25 +39,21 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
+		initializeRefreshView();
+
 		GameSummary gameSummary = (GameSummary) getIntent().getSerializableExtra(HighlightListFragment.ARG_GAME_SUMMARY);
 
 		setTitleBar(gameSummary);
-		showProgressDialog();
 
-		recyclerView = (RecyclerView) findViewById(R.id.highlight_list);
-		assert recyclerView != null;
-		try {
-			setupRecyclerView(recyclerView);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.refresh();
 	}
 
-	private void showProgressDialog(){
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle("Loading");
-		progressDialog.setCancelable(false);
-		progressDialog.show();
+	private void refresh(){
+		mSwipeRefreshLayout.setRefreshing(true);
+
+		GameSummary gameSummary = (GameSummary) getIntent().getSerializableExtra(HighlightListFragment.ARG_GAME_SUMMARY);
+		GameDetailCreator detailCreator = new GameDetailCreator(gameSummary.gameDataDirectory, false);
+		detailCreator.getHighlights(this);
 	}
 
 	private void setTitleBar(GameSummary gameSummary) {
@@ -67,6 +65,20 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 			actionBar.setTitle(gameSummary.homeTeamName + " @ " + gameSummary.awayTeamName + " - " + titleDate);
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
+	}
+
+	private void initializeRefreshView()
+	{
+		final HighlightListActivity highlightListActivity = this;
+		mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refreshableGameList);
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+		{
+			@Override
+			public void onRefresh()
+			{
+				highlightListActivity.refresh();
+			}
+		});
 	}
 
 	@Override
@@ -88,14 +100,14 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 			noHighlightsFoundView.setVisibility(View.VISIBLE);
 		}
 
-		progressDialog.dismiss();
+		mSwipeRefreshLayout.setRefreshing(false);
 	}
 
 	private void showHighlights(HighlightsCollection highlightsCollection){
 		recyclerView = (RecyclerView) findViewById(R.id.highlight_list);
 		recyclerView.setAdapter(new HighlightRecyclerViewAdapter(this, highlightsCollection.highlights));
 
-		GridLayoutManager glm = new GridLayoutManager(this, Baseballtheater.isSmallDevice() ? 1 : 2);
+		GridLayoutManager glm = new GridLayoutManager(this, BaseballTheater.isSmallDevice() ? 1 : 2);
 		recyclerView.setLayoutManager(glm);
 	}
 
@@ -105,11 +117,4 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 		super.onSaveInstanceState(outState);
 	}
 
-	private void setupRecyclerView(@NonNull final RecyclerView recyclerView) throws IOException {
-		GameSummary gameSummary = (GameSummary) getIntent().getSerializableExtra(HighlightListFragment.ARG_GAME_SUMMARY);
-
-		GameDetailCreator detailCreator = new GameDetailCreator(gameSummary.gameDataDirectory, false);
-
-		detailCreator.getHighlights(this);
-	}
 }

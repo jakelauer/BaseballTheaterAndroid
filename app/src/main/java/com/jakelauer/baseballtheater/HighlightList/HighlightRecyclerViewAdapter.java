@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
-import com.jakelauer.baseballtheater.Baseballtheater;
+import com.jakelauer.baseballtheater.BaseballTheater;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight;
 import com.jakelauer.baseballtheater.R;
 import com.jakelauer.baseballtheater.Utility;
@@ -71,7 +71,7 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 			holder.mImageView.setVisibility(View.GONE);
 		}
 
-		if(Baseballtheater.isSmallDevice()) {
+		if(BaseballTheater.isSmallDevice()) {
 			holder.mImageView.getLayoutParams().height = 250;
 		}
 

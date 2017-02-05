@@ -11,6 +11,7 @@
     <color name="textDefault">#000000</color>
     <color name="menuButton">#FFFFFF</color>
     <color name="link">#0000FF</color>
-    <color name="featuredGame">#d2ebf7</color>
+    <color name="featuredGame">#eceef9</color>
     <color name="featuredGameCorner">#ffc400</color>
+    <color name="featuredTeam">#2979ff</color>
 </resources>

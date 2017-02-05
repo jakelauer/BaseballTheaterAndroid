@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
+import org.joda.time.DateTime;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -15,7 +17,7 @@ import java.util.Date;
 
 public class GameListStatePagerAdapter extends FragmentStatePagerAdapter {
 	protected Context mContext;
-	private Date mStartingDate;
+	private DateTime mStartingDate;
 	private Calendar cal = Calendar.getInstance();
 
 	private int mDayCount = 400;
@@ -30,9 +32,7 @@ public class GameListStatePagerAdapter extends FragmentStatePagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
-		Log.d("ListStatePagerAdapter", Integer.toString(position));
-
-		Date newDate = getDateFromPosition(position);
+		DateTime newDate = getDateFromPosition(position);
 
 		Fragment newFragment = GameListActivityFragment.newInstance(newDate, mForceReplaceFlag);
 
@@ -41,17 +41,16 @@ public class GameListStatePagerAdapter extends FragmentStatePagerAdapter {
 		return newFragment;
 	}
 
-	public Date getDateFromPosition(int position){
+	public DateTime getDateFromPosition(int position){
 		int diff = position - mStartingPosition;
 
-		cal.setTime(mStartingDate);
-		cal.add(Calendar.DATE, diff);
-		Date newDate = cal.getTime();
+		DateTime newDate = new DateTime(mStartingDate);
+		newDate = newDate.plusDays(diff);
 
 		return newDate;
 	}
 
-	public void setDate(Date date){
+	public void setDate(DateTime date){
 		mStartingDate = date;
 		mForceReplaceFlag = true;
 	}

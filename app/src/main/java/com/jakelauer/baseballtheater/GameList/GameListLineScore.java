@@ -14,7 +14,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.jakelauer.baseballtheater.Baseballtheater;
+import com.jakelauer.baseballtheater.BaseballTheater;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HomeAway;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Inning;
@@ -35,17 +35,23 @@ import static dk.nodes.okhttputils.error.HttpErrorManager.context;
 public class GameListLineScore {
 
 	private final float mScale = context.getResources().getDisplayMetrics().density;
+	private final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+	private final String favTeamCode = prefs.getString("behavior_favorite_team", "");
 	private boolean hideScores;
 
 	public TableLayout generateLinescore(TableLayout lineScoreTableLayout, GameSummary gameItem){
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		DateTime today = new DateTime();
 		int hoursBetween = Hours.hoursBetween(gameItem.dateObj(), today).getHours();
 		boolean hide_todays_scores = prefs.getBoolean("behavior_hide_todays_scores", false);
 		hideScores = hide_todays_scores && hoursBetween < 24;
 
-		String favTeamCode = prefs.getString("behavior_favorite_team", "");
 		lineScoreTableLayout.setBackground(null);
+		/*RelativeLayout rl = new RelativeLayout(context);
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(Utility.getPixels(20), Utility.getPixels(20));
+		lp.addRule(RelativeLayout.ALIGN_PARENT_END);
+		rl.setLayoutParams(lp);
+		rl.setBackground(ContextCompat.getDrawable(context, R.drawable.triangle));
+		lineScoreTableLayout.addView(rl);*/
 		if(gameItem.awayFileCode.equals(favTeamCode) || gameItem.homeFileCode.equals(favTeamCode)){
 			lineScoreTableLayout.setBackgroundResource(R.color.featuredGame);
 		}
@@ -92,11 +98,15 @@ public class GameListLineScore {
 		linearLayout.setGravity(Gravity.CENTER_VERTICAL);
 
 		LineScoreTextView teamNameView = new LineScoreTextView(context);
-		String teamDisplayName = Baseballtheater.isSmallDevice()
+		String teamDisplayName = BaseballTheater.isSmallDevice()
 				? teamCode.toUpperCase()
 				: teamName;
 		teamNameView.setText(teamDisplayName);
 		teamNameView.setTypeface(teamNameView.getTypeface(), Typeface.BOLD);
+		if(teamCode.equals(favTeamCode)){
+			teamNameView.setTextColor(ContextCompat.getColor(context, R.color.featuredTeam));
+			//teamNameView.setTextAppearance(context, R.style.FeaturedTeam);
+		}
 
 		String imageName = "team_logo_" + teamCode;
 		ImageView teamLogoView = new ImageView(context);
@@ -115,7 +125,7 @@ public class GameListLineScore {
 		row.addView(linearLayout);
 
 		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) linearLayout.getLayoutParams();
-		lp.width = getPixels(Baseballtheater.isSmallDevice() ? 55 : 90);
+		lp.width = getPixels(BaseballTheater.isSmallDevice() ? 55 : 90);
 		lp.setMargins(0, 0, getPixels(5), 0);
 		linearLayout.setLayoutParams(lp);
 
@@ -222,7 +232,7 @@ public class GameListLineScore {
 			super(context);
 
 			setTextColor(ContextCompat.getColor(context, R.color.textDefault));
-			setTextSize(TypedValue.COMPLEX_UNIT_PX, getPixels(Baseballtheater.isSmallDevice() ? 11 : 12));
+			setTextSize(TypedValue.COMPLEX_UNIT_PX, getPixels(BaseballTheater.isSmallDevice() ? 11 : 12));
 		}
 	}
 }
