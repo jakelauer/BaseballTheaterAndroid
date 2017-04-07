@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                                        xmlns:tools="http://schemas.android.com/tools"
+                                        android:id="@+id/drawer_layout"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context="com.jakelauer.baseballtheater.GameList.GameListActivity">
+                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                     xmlns:tools="http://schemas.android.com/tools"
+                                                     android:layout_width="match_parent"
+                                                     android:layout_height="match_parent"
+                                                     android:fitsSystemWindows="true"
+                                                     tools:context="com.jakelauer.baseballtheater.GameList.GameListActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar"
@@ -25,11 +22,10 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                android:background="@color/primary"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-
+                android:background="@color/primary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -52,20 +48,17 @@
                     android:text="No games found for this date."
                     android:visibility="gone"/>
 
-                <android.support.v4.view.ViewPager
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    android:id="@+id/game_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:id="@+id/game_pager"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
 
-                    <include layout="@layout/game_list" />
-
+                    <include layout="@layout/game_list"/>
                 </android.support.v4.view.ViewPager>
             </FrameLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
-
         <!--suppress AndroidDomInspection -->
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -73,53 +66,119 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            app:backgroundTint="@color/primary"
             android:scaleType="center"
-            app:srcCompat="@drawable/ic_date_set_cal" />
-
-
+            app:backgroundTint="@color/primary"
+            app:srcCompat="@drawable/ic_date_set_cal"/>
     </android.support.design.widget.CoordinatorLayout>
 
-
-
-    <LinearLayout
+    <ScrollView
         android:id="@+id/left_drawer"
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:orientation="vertical"
-        >
+        android:background="#FFF"
+        android:clickable="true"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/left_drawer_image"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                />
+                android:layout_height="200dp">
 
-            <TextView
-                android:id="@+id/set_favorite_team"
+                <ImageView
+                    android:id="@+id/left_drawer_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="centerCrop"/>
+
+                <TextView
+                    android:id="@+id/set_favorite_team"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="170dp"
+                    android:text="Set Favorite Team"
+                    android:textAlignment="center"
+                    android:textColor="@color/menuButton"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/left_drawer_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:textAlignment="center"
-                android:layout_marginTop="170dp"
-                android:textColor="@color/menuButton"
-                android:text="Set Favorite Team"/>
+                android:choiceMode="singleChoice"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:orientation="vertical"
+                android:paddingTop="16dp"/>
 
-        </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/patreon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="75dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="?attr/selectableItemBackground"
+                android:orientation="vertical">
 
-        <ListView android:id="@+id/left_drawer_list"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:choiceMode="singleChoice"
-                  android:divider="@android:color/transparent"
-                  android:dividerHeight="0dp"
-                  android:paddingTop="16dp"
-                  android:background="#FFF"/>
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|bottom"
+                    android:gravity="center|bottom"
+                    android:weightSum="1">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".9">
+
+                        <ProgressBar
+                            android:id="@+id/patreon_progress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:max="100"
+                            android:progress="50"
+                            android:progressTint="#e6461a"
+                            android:scaleY="6"/>
+
+                        <TextView
+                            android:id="@+id/patreon_progress_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="4dp"
+                            android:text="Goal: $40"
+                            android:textAlignment="center"
+                            android:textColor="@color/textDefault"
+                            android:textStyle="bold"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|bottom"
+                    android:gravity="center|bottom"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/patreon_progress_description"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_weight=".9"
+                        android:text="When we reach this goal, we will pay for monthly hosting costs, and can hold a monthly raffle for backers"
+                        android:textAlignment="center"
+                        android:textColor="@color/textDefault"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </android.support.v4.widget.DrawerLayout>

@@ -9,10 +9,12 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -218,6 +220,8 @@ public class GameListActivityFragment extends Fragment implements ProgressActivi
 			GameSummary gameItem = mValues.get(position);
 
 			holder.mLineScoreLayout.removeAllViews();
+
+			holder.mLineScoreLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
 			lineScore.generateLinescore(holder.mLineScoreLayout, gameItem);
 

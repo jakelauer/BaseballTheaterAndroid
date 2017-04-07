@@ -1,9 +1,12 @@
 package com.jakelauer.baseballtheater.GameList;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.jakelauer.baseballtheater.About.AboutActivity;
@@ -11,10 +14,17 @@ import com.jakelauer.baseballtheater.Settings.SettingsActivity;
 
 import static dk.nodes.okhttputils.error.HttpErrorManager.context;
 
-public class DrawerItemClickListener implements ListView.OnItemClickListener {
+public class DrawerItemClickListener implements LinearLayout.OnClickListener {
+	private Context m_context;
+
+	public DrawerItemClickListener(Context context){
+		this.m_context = context;
+	}
+
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		selectItem(position);
+	public void onClick(View v)
+	{
+		selectItem((int) v.getTag());
 	}
 
 	private void selectItem(int position) {
@@ -39,12 +49,15 @@ public class DrawerItemClickListener implements ListView.OnItemClickListener {
 				break;
 
 			case 3:
-				intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ko-fi.com/A76217J"));
+				String url = "https://baseball.theater/backers";
+				CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+				CustomTabsIntent customTabsIntent = builder.build();
+				customTabsIntent.launchUrl(m_context, Uri.parse(url));
 				break;
 		}
 
 		if (intent != null) {
-			context.startActivity(intent);
+			this.m_context.startActivity(intent);
 		}
 	}
 }

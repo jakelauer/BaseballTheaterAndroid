@@ -46,12 +46,6 @@ public class GameListLineScore {
 		hideScores = hide_todays_scores && hoursBetween < 24;
 
 		lineScoreTableLayout.setBackground(null);
-		/*RelativeLayout rl = new RelativeLayout(context);
-		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(Utility.getPixels(20), Utility.getPixels(20));
-		lp.addRule(RelativeLayout.ALIGN_PARENT_END);
-		rl.setLayoutParams(lp);
-		rl.setBackground(ContextCompat.getDrawable(context, R.drawable.triangle));
-		lineScoreTableLayout.addView(rl);*/
 		if(gameItem.awayFileCode.equals(favTeamCode) || gameItem.homeFileCode.equals(favTeamCode)){
 			lineScoreTableLayout.setBackgroundResource(R.color.featuredGame);
 		}
@@ -70,9 +64,9 @@ public class GameListLineScore {
 		lineScoreTableLayout.addView(teamAway);
 		lineScoreTableLayout.addView(teamHome);
 
-		setBaseSize(labels);
-		setBaseSize(teamAway);
-		setBaseSize(teamHome);
+		setBaseSize(labels, gameItem);
+		setBaseSize(teamAway, gameItem);
+		setBaseSize(teamHome, gameItem);
 
 		labels.setBackgroundResource(R.color.colorPlaceholder);
 
@@ -141,21 +135,40 @@ public class GameListLineScore {
 		if (gameItem.linescore != null && gameItem.linescore.innings != null) {
 			int inningsCount = gameItem.linescore.innings.size();
 
-			int maxInningCount = Math.min(9, gameItem.linescore.innings.size());
-			for (int i = 1; i <= maxInningCount; i++) {
-				int currentInning = inningsCount - (maxInningCount - i);
-				Inning inningData = gameItem.linescore.innings.get(currentInning - 1);
+			int startingInning = 1;
+			if(inningsCount > 9){
+				startingInning = inningsCount - 9;
+			}
+
+			for (int i = 0; i < 9; i++) {
+				int currentInning = i + startingInning;
+
+				Inning inningData = null;
+				try
+				{
+					inningData = gameItem.linescore.innings.get(currentInning - 1);
+				}
+				catch(Exception e){
+
+				}
 
 				LineScoreTextView inningLabel = new LineScoreTextView(context);
 				bold(inningLabel);
 				inningLabel.setText(Integer.toString(currentInning));
 
 				LineScoreTextView inningAway = new LineScoreTextView(context);
-				inningAway.setText(hideScores ? "X" : inningData.away);
+				if(inningData != null)
+				{
+					inningAway.setText(hideScores ? "▨" : inningData.away);
+				}
 
 				LineScoreTextView inningHome = new LineScoreTextView(context);
-				String inningValue = inningData.home != null ? inningData.home : "X";
-				inningHome.setText(hideScores ? "X" : inningValue);
+				if(inningData != null)
+				{
+					String emptyInningText = gameItem.status.status.equals("Final") ? "X" : "";
+					String inningValue = inningData.home != null ? inningData.home : emptyInningText;
+					inningHome.setText(hideScores ? "▨" : inningValue);
+				}
 
 				labels.addView(inningLabel);
 				teamAway.addView(inningAway);
@@ -197,10 +210,13 @@ public class GameListLineScore {
 		}
 	}
 
-	private void setBaseSize(TableRow tableRow){
+	private void setBaseSize(TableRow tableRow,GameSummary gameItem){
+		boolean hasLinescore = gameItem != null && gameItem.linescore != null && gameItem.linescore.innings != null && gameItem.linescore.innings.size() > 0;
+		int width = hasLinescore ? TableRow.LayoutParams.WRAP_CONTENT : TableRow.LayoutParams.MATCH_PARENT;
+
 		int v20 = getPixels(5);
 		tableRow.setPadding(v20,v20,v20,v20);
-		tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+		tableRow.setLayoutParams(new TableRow.LayoutParams(width, TableRow.LayoutParams.WRAP_CONTENT, 1f));
 	}
 
 	private void setHomeAwayText(LineScoreTextView homeText, LineScoreTextView awayText, HomeAway values, TableRow rowHome, TableRow rowAway){
@@ -226,7 +242,7 @@ public class GameListLineScore {
 		return Utility.getPixels(dps);
 	}
 
-	class LineScoreTextView extends TextView
+	class LineScoreTextView extends android.support.v7.widget.AppCompatTextView
 	{
 		public LineScoreTextView(Context context){
 			super(context);

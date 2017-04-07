@@ -7,25 +7,36 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.ParseException;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jakelauer.baseballtheater.BaseballTheater;
@@ -66,9 +77,11 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 	private ViewPager mViewPager;
 	private DrawerLayout mDrawerLayout;
 	private SwipeRefreshLayout mSwipeRefreshLayout;
-	private ListView mDrawerList;
+	private LinearLayout mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private ImageView mDrawerImage;
+	private LinearLayout mPatreon;
+	private ProgressBar mPatreonProgress;
 	private TextView mNoGamesFoundView;
 
 	@Override
@@ -101,7 +114,7 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 			DateTime openingDay2016;
 			DateTime openingDay2017;
 			String openingDay2016String = "20160404";
-			String openingDay2017String = "20170402";
+			String openingDay2017String = "20170222";
 
 			DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd");
 			openingDay2016 = DateTime.parse(openingDay2016String, fmt);
@@ -137,6 +150,8 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 
 	private void refreshCurrentView()
 	{
+
+
 		mSwipeRefreshLayout.setRefreshing(true);
 
 		if (mGameListStatePagerAdapter == null)
@@ -196,7 +211,8 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 						alreadySetNoGamesFoundView[0] = true;
 					}
 
-					if(state == SCROLL_STATE_IDLE){
+					if (state == SCROLL_STATE_IDLE)
+					{
 						alreadySetNoGamesFoundView[0] = false;
 						mNoGamesFoundView.setVisibility(mLastValidNoGamesVisibilityState);
 					}
@@ -225,8 +241,10 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 	private void initializeDrawer()
 	{
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.left_drawer_list);
+		mDrawerList = (LinearLayout) findViewById(R.id.left_drawer_list);
 		mDrawerImage = (ImageView) findViewById(R.id.left_drawer_image);
+		mPatreonProgress = (ProgressBar) findViewById(R.id.patreon_progress);
+		mPatreon = (LinearLayout) findViewById(R.id.patreon);
 
 		final String favTeamCode = mPrefs.getString("behavior_favorite_team", "none");
 		String imageName = "team_splash_" + favTeamCode;
@@ -245,7 +263,7 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 				new DrawerRowItem("Settings", R.drawable.ic_settings),
 				new DrawerRowItem("About", R.drawable.ic_info),
 				new DrawerRowItem("Feedback", R.drawable.ic_feedback),
-				new DrawerRowItem("Buy Me a Beer", R.drawable.ic_beer)
+				new DrawerRowItem("Patreon Backers", R.drawable.ic_patreon)
 		));
 
 		mDrawerImage.setOnClickListener(new View.OnClickListener()
@@ -261,8 +279,23 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 			}
 		});
 
-		mDrawerList.setAdapter(new DrawerArrayAdapter(this, R.layout.drawer_list_item, listItems));
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+		LayoutInflater inflater = LayoutInflater.from(this);
+		int index = 0;
+		for (DrawerRowItem item : listItems) {
+			View view  = inflater.inflate(R.layout.drawer_list_item, mDrawerList, false);
+			TextView textView = (TextView) view.findViewById(R.id.title);
+			ImageView imageView = (ImageView) view.findViewById(R.id.icon);
+
+			textView.setText(item.mTitle);
+			imageView.setImageResource(item.mResourceId);
+
+			// set item content in view
+			mDrawerList.addView(view);
+			view.setTag(index);
+			view.setOnClickListener(new DrawerItemClickListener(this));
+			index++;
+		}
+
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.string.drawer_open, R.string.drawer_close)
 		{
@@ -278,8 +311,22 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 			}
 		};
 
+		mPatreon.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				String url = "https://www.patreon.com/jakelauer";
+				CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+				CustomTabsIntent customTabsIntent = builder.build();
+				customTabsIntent.launchUrl(context, Uri.parse(url));
+			}
+		});
+
 		mDrawerLayout.addDrawerListener(mDrawerToggle);
 		mDrawerToggle.setDrawerIndicatorEnabled(true);
+
+		mPatreonProgress.setProgress(50);
 	}
 
 	private void initializeRefreshView()
