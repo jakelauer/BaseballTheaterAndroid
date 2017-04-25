@@ -7,9 +7,9 @@ import org.simpleframework.xml.core.Persister;
 
 public class XmlLoader<T> {
     public void GetXml(String url, final ProgressActivity progressActivity, final Class<T> classType) {
-        XmlDownloader xmlDownloader = new XmlDownloader(new XmlDownloadListener() {
+        XmlDownloader xmlDownloader = new XmlDownloader(new DownloadListener<String>() {
             @Override
-            public void onXmlDownloadComplete(String response) {
+            public void onDownloadComplete(String response) {
                 Serializer serializer = new Persister();
 
                 if (response != null && !response.isEmpty()) {
@@ -25,7 +25,7 @@ public class XmlLoader<T> {
             }
 
 			@Override
-            public void onXmlDownloadProgress(Double progress) {
+            public void onDownloadProgress(Double progress) {
 				progressActivity.onProgressUpdate(progress);
             }
         });

@@ -70,7 +70,7 @@
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
 
-    <string name="pref_title_hide_today_scores">Hide scores for today\'s games</string>
+    <string name="pref_title_hide_scores">Hide game scores</string>
 
     <string name="pref_title_show_quality_options">Show Video Quality Options</string>
 

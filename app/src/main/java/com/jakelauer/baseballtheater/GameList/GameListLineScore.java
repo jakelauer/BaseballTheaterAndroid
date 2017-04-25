@@ -41,9 +41,7 @@ public class GameListLineScore {
 
 	public TableLayout generateLinescore(TableLayout lineScoreTableLayout, GameSummary gameItem){
 		DateTime today = new DateTime();
-		int hoursBetween = Hours.hoursBetween(gameItem.dateObj(), today).getHours();
-		boolean hide_todays_scores = prefs.getBoolean("behavior_hide_todays_scores", false);
-		hideScores = hide_todays_scores && hoursBetween < 24;
+		hideScores = prefs.getBoolean("behavior_hide_scores", false);
 
 		lineScoreTableLayout.setBackground(null);
 		if(gameItem.awayFileCode.equals(favTeamCode) || gameItem.homeFileCode.equals(favTeamCode)){
@@ -83,11 +81,14 @@ public class GameListLineScore {
 
 		labels.addView(status);
 
-		setTeamName(gameItem.awayTeamName, gameItem.awayFileCode, teamAway);
-		setTeamName(gameItem.homeTeamName, gameItem.homeFileCode, teamHome);
+		String homeRecord = gameItem.home_win + " - " + gameItem.home_loss;
+		String awayRecord = gameItem.away_win + " - " + gameItem.away_loss;
+
+		setTeamName(gameItem.awayTeamName, gameItem.awayFileCode, awayRecord, teamAway);
+		setTeamName(gameItem.homeTeamName, gameItem.homeFileCode, homeRecord, teamHome);
 	}
 
-	private void setTeamName(String teamName, String teamCode, TableRow row){
+	private void setTeamName(String teamName, String teamCode, String record, TableRow row){
 		LinearLayout linearLayout = new LinearLayout(context);
 		linearLayout.setGravity(Gravity.CENTER_VERTICAL);
 
@@ -95,7 +96,7 @@ public class GameListLineScore {
 		String teamDisplayName = BaseballTheater.isSmallDevice()
 				? teamCode.toUpperCase()
 				: teamName;
-		teamNameView.setText(teamDisplayName);
+		teamNameView.setText(teamDisplayName + " (" + record + ")");
 		teamNameView.setTypeface(teamNameView.getTypeface(), Typeface.BOLD);
 		if(teamCode.equals(favTeamCode)){
 			teamNameView.setTextColor(ContextCompat.getColor(context, R.color.featuredTeam));
@@ -137,7 +138,7 @@ public class GameListLineScore {
 
 			int startingInning = 1;
 			if(inningsCount > 9){
-				startingInning = inningsCount - 9;
+				startingInning = inningsCount - 8;
 			}
 
 			for (int i = 0; i < 9; i++) {

@@ -13,9 +13,9 @@ import java.net.URL;
 
 public class XmlDownloader extends AsyncTask<String, Integer, String>
 {
-    public XmlDownloadListener mListener;
+    public DownloadListener mListener;
 
-    public XmlDownloader(XmlDownloadListener listener){
+    public XmlDownloader(DownloadListener listener){
 		mListener = listener;
     }
 
@@ -60,11 +60,11 @@ public class XmlDownloader extends AsyncTask<String, Integer, String>
 	protected void onProgressUpdate(Integer... values){
 		super.onProgressUpdate(values);
 		double progress = 1 - ((double)values[0] / (double)1024);
-		mListener.onXmlDownloadProgress(progress);
+		mListener.onDownloadProgress(progress);
 	}
 
 	protected void onPostExecute(String xmlString){
-		mListener.onXmlDownloadComplete(xmlString);
+		mListener.onDownloadComplete(xmlString);
 	}
 }
 

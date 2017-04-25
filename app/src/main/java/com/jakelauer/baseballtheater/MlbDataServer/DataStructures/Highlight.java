@@ -46,9 +46,9 @@ public class Highlight implements Serializable {
 	public Keyword[] Keywords;*/
 
 	@Attribute(required = false)
-	public Boolean condensed;
+	public boolean condensed;
 
 	@Attribute(required = false)
-	public Boolean recap;
+	public boolean recap;
 }
 

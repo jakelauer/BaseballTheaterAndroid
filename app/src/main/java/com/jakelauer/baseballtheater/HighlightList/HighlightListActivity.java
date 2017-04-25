@@ -15,12 +15,15 @@ import android.widget.TextView;
 import com.jakelauer.baseballtheater.BaseballTheater;
 import com.jakelauer.baseballtheater.GameList.GameListActivity;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection;
 import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator;
 import com.jakelauer.baseballtheater.MlbDataServer.ProgressActivity;
 import com.jakelauer.baseballtheater.R;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 
 import icepick.Icepick;
 
@@ -101,6 +104,23 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 
 		if (highlightsCollection != null && highlightsCollection.highlights != null)
 		{
+			Collections.sort(highlightsCollection.highlights, new Comparator<Highlight>()
+			{
+				@Override
+				public int compare(Highlight a, Highlight b)
+				{
+					int aIsRecap = a.recap ? -1 : 0;
+					int bIsRecap = b.recap ? -1 : 0;
+					int aIsCondensed = a.condensed ? -1 : 0;
+					int bIsCondensed = b.condensed ? -1 : 0;
+
+					int recapResult = aIsRecap - bIsRecap;
+					return recapResult == 0
+							? (aIsCondensed - bIsCondensed)
+							: recapResult;
+				}
+			});
+
 			noHighlightsFoundView.setVisibility(View.GONE);
 
 			showHighlights(highlightsCollection);

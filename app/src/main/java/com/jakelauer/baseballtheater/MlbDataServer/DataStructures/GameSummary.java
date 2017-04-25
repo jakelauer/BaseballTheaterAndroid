@@ -70,4 +70,16 @@ public class GameSummary implements Serializable {
 
     @Element(required = false)
     public Linescore linescore;
+
+    @Attribute
+    public String home_win;
+
+    @Attribute
+    public String home_loss;
+
+    @Attribute
+    public String away_win;
+
+    @Attribute
+    public String away_loss;
 }

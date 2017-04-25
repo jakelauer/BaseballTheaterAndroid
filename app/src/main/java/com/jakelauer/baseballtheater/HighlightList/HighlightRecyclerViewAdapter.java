@@ -27,20 +27,23 @@ import static dk.nodes.okhttputils.error.HttpErrorManager.context;
  * Created by Jake on 1/24/2017.
  */
 
-public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<HighlightRecyclerViewAdapter.ViewHolder> {
+public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<HighlightRecyclerViewAdapter.ViewHolder>
+{
 
 	private final Activity mParentActivity;
 	private final List<Highlight> mValues;
 	private SharedPreferences mPrefs;
 
-	public HighlightRecyclerViewAdapter(Activity parent, List<Highlight> highlights) {
+	public HighlightRecyclerViewAdapter(Activity parent, List<Highlight> highlights)
+	{
 		mValues = highlights;
 		mParentActivity = parent;
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(mParentActivity);
 	}
 
 	@Override
-	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+	{
 		View view = LayoutInflater.from(parent.getContext())
 				.inflate(R.layout.highlight_list_content, parent, false);
 
@@ -48,16 +51,24 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 	}
 
 	@Override
-	public void onBindViewHolder(final ViewHolder holder, int position) {
+	public void onBindViewHolder(final ViewHolder holder, int position)
+	{
 		final Boolean showVideoQualities = mPrefs.getBoolean("behavior_show_video_quality_options", true);
 
 		Highlight highlight = mValues.get(position);
 
 		holder.mItem = highlight;
-		holder.mIdView.setText(highlight.headline);
+
+		String title = highlight.headline;
+		if (highlight.recap)
+		{
+			title = "Recap (score hidden)";
+		}
+		holder.mIdView.setText(title);
 		holder.mImageView.setImageDrawable(null);
 
-		if (highlight.thumbs != null && highlight.thumbs.thumbs != null && highlight.thumbs.thumbs.size() > 0) {
+		if (highlight.thumbs != null && highlight.thumbs.thumbs != null && highlight.thumbs.thumbs.size() > 0)
+		{
 			int thumbIndex = this.getThumbIndex(highlight);
 
 			String thumb = highlight.thumbs.thumbs.get(thumbIndex);
@@ -67,24 +78,30 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 					.placeholder(R.color.colorPlaceholder)
 					.into(holder.mImageView);
 		}
-		else{
+		else
+		{
 			holder.mImageView.setVisibility(View.GONE);
 		}
 
-		if(BaseballTheater.isSmallDevice()) {
+		if (BaseballTheater.isSmallDevice())
+		{
 			holder.mImageView.getLayoutParams().height = 250;
 		}
 
-		if(showVideoQualities){
+		if (showVideoQualities)
+		{
 			this.setupVideoQualityLinks(highlight, holder);
 		}
-		else{
+		else
+		{
 			holder.mVideoQualityOptions.setVisibility(View.GONE);
 		}
 
-		View.OnClickListener defaultListener = new View.OnClickListener() {
+		View.OnClickListener defaultListener = new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				openLink(holder);
 			}
 		};
@@ -93,7 +110,8 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 		holder.mImageView.setOnClickListener(defaultListener);
 	}
 
-	private int getThumbIndex(Highlight highlight){
+	private int getThumbIndex(Highlight highlight)
+	{
 		int thumbIndex = highlight.thumbs.thumbs.size() - 4;
 
 		String prefKey = Utility.isWifiAvailable(context)
@@ -101,7 +119,8 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 				: "display_thumbnail_quality_mobile";
 
 		String thumbQualitySetting = mPrefs.getString(prefKey, "1");
-		switch (thumbQualitySetting) {
+		switch (thumbQualitySetting)
+		{
 			case "0":
 				thumbIndex = 0;
 				break;
@@ -116,26 +135,31 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 		return thumbIndex;
 	}
 
-	private void setupVideoQualityLinks(Highlight highlight, ViewHolder holder){
-		View.OnClickListener qualityListener = new View.OnClickListener() {
+	private void setupVideoQualityLinks(Highlight highlight, ViewHolder holder)
+	{
+		View.OnClickListener qualityListener = new View.OnClickListener()
+		{
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				openLink((String) v.getTag());
 			}
 		};
 
-		for(String url : highlight.urls)
+		for (String url : highlight.urls)
 		{
 			Pattern pattern = Pattern.compile("\\d{4}K");
 			Matcher matcher = pattern.matcher(url);
 
 			String kValue = "";
-			if(matcher.find()){
+			if (matcher.find())
+			{
 				kValue = matcher.group(0);
 			}
 
 			TextView qualityTextView = null;
-			switch(kValue){
+			switch (kValue)
+			{
 				case "1200K":
 					qualityTextView = holder.mVideoQuality1200K;
 					break;
@@ -149,25 +173,29 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 					break;
 			}
 
-			if(qualityTextView != null && kValue != ""){
+			if (qualityTextView != null && kValue != "")
+			{
 				qualityTextView.setTag(url);
 				qualityTextView.setOnClickListener(qualityListener);
 			}
 		}
 	}
 
-	private void openLink(String url){
+	private void openLink(String url)
+	{
 		OpenHighlightAsyncTask ohat = new OpenHighlightAsyncTask(mParentActivity);
 		ohat.execute(url);
 	}
 
-	private void openLink(ViewHolder holder){
+	private void openLink(ViewHolder holder)
+	{
 		Integer urlIndex = this.getVideoUrlIndex(holder.mItem);
 		String url = holder.mItem.urls.get(urlIndex);
 		openLink(url);
 	}
 
-	private int getVideoUrlIndex(Highlight highlight){
+	private int getVideoUrlIndex(Highlight highlight)
+	{
 		int urlIndex = 2;
 
 		String prefKey = Utility.isWifiAvailable(context)
@@ -175,7 +203,8 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 				: "display_video_quality_mobile";
 
 		String qualitySetting = mPrefs.getString(prefKey, "1");
-		switch (qualitySetting) {
+		switch (qualitySetting)
+		{
 			case "0":
 				urlIndex = 0;
 				break;
@@ -193,11 +222,13 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 	}
 
 	@Override
-	public int getItemCount() {
+	public int getItemCount()
+	{
 		return mValues.size();
 	}
 
-	public class ViewHolder extends RecyclerView.ViewHolder {
+	public class ViewHolder extends RecyclerView.ViewHolder
+	{
 		public final View mView;
 		public final TextView mIdView;
 		public final ImageView mImageView;
@@ -207,7 +238,8 @@ public class HighlightRecyclerViewAdapter extends RecyclerView.Adapter<Highlight
 		public final TextView mVideoQuality2500K;
 		public Highlight mItem;
 
-		public ViewHolder(View view) {
+		public ViewHolder(View view)
+		{
 			super(view);
 			mView = view;
 			mIdView = (TextView) view.findViewById(R.id.id);

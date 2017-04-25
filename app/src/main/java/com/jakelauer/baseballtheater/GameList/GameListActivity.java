@@ -40,7 +40,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jakelauer.baseballtheater.BaseballTheater;
+import com.jakelauer.baseballtheater.MlbDataServer.PatreonDataCreator;
 import com.jakelauer.baseballtheater.MlbDataServer.ProgressActivity;
+import com.jakelauer.baseballtheater.MlbDataServer.Utils.DownloadListener;
 import com.jakelauer.baseballtheater.R;
 import com.jakelauer.baseballtheater.Settings.SettingsActivity;
 import com.squareup.picasso.Picasso;
@@ -48,6 +50,8 @@ import com.squareup.picasso.Picasso;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -326,7 +330,33 @@ public class GameListActivity extends AppCompatActivity implements ProgressActiv
 		mDrawerLayout.addDrawerListener(mDrawerToggle);
 		mDrawerToggle.setDrawerIndicatorEnabled(true);
 
-		mPatreonProgress.setProgress(50);
+		PatreonDataCreator patreonDataCreator = new PatreonDataCreator();
+		patreonDataCreator.get(new DownloadListener<JSONObject>()
+		{
+			@Override
+			public void onDownloadComplete(JSONObject response)
+			{
+				Double percentageString = 0.0;
+				try
+				{
+					percentageString = (Double) response.get("GoalPercentage");
+				}
+				catch (JSONException e)
+				{
+					e.printStackTrace();
+				}
+				Double realPercentage = (percentageString * 100);
+				ProgressBar pp = (ProgressBar) findViewById(R.id.patreon_progress);
+				pp.setProgress(realPercentage.intValue());
+			}
+
+			@Override
+			public void onDownloadProgress(Double progress)
+			{
+
+			}
+		});
+
 	}
 
 	private void initializeRefreshView()

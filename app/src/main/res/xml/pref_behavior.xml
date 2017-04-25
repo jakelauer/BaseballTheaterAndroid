@@ -2,11 +2,11 @@
 
     <SwitchPreference
         android:defaultValue="false"
-        android:key="behavior_hide_todays_scores"
-        android:title="@string/pref_title_hide_today_scores"/>
+        android:key="behavior_hide_scores"
+        android:title="@string/pref_title_hide_scores"/>
 
     <ListPreference
-        android:defaultValue="none"
+        android:defaultValue="0"
         android:key="behavior_favorite_team"
         android:title="@string/pref_title_behavior_favorite_team"
         android:entries="@array/teams_list_keys"

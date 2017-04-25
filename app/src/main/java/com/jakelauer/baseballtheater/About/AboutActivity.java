@@ -37,13 +37,8 @@ public class AboutActivity extends AppCompatActivity {
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				final Intent emailIntent = new Intent(Intent.ACTION_SEND);
-
-				emailIntent.setData(Uri.parse("mailto:baseballtheater@gmail.com"));
-				emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] { "baseballtheater@gmail.com" });
-				emailIntent.setType("text/plain");
-
-				startActivity(Intent.createChooser(emailIntent, "Choose an Email client :"));
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.reddit.com/r/BaseballTheater"));
+				mParentActivity.startActivity(browserIntent);
 			}
 		});
 
