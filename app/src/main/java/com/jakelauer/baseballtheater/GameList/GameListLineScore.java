@@ -23,6 +23,8 @@ import com.jakelauer.baseballtheater.R;
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Hours;
 
 import static com.jakelauer.baseballtheater.Utility.bold;
@@ -58,6 +60,7 @@ public class GameListLineScore {
 		teamAway.setLayoutParams(trlp);
 		teamHome.setLayoutParams(trlp);
 
+
 		lineScoreTableLayout.addView(labels);
 		lineScoreTableLayout.addView(teamAway);
 		lineScoreTableLayout.addView(teamHome);
@@ -76,13 +79,23 @@ public class GameListLineScore {
 
 	private void setTeamsAndStatus(GameSummary gameItem, TableRow labels, TableRow teamAway, TableRow teamHome){
 		LineScoreTextView status = new LineScoreTextView(context);
-		status.setText(gameItem.status.status);
+
+		DateTimeZone dz = DateTimeZone.getDefault();
+		String tzid = dz.getShortName(DateTimeUtils.currentTimeMillis());
+
+		String startTime = gameItem.localDateObj().toString("h:mm") + " " + tzid;
+		status.setText(gameItem.status.status + " (" + startTime + ")");
 		bold(status);
 
 		labels.addView(status);
 
-		String homeRecord = gameItem.home_win + " - " + gameItem.home_loss;
-		String awayRecord = gameItem.away_win + " - " + gameItem.away_loss;
+		String homeRecord = null;
+		String awayRecord = null;
+		if(gameItem.linescore == null || gameItem.linescore.innings == null || gameItem.linescore.innings.size() == 0)
+		{
+			homeRecord = gameItem.home_win + " - " + gameItem.home_loss;
+			awayRecord = gameItem.away_win + " - " + gameItem.away_loss;
+		}
 
 		setTeamName(gameItem.awayTeamName, gameItem.awayFileCode, awayRecord, teamAway);
 		setTeamName(gameItem.homeTeamName, gameItem.homeFileCode, homeRecord, teamHome);
@@ -96,7 +109,12 @@ public class GameListLineScore {
 		String teamDisplayName = BaseballTheater.isSmallDevice()
 				? teamCode.toUpperCase()
 				: teamName;
-		teamNameView.setText(teamDisplayName + " (" + record + ")");
+
+		if(record != null){
+			teamDisplayName += " (" + record + ")";
+		}
+
+		teamNameView.setText(teamDisplayName);
 		teamNameView.setTypeface(teamNameView.getTypeface(), Typeface.BOLD);
 		if(teamCode.equals(favTeamCode)){
 			teamNameView.setTextColor(ContextCompat.getColor(context, R.color.featuredTeam));

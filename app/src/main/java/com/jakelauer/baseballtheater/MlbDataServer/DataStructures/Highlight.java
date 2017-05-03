@@ -18,7 +18,7 @@ public class Highlight implements Serializable {
 	public String type;
 
 	@Attribute(required = false)
-	public long id;
+	public int id;
 
 	@Attribute(required = false)
 	public String date;

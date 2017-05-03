@@ -115,9 +115,20 @@ public class HighlightListActivity extends AppCompatActivity implements Progress
 					int bIsCondensed = b.condensed ? -1 : 0;
 
 					int recapResult = aIsRecap - bIsRecap;
-					return recapResult == 0
-							? (aIsCondensed - bIsCondensed)
-							: recapResult;
+					int condensedResult = aIsCondensed - bIsCondensed;
+					int idResult = a.id - b.id;
+
+					if (recapResult != 0)
+					{
+						return recapResult;
+					}
+
+					if (condensedResult != 0)
+					{
+						return condensedResult;
+					}
+
+					return idResult;
 				}
 			});
 

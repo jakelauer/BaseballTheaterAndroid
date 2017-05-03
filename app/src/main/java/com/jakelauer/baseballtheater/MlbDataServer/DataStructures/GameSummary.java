@@ -1,6 +1,7 @@
 package com.jakelauer.baseballtheater.MlbDataServer.DataStructures;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.simpleframework.xml.Attribute;
@@ -27,6 +28,11 @@ public class GameSummary implements Serializable {
     public DateTime dateObj() {
         DateTimeFormatter f = DateTimeFormat.forPattern("yyyy/MM/dd h:m");
         return f.parseDateTime(date);
+    }
+
+    public LocalDateTime localDateObj() {
+        DateTimeFormatter f = DateTimeFormat.forPattern("yyyy/MM/dd h:m Z");
+        return f.parseDateTime(date + " -0400").toLocalDateTime();
     }
 
     @Attribute(name = "game_type")
