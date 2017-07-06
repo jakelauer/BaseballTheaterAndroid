@@ -7,8 +7,8 @@ android {
         applicationId "com.jakelauer.baseballtheater"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 26
-        versionName "1.6"
+        versionCode 28
+        versionName "1.611"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

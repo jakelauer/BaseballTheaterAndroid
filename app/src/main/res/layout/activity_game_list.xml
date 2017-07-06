@@ -154,7 +154,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_marginTop="4dp"
-                            android:text="Goal: $40"
+                            android:text="Goal"
                             android:textAlignment="center"
                             android:textColor="@color/textDefault"
                             android:textStyle="bold"/>
@@ -174,7 +174,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_weight=".9"
-                        android:text="When we reach this goal, we will pay for monthly hosting costs, and can hold a monthly raffle for backers"
+                        android:text="When we reach this goal, I can start working on more features for the web, like expanded box scores and more live info. We will hold a monthly, backer-only raffle for a baseball prize valued at $30!"
                         android:textAlignment="center"
                         android:textColor="@color/textDefault"/>
                 </LinearLayout>
