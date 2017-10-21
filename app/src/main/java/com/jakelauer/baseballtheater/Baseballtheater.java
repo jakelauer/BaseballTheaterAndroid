@@ -2,49 +2,22 @@ package com.jakelauer.baseballtheater;
 
 import android.app.Application;
 
+import com.facebook.stetho.Stetho;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
+
 import org.joda.time.DateTime;
 
 import java.util.Date;
+
+import okhttp3.OkHttpClient;
 
 /**
  * Created by Jake on 1/21/2017.
  */
 
 public class BaseballTheater extends Application {
-	private DateTime gameListDate;
-	private static Boolean mSmallDevice = false;
-	private static Boolean mLargeDevice = false;
-	private static Boolean mSettingsChanged = false;
-
-	public DateTime getGameListDate(){
-		return gameListDate;
-	}
-
-	public void setGameListDate(DateTime newGameListDate){
-		gameListDate = newGameListDate;
-	}
-
-	public static Boolean isSmallDevice(){
-		return mSmallDevice;
-	}
-
-	public static void setIsSmallDevice(Boolean isSmallDevice){
-		mSmallDevice = isSmallDevice;
-	}
-
-	public static Boolean isLargeDevice(){
-		return mLargeDevice;
-	}
-
-	public static void setIsLargeDevice(Boolean isLargeDevice){
-		mLargeDevice = isLargeDevice;
-	}
-
-	public static Boolean getSettingsChanged(){
-		return mSettingsChanged;
-	}
-
-	public static void setSettingsChanged(Boolean settingsChanged){
-		mSettingsChanged = settingsChanged;
+	public void onCreate() {
+		super.onCreate();
+		Stetho.initializeWithDefaults(this);
 	}
 }
