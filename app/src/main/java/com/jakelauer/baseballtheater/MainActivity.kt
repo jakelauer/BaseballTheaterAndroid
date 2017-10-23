@@ -1,10 +1,11 @@
 package com.jakelauer.baseballtheater
 
-import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.Fragment
 import com.jakelauer.baseballtheater.base.BaseActivity
+import com.jakelauer.baseballtheater.gamelist.GameListPagerFragment
 import kotlinx.android.synthetic.main.activity_base.*
+import org.joda.time.DateTime
 
 class MainActivity : BaseActivity()
 {
@@ -14,26 +15,34 @@ class MainActivity : BaseActivity()
     override fun onBindView()
     {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        val fragment = GameListPagerFragment.newInstance(DateTime.now())
+        setMainFragment(fragment)
     }
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId)
         {
-            R.id.navigation_home ->
+            R.id.navigation_games ->
             {
+                val fragment = GameListPagerFragment.newInstance(DateTime.now())
+                setMainFragment(fragment)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard ->
+            R.id.navigation_articles ->
             {
+                val fragment = GameListPagerFragment.newInstance(DateTime.now())
+                setMainFragment(fragment)
                 return@OnNavigationItemSelectedListener true
             }
         }
         false
     }
 
-    override fun onCreate(savedInstanceState: Bundle?)
+    private fun setMainFragment(fragment: Fragment)
     {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_base)
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager?.beginTransaction()
+        fragmentTransaction?.add(R.id.content_frame, fragment)
+        fragmentTransaction?.commit()
     }
 }
