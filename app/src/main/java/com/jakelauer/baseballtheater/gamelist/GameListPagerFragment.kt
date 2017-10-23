@@ -2,13 +2,18 @@ package com.jakelauer.baseballtheater.gamelist
 
 import android.content.Context
 import android.os.Bundle
+import android.support.annotation.Nullable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.view.ViewPager
 import android.view.View
+import butterknife.BindView
 import com.f2prateek.dart.InjectExtra
 import com.jakelauer.baseballtheater.R
+import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.BaseFragment
+import com.jakelauer.baseballtheater.base.ListFragment
 import com.jakelauer.baseballtheater.base.ItemViewHolder
 import kotlinx.android.synthetic.main.game_list_pager_fragment.*
 import org.joda.time.DateTime
@@ -19,16 +24,13 @@ import java.util.*
  * Created by Jake on 10/20/2017.
  */
 
-class GameListPagerFragment : BaseFragment
+class GameListPagerFragment : BaseFragment<Void?>()
 {
-    override fun getViewHolder(view: View): ItemViewHolder
-    {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     companion object
     {
         const val ARG_DATE = "ARG_DATE"
+
+        @JvmStatic
         fun newInstance(date: DateTime): GameListPagerFragment
         {
             val args = Bundle()
@@ -42,14 +44,23 @@ class GameListPagerFragment : BaseFragment
     @InjectExtra(ARG_DATE)
     var m_date: DateTime? = null
 
-    constructor()
-    {
-        game_pager.adapter = GameListPagerAdapter(fragmentManager, context.applicationContext)
-    }
+    @BindView(R.id.game_pager)
+    @JvmField
+    var m_gamePager: ViewPager? = null
 
     override fun getLayoutResourceId(): Int = R.layout.game_list_pager_fragment
 
     override fun onBindView()
+    {
+        m_gamePager?.adapter = GameListPagerAdapter(fragmentManager, context.applicationContext)
+    }
+
+    override fun createModel(): Void?
+    {
+        return null
+    }
+
+    override fun loadData()
     {
 
     }

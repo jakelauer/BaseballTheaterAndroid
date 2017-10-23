@@ -15,9 +15,11 @@ import okhttp3.OkHttpClient;
  * Created by Jake on 1/21/2017.
  */
 
-public class BaseballTheater extends Application {
-	public void onCreate() {
-		super.onCreate();
-		Stetho.initializeWithDefaults(this);
-	}
+public class BaseballTheater extends Application
+{
+    public void onCreate()
+    {
+        super.onCreate();
+        Stetho.initializeWithDefaults(this);
+    }
 }
