@@ -1,11 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:orientation="vertical"
+    android:padding="12dp">
 
-    <TextView
-        android:id="@+id/game_item_title"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/game_team_away_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </TextView>
+
+        <LinearLayout
+            android:id="@+id/game_team_away_team_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.jakelauer.baseballtheater.common.TeamNameTextView
+                android:id="@+id/game_away_team_city"
+                style="@style/TeamName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Chicago" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.6">
+
+                <com.jakelauer.baseballtheater.common.TeamNameTextView
+                    android:id="@+id/game_away_team_name"
+                    style="@style/TeamName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Cubs" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/game_away_team_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center"
+            tools:text="7" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:background="#000000" />
+
+        <TextView
+            android:id="@+id/game_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/app_background"
+            android:padding="3dp"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+            android:textSize="12sp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.jakelauer.baseballtheater.common.TeamNameTextView
+                android:id="@+id/game_home_team_city"
+                style="@style/TeamName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Chicago" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.6">
+
+                <com.jakelauer.baseballtheater.common.TeamNameTextView
+                    android:id="@+id/game_home_team_name"
+                    style="@style/TeamName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Cubs" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/game_home_team_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center"
+            tools:text="7" />
+    </FrameLayout>
+
 </LinearLayout>

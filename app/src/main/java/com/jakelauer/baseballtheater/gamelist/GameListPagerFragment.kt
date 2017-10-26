@@ -2,107 +2,126 @@ package com.jakelauer.baseballtheater.gamelist
 
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.Nullable
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
-import android.view.View
-import butterknife.BindView
 import com.f2prateek.dart.InjectExtra
 import com.jakelauer.baseballtheater.R
-import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.BaseFragment
-import com.jakelauer.baseballtheater.base.ListFragment
-import com.jakelauer.baseballtheater.base.ItemViewHolder
-import kotlinx.android.synthetic.main.game_list_pager_fragment.*
+import libs.bindView
 import org.joda.time.DateTime
 import java.util.*
+import org.joda.time.format.DateTimeFormat
 
 
 /**
  * Created by Jake on 10/20/2017.
  */
 
-class GameListPagerFragment : BaseFragment<Void?>()
+class GameListPagerFragment : BaseFragment<Any>()
 {
-    companion object
-    {
-        const val ARG_DATE = "ARG_DATE"
+	companion object
+	{
+		const val ARG_DATE = "ARG_DATE"
 
-        @JvmStatic
-        fun newInstance(date: DateTime): GameListPagerFragment
-        {
-            val args = Bundle()
-            args.putSerializable(ARG_DATE, date)
-            val fragment = GameListPagerFragment()
-            fragment.arguments = args
-            return fragment
-        }
-    }
+		@JvmStatic
+		fun newInstance(date: DateTime): GameListPagerFragment
+		{
+			val args = Bundle()
+			args.putSerializable(ARG_DATE, date)
+			val fragment = GameListPagerFragment()
+			fragment.arguments = args
+			return fragment
+		}
+	}
 
-    @InjectExtra(ARG_DATE)
-    var m_date: DateTime? = null
+	@InjectExtra(ARG_DATE)
+	lateinit var m_date: DateTime
 
-    @BindView(R.id.game_pager)
-    @JvmField
-    var m_gamePager: ViewPager? = null
+	val m_gamePager: ViewPager by bindView(R.id.game_pager)
 
-    override fun getLayoutResourceId(): Int = R.layout.game_list_pager_fragment
+	override fun getLayoutResourceId(): Int = R.layout.game_list_pager_fragment
 
-    override fun onBindView()
-    {
-        m_gamePager?.adapter = GameListPagerAdapter(fragmentManager, context.applicationContext)
-    }
+	override fun onBindView()
+	{
+		m_gamePager.adapter = GameListPagerAdapter(fragmentManager, context.applicationContext)
+		(m_gamePager.adapter as GameListPagerAdapter).setDate(getStartingDate())
+	}
 
-    override fun createModel(): Void?
-    {
-        return null
-    }
+	override fun createModel(): Any
+	{
+		return ""
+	}
 
-    override fun loadData()
-    {
+	override fun loadData()
+	{
 
-    }
+	}
 
-    class GameListPagerAdapter(fm: FragmentManager, context: Context) : FragmentStatePagerAdapter(fm)
-    {
-        protected var m_context: Context = context
-        private var m_startingDate: DateTime? = null
-        private val cal = Calendar.getInstance()
+	fun getStartingDate(): DateTime
+	{
+		val today = DateTime()
+		val finalDay2017: DateTime
+		val openingDay2018: DateTime
+		val final2017String = "20171102"
+		val openingDay2018String = "20180303"
 
-        private val m_dayCount = 400
-        private val m_startingPosition = m_dayCount / 2
-        private var m_forceReplaceFlag: Boolean? = false
+		val fmt = DateTimeFormat.forPattern("yyyyMMdd")
+		finalDay2017 = DateTime.parse(final2017String, fmt)
+		openingDay2018 = DateTime.parse(openingDay2018String, fmt)
 
-        override fun getItem(position: Int): Fragment
-        {
-            val newDate = getDateFromPosition(position)
+		var returnTime = today
+		if (today.isBefore(finalDay2017))
+		{
+			returnTime = finalDay2017
+		}
+		else if (today.year > 2017)
+		{
+			returnTime = openingDay2018
+		}
 
-            val newFragment = GameListFragment.newInstance(newDate)
+		return returnTime
+	}
 
-            return newFragment
-        }
+	class GameListPagerAdapter(fm: FragmentManager, context: Context) : FragmentStatePagerAdapter(fm)
+	{
+		protected var m_context: Context = context
+		private var m_startingDate: DateTime = DateTime.now()
+		private val cal = Calendar.getInstance()
 
-        fun getDateFromPosition(position: Int): DateTime
-        {
-            val diff = position - m_startingPosition
+		private val m_dayCount = 400
+		private val m_startingPosition = m_dayCount / 2
+		private var m_forceReplaceFlag: Boolean? = false
 
-            var newDate = DateTime(m_startingDate)
-            newDate = newDate.plusDays(diff)
+		override fun getItem(position: Int): Fragment
+		{
+			val newDate = getDateFromPosition(position)
 
-            return newDate
-        }
+			val newFragment = GameListFragment.newInstance(newDate)
 
-        fun setDate(date: DateTime)
-        {
-            m_startingDate = date
-            m_forceReplaceFlag = true
-        }
+			return newFragment
+		}
 
-        override fun getCount(): Int
-        {
-            return m_dayCount
-        }
-    }
+		fun getDateFromPosition(position: Int): DateTime
+		{
+			val diff = position - m_startingPosition
+
+			var newDate = DateTime(m_startingDate)
+			newDate = newDate.plusDays(diff)
+
+			return newDate
+		}
+
+		fun setDate(date: DateTime)
+		{
+			m_startingDate = date
+			m_forceReplaceFlag = true
+		}
+
+		override fun getCount(): Int
+		{
+			return m_dayCount
+		}
+	}
 }

@@ -2,11 +2,13 @@ package com.jakelauer.baseballtheater.gamelist
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.f2prateek.dart.InjectExtra
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummaryCollection
 import com.jakelauer.baseballtheater.MlbDataServer.GameSummaryCreator
 import com.jakelauer.baseballtheater.R
+import com.jakelauer.baseballtheater.base.AdapterChildItem
+import com.jakelauer.baseballtheater.base.ItemViewHolder
 import com.jakelauer.baseballtheater.base.ListFragment
+import com.jakelauer.baseballtheater.utils.inject
 import org.joda.time.DateTime
 import java.util.concurrent.ExecutionException
 
@@ -14,12 +16,9 @@ import java.util.concurrent.ExecutionException
 /**s
  * Created by Jake on 10/20/2017.
  */
-
 class GameListFragment : ListFragment<GameListFragment.Model>()
 {
-
-	@InjectExtra(ARG_DATE)
-	var m_date: DateTime? = null
+	var m_date: DateTime by inject(ARG_DATE)
 
 	override fun getLayoutResourceId(): Int = R.layout.game_list_fragment
 
@@ -41,14 +40,6 @@ class GameListFragment : ListFragment<GameListFragment.Model>()
 		return Model()
 	}
 
-	override fun onBindView()
-	{
-		m_adapter?.clear()
-
-		val item = GameItem(GameItem.Model("Test"))
-		m_adapter?.add(item)
-	}
-
 	override fun loadData()
 	{
 		if (m_date != null)
@@ -57,7 +48,8 @@ class GameListFragment : ListFragment<GameListFragment.Model>()
 			try
 			{
 				gsCreator.GetSummaryCollection(m_date, { data ->
-					m_model.updateData(data)
+					getModel().updateGames(data)
+					onDataLoaded()
 				})
 			}
 			catch (e: ExecutionException)
@@ -71,13 +63,32 @@ class GameListFragment : ListFragment<GameListFragment.Model>()
 		}
 	}
 
+	fun onDataLoaded()
+	{
+		m_adapter?.clear()
+
+		val games = getModel().getGames()
+		if (games != null)
+		{
+			for (game in games.GameSummaries)
+			{
+				val item = GameItem(GameItem.Model(game))
+
+				@Suppress("UNCHECKED_CAST")
+				m_adapter?.add(item as AdapterChildItem<*, ItemViewHolder>)
+			}
+		}
+	}
+
 	class Model
 	{
-		var m_data: GameSummaryCollection? = null
+		private var m_games: GameSummaryCollection? = null
 
-		fun updateData(data: GameSummaryCollection)
+		fun updateGames(data: GameSummaryCollection?)
 		{
-			m_data = data
+			m_games = data
 		}
+
+		fun getGames() = m_games
 	}
 }

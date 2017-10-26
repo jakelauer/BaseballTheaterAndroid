@@ -12,8 +12,9 @@ import java.util.List;
  */
 
 @Root(name = "linescore", strict = false)
-public class Linescore implements Serializable {
-	@ElementList(name= "inning", inline = true, required = false)
+public class Linescore implements Serializable
+{
+	@ElementList(name = "inning", inline = true, required = false)
 	public List<Inning> innings;
 
 	@Element(name = "r")
@@ -24,4 +25,17 @@ public class Linescore implements Serializable {
 
 	@Element(name = "e")
 	public Errors errors;
+
+	public int getStartingInning()
+	{
+		int startingInning = 0;
+		int inningCount = 9;
+		if (innings.size() > inningCount)
+		{
+			inningCount = innings.size();
+			startingInning = inningCount - 9;
+		}
+
+		return startingInning;
+	}
 }

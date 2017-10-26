@@ -3,44 +3,64 @@ package com.jakelauer.baseballtheater.base
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.BindView
-import butterknife.ButterKnife
-import com.jakelauer.baseballtheater.R
+import com.f2prateek.dart.Dart
+import icepick.Icepick
 
 /**
  * Created by Jake on 10/20/2017.
  */
 
-abstract class BaseFragment<TData> : Fragment()
+abstract class BaseFragment<TData : Any> : Fragment()
 {
-    @LayoutRes
-    abstract fun getLayoutResourceId(): Int
+	@LayoutRes
+	abstract fun getLayoutResourceId(): Int
 
-    var m_model: TData = createModel()
+	private lateinit var m_model: TData
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View
-    {
-        val view = inflater!!.inflate(getLayoutResourceId(), container, false)
+	fun getModel() = m_model
 
-        ButterKnife.bind(this, view)
-        beforeBindView()
-        onBindView()
+	override fun onCreate(savedInstanceState: Bundle?)
+	{
+		Icepick.restoreInstanceState(this, savedInstanceState)
+		super.onCreate(savedInstanceState)
 
-        return view
-    }
+		val arguments = arguments
+		Dart.inject(this, arguments)
 
-    protected abstract fun createModel() : TData
+		m_model = createModel()
+	}
 
-    protected abstract fun onBindView()
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+	{
+		var view = inflater.inflate(getLayoutResourceId(), container, false)
 
-    protected abstract fun loadData()
+		return view
+	}
 
-    open protected fun beforeBindView()
-    {
+	override fun onViewCreated(view: View?, savedInstanceState: Bundle?)
+	{
+		super.onViewCreated(view, savedInstanceState)
 
-    }
+		beforeOnBindView()
+		onBindView()
+
+		loadData()
+	}
+
+	protected abstract fun createModel(): TData
+
+	protected open fun onBindView()
+	{
+
+	}
+
+	protected abstract fun loadData()
+
+	open protected fun beforeOnBindView()
+	{
+
+	}
 }

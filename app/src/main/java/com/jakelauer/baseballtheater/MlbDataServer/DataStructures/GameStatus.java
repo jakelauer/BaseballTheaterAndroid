@@ -13,4 +13,16 @@ import java.io.Serializable;
 public class GameStatus implements Serializable {
 	@Attribute
 	public String status;
+
+	@Attribute
+	public String reason;
+
+	@Attribute
+	public String ind;
+
+	@Attribute(required = false)
+	public String inning;
+
+	@Attribute
+	public String inning_state;
 }
