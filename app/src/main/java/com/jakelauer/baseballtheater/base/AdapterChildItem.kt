@@ -2,7 +2,6 @@ package com.jakelauer.baseballtheater.base
 
 import android.support.annotation.LayoutRes
 import android.view.View
-import butterknife.ButterKnife
 
 /**
  * Created by Jake on 10/21/2017.
@@ -10,26 +9,20 @@ import butterknife.ButterKnife
 
 abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData)
 {
-    val m_data = data
-    var m_viewHolder: TViewHolder? = null
-        private set
+	val m_data = data
 
-    @LayoutRes
-    abstract fun getLayoutResId(): Int
+	@LayoutRes
+	abstract fun getLayoutResId(): Int
 
-    fun setViewHolder(view: View): TViewHolder
-    {
-        m_viewHolder = createViewHolder(view)
-        return m_viewHolder!!
-    }
+	abstract fun createViewHolder(view: View): TViewHolder
 
-    abstract fun createViewHolder(view: View): TViewHolder
+	fun bindView(viewHolder: TViewHolder)
+	{
+		viewHolder.let {
+			//ButterKnife.bind(it, it.itemView)
+			onBindView(it)
+		}
+	}
 
-    fun bindView(view: View)
-    {
-        ButterKnife.bind(m_viewHolder!!, view)
-        onBindView()
-    }
-
-    abstract fun onBindView()
+	abstract fun onBindView(viewHolder: TViewHolder)
 }

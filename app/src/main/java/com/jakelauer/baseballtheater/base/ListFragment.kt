@@ -2,37 +2,28 @@ package com.jakelauer.baseballtheater.base
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import butterknife.BindView
 import com.jakelauer.baseballtheater.R
+import libs.bindView
 
 /**
  * Created by Jake on 10/20/2017.
  */
 
-abstract class ListFragment<TData> : BaseFragment<TData>()
+abstract class ListFragment<TData : Any> : BaseFragment<TData>()
 {
-    @BindView(R.id.common_list)
-    @JvmField
-    var m_parentList: RecyclerView? = null
+	val m_parentList: RecyclerView by bindView(R.id.common_list)
 
-    var m_adapter: ComplexAdapter? = null
+	var m_adapter: ComplexAdapter? = null
 
-    protected fun createAdapter()
-    {
-        m_adapter = ComplexAdapter(context)
-    }
+	protected fun createAdapter()
+	{
+		m_adapter = ComplexAdapter(context)
+	}
 
-    override fun beforeBindView()
-    {
-        createAdapter()
-        if (m_parentList != null)
-        {
-            m_parentList?.adapter = m_adapter
-            m_parentList?.layoutManager = LinearLayoutManager(context)
-        }
-        else
-        {
-            throw Exception("You must include layout 'common_list' in your Fragment layout")
-        }
-    }
+	override fun beforeOnBindView()
+	{
+		createAdapter()
+		m_parentList.adapter = m_adapter
+		m_parentList.layoutManager = LinearLayoutManager(context)
+	}
 }

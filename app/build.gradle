@@ -29,7 +29,7 @@ dependencies {
     compile('org.simpleframework:simple-xml:2.7.1') {
         exclude module: 'stax-api'
     }
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -38,15 +38,13 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.github.frankiesardo:icepick:2.3.6'
-    compile 'com.jakewharton:butterknife:8.7.0'
-    kapt 'com.jakewharton:butterknife-compiler:8.7.0'
-    compile 'com.f2prateek.dart:dart:2.0.1'
+    compile 'com.f2prateek.dart:dart:2.0.2'
+    kapt 'com.f2prateek.dart:dart-processor:2.0.2'
     compile 'joda-time:joda-time:2.9.7'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
 }
-
 kapt {
     generateStubs = true
 }

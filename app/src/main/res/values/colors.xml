@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="app_background">#FFF</color>
     <color name="colorPrimary">#ce0f0f</color>
     <color name="colorPrimaryDark">#9b0a0b</color>
     <color name="colorAccent">#ce0f0f</color>
@@ -14,4 +15,37 @@
     <color name="featuredGame">#eceef9</color>
     <color name="featuredGameCorner">#ffc400</color>
     <color name="featuredTeam">#2979ff</color>
+
+    <color name="team_color_ana">#ce1141</color>
+    <color name="team_color_az">#a71930</color>
+    <color name="team_color_ari">#a71930</color>
+    <color name="team_color_atl">#01487e</color>
+    <color name="team_color_bal">#f4632a</color>
+    <color name="team_color_bos">#c60c30</color>
+    <color name="team_color_chc">#0e3386</color>
+    <color name="team_color_chw">#000</color>
+    <color name="team_color_cin">#c6011f</color>
+    <color name="team_color_cle">#002b5c</color>
+    <color name="team_color_col">#336</color>
+    <color name="team_color_det">#10293f</color>
+    <color name="team_color_mia">#000000</color>
+    <color name="team_color_hou">#072854</color>
+    <color name="team_color_kc">#15317e</color>
+    <color name="team_color_la">#005596</color>
+    <color name="team_color_mil">#012143</color>
+    <color name="team_color_min">#042462</color>
+    <color name="team_color_nym">#004685</color>
+    <color name="team_color_nyy">#1c2841</color>
+    <color name="team_color_oak">#00483a</color>
+    <color name="team_color_phi">#ca1f2c</color>
+    <color name="team_color_pit">#000000</color>
+    <color name="team_color_stl">#c41e3a</color>
+    <color name="team_color_sdp">#1c3465</color>
+    <color name="team_color_sf">#000000</color>
+    <color name="team_color_sea">#003166</color>
+    <color name="team_color_tb">#00285d</color>
+    <color name="team_color_tex">#003279</color>
+    <color name="team_color_tor">#003da5</color>
+    <color name="team_color_was">#ba122b</color>
+
 </resources>

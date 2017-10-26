@@ -1,11 +1,9 @@
 package com.jakelauer.baseballtheater.base
 
-import android.support.annotation.LayoutRes
-import butterknife.ButterKnife
-import icepick.Icepick
 import android.os.Bundle
+import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
-
+import icepick.Icepick
 
 
 /**
@@ -25,7 +23,7 @@ abstract class BaseActivity : AppCompatActivity()
 
         setContentView(layoutResId)
 
-        ButterKnife.bind(this)
+        //ButterKnife.bind(this)
 
         onBindView()
     }
