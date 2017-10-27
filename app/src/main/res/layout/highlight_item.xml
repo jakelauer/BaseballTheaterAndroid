@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/HIGHLIGHT_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_margin_small">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/default_padding">
+
+            <ImageView
+                android:id="@+id/HIGHLIGHT_thumbnail"
+                android:layout_width="120dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                tools:background="@drawable/ic_newspaper_black_48dp" />
+
+            <TextView
+                android:id="@+id/HIGHLIGHT_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/default_margin"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/HIGHLIGHT_thumbnail"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Kris Bryant hits 923 Hrs" />
+
+            <TextView
+                android:id="@+id/HIGHLIGHT_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/HIGHLIGHT_title"
+                app:layout_constraintStart_toStartOf="@id/HIGHLIGHT_title"
+                app:layout_constraintEnd_toEndOf="@id/HIGHLIGHT_title"
+                android:ellipsize="end"
+                android:layout_marginTop="@dimen/default_margin_small"
+                tools:text="Kris Bryant hits a lot of home runs as the crowd watches in complete awe"
+                />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/HIGHLIGHT_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorPlaceholder"
+            />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/HIGHLIGHT_separator">
+
+            <TextView
+                android:id="@+id/HIGHLIGHT_quality_low"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/default_padding_small"
+                android:text="@string/highlight_quality_low" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPlaceholder"/>
+
+            <TextView
+                android:id="@+id/HIGHLIGHT_quality_mid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/default_padding_small"
+                android:text="@string/highlight_quality_mid" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPlaceholder"/>
+
+            <TextView
+                android:id="@+id/HIGHLIGHT_quality_high"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/default_padding_small"
+                android:text="@string/highlight_quality_high" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

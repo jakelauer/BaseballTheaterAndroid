@@ -5,9 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummaryCollection
 import com.jakelauer.baseballtheater.MlbDataServer.GameSummaryCreator
 import com.jakelauer.baseballtheater.R
-import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.FlexibleListFragment
-import com.jakelauer.baseballtheater.base.ItemViewHolder
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
 import com.jakelauer.baseballtheater.utils.inject
 import libs.bindView
@@ -46,8 +44,6 @@ class GameListFragment : FlexibleListFragment<GameListFragment.Model>()
 
 	override fun onBindView()
 	{
-		m_refreshView.isRefreshing = true
-
 		m_refreshView.setOnRefreshListener {
 			loadData()
 		}
@@ -55,13 +51,15 @@ class GameListFragment : FlexibleListFragment<GameListFragment.Model>()
 
 	override fun loadData()
 	{
+		m_refreshView.isRefreshing = true
+
 		val gsCreator = GameSummaryCreator()
 		try
 		{
-			gsCreator.GetSummaryCollection(m_date, { data ->
-				getModel().updateGames(data)
+			gsCreator.GetSummaryCollection(m_date) {
+				getModel().updateGames(it)
 				onDataLoaded()
-			})
+			}
 		}
 		catch (e: ExecutionException)
 		{

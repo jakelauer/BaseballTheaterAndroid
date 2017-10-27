@@ -5,4 +5,11 @@
     <string name="title_notifications">Notifications</string>
 
     <string name="game_list_empty">There are no games on this day. Try another!</string>
+
+    <string name="highlight_quality_low">Low</string>
+    <string name="highlight_quality_mid">Mid</string>
+    <string name="highlight_quality_high">High</string>
+
+    <string name="highlight_recap">Recap</string>
+    <string name="highlight_list_title">Highlights</string>
 </resources>

@@ -36,7 +36,7 @@ public class GameDetailCreator
         this.gameSummaryXmlUrl = this.directoryUrl + "/linescore.xml";
     }
 
-    public void getHighlights(final ProgressListener progressListener)
+    public void getHighlights(final ProgressListener<HighlightsCollection> progressListener)
     {
         ProgressListener baseProgressListener = new ProgressListener()
         {
@@ -84,12 +84,12 @@ public class GameDetailCreator
         getDetailItem(this.highlightsXmlUrl, baseProgressListener, HighlightsCollection.class);
     }
 
-    public void getGameCenter(ProgressListener progressListener)
+    public void getGameCenter(ProgressListener<GameCenter> progressListener)
     {
         getDetailItem(this.gameCenterXmlUrl, progressListener, GameCenter.class);
     }
 
-    public void getGameSummary(ProgressListener progressListener)
+    public void getGameSummary(ProgressListener<GameSummary> progressListener)
     {
         getDetailItem(this.gameSummaryXmlUrl, progressListener, GameSummary.class);
     }

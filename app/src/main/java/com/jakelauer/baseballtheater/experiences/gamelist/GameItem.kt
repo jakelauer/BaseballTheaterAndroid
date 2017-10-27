@@ -1,5 +1,6 @@
 package com.jakelauer.baseballtheater.experiences.gamelist
 
+import android.content.Context
 import android.view.View
 import android.widget.TextView
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
@@ -26,15 +27,15 @@ class GameItem(model: GameItem.Model) : AdapterChildItem<GameItem.Model, GameIte
 		return ViewHolder(view)
 	}
 
-	override fun onBindView(viewHolder: GameItem.ViewHolder)
+	override fun onBindView(viewHolder: ViewHolder, context: Context)
 	{
-		viewHolder.m_awayTeamCity.setText(m_data.m_game.awayTeamCity)
-		viewHolder.m_awayTeamName.setText(m_data.m_game.awayTeamName)
-		viewHolder.m_awayTeamScore.setText(m_data.m_awayTeamScore)
-		viewHolder.m_homeTeamCity.setText(m_data.m_game.homeTeamCity)
-		viewHolder.m_homeTeamName.setText(m_data.m_game.homeTeamName)
-		viewHolder.m_homeTeamScore.setText(m_data.m_homeTeamScore)
-		viewHolder.m_gameStatus.setText(m_data.m_game.currentInning)
+		viewHolder.m_awayTeamCity.text = m_data.m_game.awayTeamCity
+		viewHolder.m_awayTeamName.text = m_data.m_game.awayTeamName
+		viewHolder.m_awayTeamScore.text = m_data.m_awayTeamScore
+		viewHolder.m_homeTeamCity.text = m_data.m_game.homeTeamCity
+		viewHolder.m_homeTeamName.text = m_data.m_game.homeTeamName
+		viewHolder.m_homeTeamScore.text = m_data.m_homeTeamScore
+		viewHolder.m_gameStatus.text = m_data.m_game.currentInning
 
 		viewHolder.m_awayTeamCity.setTextColor(TeamColors.getTeamColor(m_data.m_game.awayFileCode, viewHolder.itemView.context))
 		viewHolder.m_awayTeamName.setTextColor(TeamColors.getTeamColor(m_data.m_game.awayFileCode, viewHolder.itemView.context))
@@ -58,18 +59,12 @@ class GameItem(model: GameItem.Model) : AdapterChildItem<GameItem.Model, GameIte
 		val m_gameStatus: TextView by bindView(R.id.game_status)
 	}
 
-	class Model
+	class Model(game: GameSummary)
 	{
-		var m_game: GameSummary
+		var m_game: GameSummary = game
 
-		var m_awayTeamScore: String
-		var m_homeTeamScore: String
+		var m_awayTeamScore: String = game.linescore?.runs?.away ?: ""
+		var m_homeTeamScore: String = game.linescore?.runs?.home ?: ""
 
-		constructor(game: GameSummary)
-		{
-			m_game = game
-			m_awayTeamScore = game.linescore?.runs?.away ?: ""
-			m_homeTeamScore = game.linescore?.runs?.home ?: ""
-		}
 	}
 }

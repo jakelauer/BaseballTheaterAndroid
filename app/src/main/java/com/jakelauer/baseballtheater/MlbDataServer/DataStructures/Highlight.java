@@ -30,6 +30,9 @@ public class Highlight implements Serializable {
 	public String blurb;
 
 	@Element(required = false)
+	public String bigblurb;
+
+	@Element(required = false)
 	public String duration;
 
 	@ElementList(entry = "url", inline = true)
