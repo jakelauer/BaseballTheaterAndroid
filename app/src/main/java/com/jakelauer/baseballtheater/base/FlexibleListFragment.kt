@@ -9,7 +9,7 @@ import libs.bindView
  * Created by Jake on 10/20/2017.
  */
 
-abstract class ListFragment<TData : Any> : BaseFragment<TData>()
+abstract class FlexibleListFragment<TData : Any> : BaseFragment<TData>()
 {
 	val m_parentList: RecyclerView by bindView(R.id.common_list)
 

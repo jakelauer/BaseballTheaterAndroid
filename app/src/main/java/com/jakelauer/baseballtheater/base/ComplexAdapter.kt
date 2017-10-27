@@ -56,13 +56,15 @@ class ComplexAdapter : RecyclerView.Adapter<ItemViewHolder>
 		throw Exception("Error creating ViewHolder")
 	}
 
-	fun add(item: AdapterChildItem<*, ItemViewHolder>)
+	fun add(item: AdapterChildItem<*, *>)
 	{
 		m_classToViewtype.put(item.javaClass, m_currentViewType)
 		m_typeToLayout.put(m_currentViewType, item.getLayoutResId())
 		m_currentViewType++
 
-		m_items.add(item)
+		@Suppress("UNCHECKED_CAST")
+		m_items.add(item as AdapterChildItem<*, ItemViewHolder>)
+
 		notifyDataSetChanged()
 	}
 
