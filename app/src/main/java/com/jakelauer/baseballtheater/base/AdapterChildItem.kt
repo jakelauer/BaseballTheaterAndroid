@@ -1,7 +1,10 @@
 package com.jakelauer.baseballtheater.base
 
+import android.content.Context
 import android.support.annotation.LayoutRes
 import android.view.View
+import android.widget.ImageView
+import com.squareup.picasso.Picasso
 
 /**
  * Created by Jake on 10/21/2017.
@@ -21,7 +24,7 @@ abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData
 	{
 		viewHolder.let {
 			//ButterKnife.bind(it, it.itemView)
-			onBindView(it)
+			onBindView(it, it.itemView.context)
 		}
 	}
 
@@ -30,5 +33,10 @@ abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData
 		m_data = data
 	}
 
-	abstract fun onBindView(viewHolder: TViewHolder)
+	abstract fun onBindView(viewHolder: TViewHolder, context: Context)
+
+	fun ImageView.loadUrl(url: String)
+	{
+		Picasso.with(context).load(url).into(this)
+	}
 }

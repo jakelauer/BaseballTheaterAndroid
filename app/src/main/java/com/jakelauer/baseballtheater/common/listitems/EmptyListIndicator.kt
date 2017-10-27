@@ -28,7 +28,7 @@ class EmptyListIndicator : AdapterChildItem<String?, EmptyListIndicator.ViewHold
 
 	override fun createViewHolder(view: View): ViewHolder = ViewHolder(view)
 
-	override fun onBindView(viewHolder: ViewHolder)
+	override fun onBindView(viewHolder: ViewHolder, context: Context)
 	{
 		viewHolder.m_message.setText(m_data)
 	}
