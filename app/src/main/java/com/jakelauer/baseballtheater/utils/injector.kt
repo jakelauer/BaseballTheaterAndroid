@@ -1,5 +1,7 @@
 package com.jakelauer.baseballtheater.utils
 
+import android.app.Activity
+import android.content.Intent
 import android.support.v4.app.Fragment
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -11,18 +13,41 @@ import kotlin.reflect.KProperty
 fun <Prop : Any> Fragment.inject(arg: String)
 		: ReadWriteProperty<Fragment, Prop> = getArg(arg, this)
 
+fun <Prop : Any> Activity.inject(arg: String)
+		: ReadWriteProperty<Activity, Prop> = getArg(arg, this)
+
 
 @Suppress("UNCHECKED_CAST")
 private fun <T, Prop : Any> getArg(arg: String, frag: Fragment)
-		= Lazy { t: T, desc -> findArgument<Prop>(arg, frag) }
+		= Lazy { t: T, desc -> findArgumentInFragment<Prop>(arg, frag) }
 
 @Suppress("UNCHECKED_CAST")
-private fun <Prop : Any> findArgument(arg: String, frag: Fragment): Prop
+private fun <T, Prop : Any> getArg(arg: String, frag: Activity)
+		= Lazy { t: T, desc -> findArgumentInActivity<Prop>(arg, frag) }
+
+@Suppress("UNCHECKED_CAST")
+private fun <Prop : Any> findArgumentInFragment(arg: String, frag: Fragment): Prop
 {
 	val value: Prop
 	try
 	{
 		value = frag.arguments.get(arg) as Prop
+	}
+	catch (e: Throwable)
+	{
+		throw Exception("Injector: Cannot cast argument to type")
+	}
+
+	return value
+}
+
+@Suppress("UNCHECKED_CAST")
+private fun <Prop : Any> findArgumentInActivity(arg: String, act: Activity): Prop
+{
+	val value: Prop
+	try
+	{
+		value = act.intent.extras.get(arg) as Prop
 	}
 	catch (e: Throwable)
 	{

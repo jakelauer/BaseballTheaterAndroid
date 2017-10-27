@@ -14,7 +14,7 @@ public class GameStatus implements Serializable {
 	@Attribute
 	public String status;
 
-	@Attribute
+	@Attribute(required = false)
 	public String reason;
 
 	@Attribute

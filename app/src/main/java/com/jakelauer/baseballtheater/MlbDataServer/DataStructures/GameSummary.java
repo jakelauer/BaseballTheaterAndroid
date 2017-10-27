@@ -1,6 +1,6 @@
 package com.jakelauer.baseballtheater.MlbDataServer.DataStructures;
 
-import com.facebook.stetho.common.StringUtil;
+import android.text.TextUtils;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
@@ -137,7 +137,7 @@ public class GameSummary implements Serializable
 			return status.status;
 		}
 
-		if (!status.reason.isEmpty())
+		if (!TextUtils.isEmpty(status.reason))
 		{
 			return status.status + " (" + status.reason + ")";
 		}

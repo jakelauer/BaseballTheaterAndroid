@@ -1,4 +1,4 @@
-package com.jakelauer.baseballtheater.gamelist
+package com.jakelauer.baseballtheater.experiences.gamelist
 
 import android.view.View
 import android.widget.TextView
@@ -6,8 +6,10 @@ import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.ItemViewHolder
+import com.jakelauer.baseballtheater.experiences.gamedetail.GameDetailActivity
 import com.jakelauer.baseballtheater.utils.TeamColors
 import libs.bindView
+
 
 /**
  * Created by Jake on 10/22/2017.
@@ -38,6 +40,11 @@ class GameItem(model: GameItem.Model) : AdapterChildItem<GameItem.Model, GameIte
 		viewHolder.m_awayTeamName.setTextColor(TeamColors.getTeamColor(m_data.m_game.awayFileCode, viewHolder.itemView.context))
 		viewHolder.m_homeTeamCity.setTextColor(TeamColors.getTeamColor(m_data.m_game.homeFileCode, viewHolder.itemView.context))
 		viewHolder.m_homeTeamName.setTextColor(TeamColors.getTeamColor(m_data.m_game.homeFileCode, viewHolder.itemView.context))
+
+		viewHolder.itemView.setOnClickListener {
+			GameDetailActivity.startActivity(m_data.m_game, viewHolder.itemView.context)
+
+		}
 	}
 
 	class ViewHolder(view: View) : ItemViewHolder(view)

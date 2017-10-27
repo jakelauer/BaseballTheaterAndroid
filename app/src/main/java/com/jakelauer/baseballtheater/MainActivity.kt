@@ -3,7 +3,7 @@ package com.jakelauer.baseballtheater
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import com.jakelauer.baseballtheater.base.BaseActivity
-import com.jakelauer.baseballtheater.gamelist.GameListPagerFragment
+import com.jakelauer.baseballtheater.experiences.gamelist.GameListPagerFragment
 import kotlinx.android.synthetic.main.activity_base.*
 import org.joda.time.DateTime
 
@@ -36,13 +36,5 @@ class MainActivity : BaseActivity()
             }
         }
         false
-    }
-
-    private fun setMainFragment(fragment: Fragment)
-    {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager?.beginTransaction()
-        fragmentTransaction?.add(R.id.content_frame, fragment)
-        fragmentTransaction?.commit()
     }
 }

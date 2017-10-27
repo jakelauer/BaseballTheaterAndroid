@@ -1,18 +1,16 @@
-package com.jakelauer.baseballtheater.gamelist
+package com.jakelauer.baseballtheater.experiences.gamelist
 
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
+import android.widget.TextView
 import com.f2prateek.dart.InjectExtra
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseFragment
 import libs.bindView
 import org.joda.time.DateTime
-import java.util.*
-import org.joda.time.format.DateTimeFormat
 
 
 /**
@@ -37,16 +35,24 @@ class GameListPagerFragment : BaseFragment<Any>()
 	}
 
 	@InjectExtra(ARG_DATE)
-	lateinit var m_date: DateTime
+	lateinit var m_startingDate: DateTime
 
 	val m_gamePager: ViewPager by bindView(R.id.game_pager)
+	lateinit var m_gamePagerAdapter: GameListPagerAdapter
+
+	var m_toolbarDate: TextView by bindView(R.id.game_list_toolbar_date)
 
 	override fun getLayoutResourceId(): Int = R.layout.game_list_pager_fragment
 
 	override fun onBindView()
 	{
-		m_gamePager.adapter = GameListPagerAdapter(fragmentManager, context.applicationContext)
-		(m_gamePager.adapter as GameListPagerAdapter).setDate(getStartingDate())
+		m_gamePagerAdapter = GameListPagerAdapter(fragmentManager)
+		m_gamePager.adapter = m_gamePagerAdapter
+		m_gamePagerAdapter.setDate(m_startingDate)
+		m_gamePager.currentItem = m_gamePagerAdapter.count / 2
+		m_gamePager.addOnPageChangeListener(GameListPagerChangeListener())
+
+		setToolbarDate(m_startingDate)
 	}
 
 	override fun createModel(): Any
@@ -59,37 +65,14 @@ class GameListPagerFragment : BaseFragment<Any>()
 
 	}
 
-	fun getStartingDate(): DateTime
+	fun setToolbarDate(date: DateTime)
 	{
-		val today = DateTime()
-		val finalDay2017: DateTime
-		val openingDay2018: DateTime
-		val final2017String = "20171102"
-		val openingDay2018String = "20180303"
-
-		val fmt = DateTimeFormat.forPattern("yyyyMMdd")
-		finalDay2017 = DateTime.parse(final2017String, fmt)
-		openingDay2018 = DateTime.parse(openingDay2018String, fmt)
-
-		var returnTime = today
-		if (today.isBefore(finalDay2017))
-		{
-			returnTime = finalDay2017
-		}
-		else if (today.year > 2017)
-		{
-			returnTime = openingDay2018
-		}
-
-		return returnTime
+		val dateString = date.toString("MMM d, yyyy")
+		m_toolbarDate.setText(dateString)
 	}
 
-	class GameListPagerAdapter(fm: FragmentManager, context: Context) : FragmentStatePagerAdapter(fm)
+	inner class GameListPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm)
 	{
-		protected var m_context: Context = context
-		private var m_startingDate: DateTime = DateTime.now()
-		private val cal = Calendar.getInstance()
-
 		private val m_dayCount = 400
 		private val m_startingPosition = m_dayCount / 2
 		private var m_forceReplaceFlag: Boolean? = false
@@ -115,13 +98,52 @@ class GameListPagerFragment : BaseFragment<Any>()
 
 		fun setDate(date: DateTime)
 		{
-			m_startingDate = date
 			m_forceReplaceFlag = true
+			setToolbarDate(date)
 		}
 
 		override fun getCount(): Int
 		{
 			return m_dayCount
+		}
+	}
+
+	inner class GameListPagerChangeListener : ViewPager.OnPageChangeListener
+	{
+		var m_currentPage = 0;
+
+		override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int)
+		{
+			val newPosition: Int
+			if (position == m_currentPage)
+			{
+				newPosition = if (positionOffset > 0.5) position + 1 else position
+			}
+			else
+			{
+				newPosition = if (positionOffset < 0.5) position else position + 1
+			}
+
+			val diff = newPosition - m_currentPage
+
+			if (diff != 0)
+			{
+				val setToDate = m_gamePagerAdapter.getDateFromPosition(newPosition)
+				m_gamePagerAdapter.setDate(setToDate)
+			}
+
+			m_currentPage = newPosition
+		}
+
+		override fun onPageSelected(position: Int)
+		{
+			m_currentPage = position
+			val setToDate = m_gamePagerAdapter.getDateFromPosition(position)
+			m_gamePagerAdapter.setDate(setToDate)
+		}
+
+		override fun onPageScrollStateChanged(state: Int)
+		{
 		}
 	}
 }

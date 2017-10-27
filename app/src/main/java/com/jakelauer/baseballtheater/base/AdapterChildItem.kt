@@ -9,7 +9,8 @@ import android.view.View
 
 abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData)
 {
-	val m_data = data
+	var m_data = data
+		private set
 
 	@LayoutRes
 	abstract fun getLayoutResId(): Int
@@ -22,6 +23,11 @@ abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData
 			//ButterKnife.bind(it, it.itemView)
 			onBindView(it)
 		}
+	}
+
+	protected fun setData(data: TData)
+	{
+		m_data = data
 	}
 
 	abstract fun onBindView(viewHolder: TViewHolder)
