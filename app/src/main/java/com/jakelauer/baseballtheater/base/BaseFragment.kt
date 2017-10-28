@@ -35,32 +35,37 @@ abstract class BaseFragment<TData : Any> : Fragment
 	{
 		val args = Bundle()
 
-		val types = argList.map { arg ->
+		val argumentTypes = argList.map { arg ->
 			arg.javaClass.kotlin.starProjectedType
 		}
 
+		// Loop through all the constructors for this class
 		for (constructor in javaClass.kotlin.constructors)
 		{
-			if (constructor.parameters.size > 0)
+			// Ignore constructors with no parameters
+			if (constructor.parameters.isNotEmpty())
 			{
-				val paramTypes = constructor.parameters.map { param -> param.type }
+				val constructorParamTypes = constructor.parameters.map { param -> param.type }
 
-				if (paramTypes.size == types.size)
+				// If this constructor has the same number of params as the argument list...
+				if (constructorParamTypes.size == argumentTypes.size)
 				{
+					// Check to make sure they are all the same types as each other
 					var allEqual = true
-					for (i in 0 until types.size)
+					for (i in 0 until argumentTypes.size)
 					{
-						val paramType = paramTypes[i]
-						if (!types.contains(paramType))
+						val paramType = constructorParamTypes[i]
+						if (!argumentTypes.contains(paramType))
 						{
 							allEqual = false
 							break
 						}
 					}
 
+					// If they are, add them to the bundle as "m_" + parameterName
 					if (allEqual)
 					{
-						for (i in 0 until types.size)
+						for (i in 0 until argumentTypes.size)
 						{
 							val parameter = constructor.parameters[i]
 							val name = parameter.name
