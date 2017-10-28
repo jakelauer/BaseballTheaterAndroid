@@ -1,5 +1,6 @@
 package com.jakelauer.baseballtheater.base
 
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v4.app.Fragment
@@ -14,27 +15,48 @@ import icepick.Icepick
 
 abstract class BaseActivity : AppCompatActivity()
 {
-    @get:LayoutRes
-    protected abstract val layoutResId: Int
+	@get:LayoutRes
+	protected abstract val layoutResId: Int
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
+	override fun onCreate(savedInstanceState: Bundle?)
+	{
+		super.onCreate(savedInstanceState)
 
-        Icepick.restoreInstanceState(this, savedInstanceState)
+		Icepick.restoreInstanceState(this, savedInstanceState)
 
-        setContentView(layoutResId)
+		setContentView(layoutResId)
 
-        onBindView()
-    }
+		onBindView()
+	}
 
-    protected abstract fun onBindView()
+	protected abstract fun onBindView()
 
-    protected fun setMainFragment(fragment: Fragment)
-    {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager?.beginTransaction()
-        fragmentTransaction?.add(R.id.content_frame, fragment)
-        fragmentTransaction?.commit()
-    }
+	protected fun setMainFragment(fragment: Fragment)
+	{
+		val fragmentManager = supportFragmentManager
+		val fragmentTransaction = fragmentManager?.beginTransaction()
+		fragmentTransaction?.replace(R.id.content_frame, fragment)
+		fragmentTransaction?.commit()
+	}
+
+	fun setPref(key: String, value: String)
+	{
+		val sharedPref = getPreferences(Context.MODE_PRIVATE)
+		val editor = sharedPref.edit()
+		editor.putString(key, value)
+		editor.commit()
+	}
+
+	fun getPref(key: String): String
+	{
+		val sharedPref = getPreferences(Context.MODE_PRIVATE)
+		return sharedPref.getString(key, "")
+	}
+
+	fun clearPref(key: String)
+	{
+		val sharedPref = getPreferences(Context.MODE_PRIVATE)
+		val editor = sharedPref.edit()
+		editor.remove(key)
+	}
 }

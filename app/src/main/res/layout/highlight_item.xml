@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/default_margin"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/textDefault"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/HIGHLIGHT_thumbnail"
                 app:layout_constraintTop_toTopOf="parent"
@@ -69,7 +70,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:background="?attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
                 android:padding="@dimen/default_padding_small"
                 android:text="@string/highlight_quality_low" />
 
@@ -84,7 +86,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:background="?attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="@dimen/default_padding_small"
                 android:text="@string/highlight_quality_mid" />
 
@@ -99,7 +103,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textAlignment="center"
-                android:background="?attr/selectableItemBackground"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="@dimen/default_padding_small"
                 android:text="@string/highlight_quality_high" />
 

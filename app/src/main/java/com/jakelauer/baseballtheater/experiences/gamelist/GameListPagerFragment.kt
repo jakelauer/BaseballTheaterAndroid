@@ -6,8 +6,13 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
+import android.support.v7.app.MediaRouteButton
+import android.util.Log
 import android.widget.TextView
+import com.google.android.gms.cast.framework.CastButtonFactory
+import com.google.android.gms.cast.framework.CastContext
 import com.jakelauer.baseballtheater.R
+import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.BaseFragment
 import com.jakelauer.baseballtheater.utils.Inject
 import libs.bindView
@@ -28,11 +33,18 @@ class GameListPagerFragment : BaseFragment<Any>
 	var m_startingDate: DateTime by Inject<DateTime>()
 
 	val m_gamePager: ViewPager by bindView(R.id.game_pager)
-	lateinit var m_gamePagerAdapter: GameListPagerAdapter
-
+	val m_castButton: MediaRouteButton by bindView(R.id.media_route_button)
 	var m_toolbarDate: TextView by bindView(R.id.game_list_toolbar_date)
 
+	lateinit var m_gamePagerAdapter: GameListPagerAdapter
+	lateinit var m_castContext: CastContext
+
 	override fun getLayoutResourceId(): Int = R.layout.game_list_pager_fragment
+
+	override fun onCreate(savedInstanceState: Bundle?)
+	{
+		super.onCreate(savedInstanceState)
+	}
 
 	override fun onBindView()
 	{
@@ -43,6 +55,9 @@ class GameListPagerFragment : BaseFragment<Any>
 		m_gamePager.addOnPageChangeListener(GameListPagerChangeListener())
 
 		setToolbarDate(m_startingDate)
+
+		CastButtonFactory.setUpMediaRouteButton(context, m_castButton)
+		m_castContext = CastContext.getSharedInstance(context);
 	}
 
 	override fun createModel(): Any
@@ -58,7 +73,7 @@ class GameListPagerFragment : BaseFragment<Any>
 	fun setToolbarDate(date: DateTime)
 	{
 		val dateString = date.toString("MMM d, yyyy")
-		m_toolbarDate.setText(dateString)
+		m_toolbarDate.text = dateString
 	}
 
 	inner class GameListPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm)
@@ -71,9 +86,7 @@ class GameListPagerFragment : BaseFragment<Any>
 		{
 			val newDate = getDateFromPosition(position)
 
-			val newFragment = GameListFragment(newDate)
-
-			return newFragment
+			return GameListFragment(newDate)
 		}
 
 		fun getDateFromPosition(position: Int): DateTime
@@ -90,6 +103,7 @@ class GameListPagerFragment : BaseFragment<Any>
 		{
 			m_forceReplaceFlag = true
 			setToolbarDate(date)
+			(activity as BaseActivity).setPref("date", date.toString())
 		}
 
 		override fun getCount(): Int
@@ -100,29 +114,34 @@ class GameListPagerFragment : BaseFragment<Any>
 
 	inner class GameListPagerChangeListener : ViewPager.OnPageChangeListener
 	{
-		var m_currentPage = 0;
+		var m_currentPage = 0
+		var m_state = 0
 
 		override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int)
 		{
-			val newPosition: Int
-			if (position == m_currentPage)
+			if (m_state != ViewPager.SCROLL_STATE_SETTLING)
 			{
-				newPosition = if (positionOffset > 0.5) position + 1 else position
-			}
-			else
-			{
-				newPosition = if (positionOffset < 0.5) position else position + 1
-			}
+				val newPosition: Int
+				if (position == m_currentPage)
+				{
+					newPosition = if (positionOffset > 0.5) position + 1 else position
+				}
+				else
+				{
+					newPosition = if (positionOffset < 0.5) position else position + 1
+				}
 
-			val diff = newPosition - m_currentPage
+				val diff = newPosition - m_currentPage
 
-			if (diff != 0)
-			{
-				val setToDate = m_gamePagerAdapter.getDateFromPosition(newPosition)
-				m_gamePagerAdapter.setDate(setToDate)
+				if (diff != 0)
+				{
+					val setToDate = m_gamePagerAdapter.getDateFromPosition(newPosition)
+					m_gamePagerAdapter.setDate(setToDate)
+					Log.d("setPageScrolled", "1")
+				}
+
+				m_currentPage = newPosition
 			}
-
-			m_currentPage = newPosition
 		}
 
 		override fun onPageSelected(position: Int)
@@ -130,10 +149,12 @@ class GameListPagerFragment : BaseFragment<Any>
 			m_currentPage = position
 			val setToDate = m_gamePagerAdapter.getDateFromPosition(position)
 			m_gamePagerAdapter.setDate(setToDate)
+			Log.d("setPageSelected", "1")
 		}
 
 		override fun onPageScrollStateChanged(state: Int)
 		{
+			m_state = state
 		}
 	}
 }
