@@ -7,7 +7,7 @@ import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.ItemViewHolder
-import com.jakelauer.baseballtheater.experiences.gamedetail.GameDetailActivity
+import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.GameDetailActivity
 import com.jakelauer.baseballtheater.utils.TeamColors
 import libs.bindView
 

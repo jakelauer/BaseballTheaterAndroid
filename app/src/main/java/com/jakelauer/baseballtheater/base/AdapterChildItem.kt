@@ -37,6 +37,10 @@ abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData
 
 	fun ImageView.loadUrl(url: String)
 	{
-		Picasso.with(context).load(url).into(this)
+		Picasso.with(context)
+				.load(url)
+				.resize(200, 200)
+				.centerCrop()
+				.into(this)
 	}
 }

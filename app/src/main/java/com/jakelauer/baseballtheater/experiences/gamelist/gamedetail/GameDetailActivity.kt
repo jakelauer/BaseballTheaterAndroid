@@ -1,4 +1,4 @@
-package com.jakelauer.baseballtheater.experiences.gamedetail
+package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail
 
 import android.content.Context
 import android.content.Intent
@@ -28,7 +28,7 @@ class GameDetailActivity : BaseActivity()
 		fun startIntent(game: GameSummary, context: Context): Intent
 		{
 			val intent = Intent(context, GameDetailActivity::class.java)
-			intent.putExtra("game", game)
+			intent.putExtra("m_game", game)
 			return intent
 		}
 

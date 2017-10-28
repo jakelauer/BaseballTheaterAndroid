@@ -1,4 +1,4 @@
-package com.jakelauer.baseballtheater.experiences.gamedetail
+package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail
 
 import android.annotation.SuppressLint
 import android.support.v4.widget.SwipeRefreshLayout

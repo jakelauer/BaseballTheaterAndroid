@@ -1,4 +1,4 @@
-package com.jakelauer.baseballtheater.experiences.gamedetail
+package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail
 
 import android.content.Context
 import android.os.Build

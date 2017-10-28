@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.jakelauer.baseballtheater.experiences.gamedetail.GameDetailActivity">
+    tools:context=".experiences.gamelist.gamedetail.GameDetailActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refreshableGameList"
