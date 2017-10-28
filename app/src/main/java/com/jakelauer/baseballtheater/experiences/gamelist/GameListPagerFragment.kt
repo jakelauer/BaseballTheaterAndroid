@@ -1,14 +1,15 @@
 package com.jakelauer.baseballtheater.experiences.gamelist
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
 import android.widget.TextView
-import com.f2prateek.dart.InjectExtra
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseFragment
+import com.jakelauer.baseballtheater.utils.Inject
 import libs.bindView
 import org.joda.time.DateTime
 
@@ -17,25 +18,14 @@ import org.joda.time.DateTime
  * Created by Jake on 10/20/2017.
  */
 
-class GameListPagerFragment : BaseFragment<Any>()
+class GameListPagerFragment : BaseFragment<Any>
 {
-	companion object
-	{
-		const val ARG_DATE = "ARG_DATE"
+	constructor() : super()
 
-		@JvmStatic
-		fun newInstance(date: DateTime): GameListPagerFragment
-		{
-			val args = Bundle()
-			args.putSerializable(ARG_DATE, date)
-			val fragment = GameListPagerFragment()
-			fragment.arguments = args
-			return fragment
-		}
-	}
+	@SuppressLint("ValidFragment")
+	constructor(startingDate: DateTime) : super(startingDate)
 
-	@InjectExtra(ARG_DATE)
-	lateinit var m_startingDate: DateTime
+	var m_startingDate: DateTime by Inject<DateTime>()
 
 	val m_gamePager: ViewPager by bindView(R.id.game_pager)
 	lateinit var m_gamePagerAdapter: GameListPagerAdapter
@@ -81,7 +71,7 @@ class GameListPagerFragment : BaseFragment<Any>()
 		{
 			val newDate = getDateFromPosition(position)
 
-			val newFragment = GameListFragment.newInstance(newDate)
+			val newFragment = GameListFragment(newDate)
 
 			return newFragment
 		}

@@ -1,5 +1,6 @@
 package com.jakelauer.baseballtheater.experiences.gamelist
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummaryCollection
@@ -7,7 +8,7 @@ import com.jakelauer.baseballtheater.MlbDataServer.GameSummaryCreator
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.FlexibleListFragment
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
-import com.jakelauer.baseballtheater.utils.inject
+import com.jakelauer.baseballtheater.utils.Inject
 import libs.bindView
 import org.joda.time.DateTime
 import java.util.concurrent.ExecutionException
@@ -16,22 +17,14 @@ import java.util.concurrent.ExecutionException
 /**s
  * Created by Jake on 10/20/2017.
  */
-class GameListFragment : FlexibleListFragment<GameListFragment.Model>()
+class GameListFragment : FlexibleListFragment<GameListFragment.Model>
 {
-	var m_date: DateTime by inject(ARG_DATE)
+	var m_date: DateTime by Inject<DateTime>()
 
-	companion object
-	{
-		const val ARG_DATE = "ARG_DATE"
-		fun newInstance(date: DateTime): GameListFragment
-		{
-			val args = Bundle()
-			args.putSerializable(ARG_DATE, date)
-			val fragment = GameListFragment()
-			fragment.arguments = args
-			return fragment
-		}
-	}
+	constructor() : super()
+
+	@SuppressLint("ValidFragment")
+	constructor(date: DateTime) : super(date)
 
 	var m_refreshView: SwipeRefreshLayout by bindView(R.id.game_list_refresh)
 

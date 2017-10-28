@@ -39,12 +39,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.github.frankiesardo:icepick:2.3.6'
-    compile 'com.f2prateek.dart:dart:2.0.2'
-    kapt 'com.f2prateek.dart:dart-processor:2.0.2'
     compile 'joda-time:joda-time:2.9.7'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
 kapt {
     generateStubs = true

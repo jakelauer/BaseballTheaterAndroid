@@ -9,11 +9,15 @@ import libs.bindView
  * Created by Jake on 10/20/2017.
  */
 
-abstract class FlexibleListFragment<TData : Any> : BaseFragment<TData>()
+abstract class FlexibleListFragment<TData : Any> : BaseFragment<TData>
 {
 	val m_parentList: RecyclerView by bindView(R.id.common_list)
 
 	var m_adapter: ComplexAdapter? = null
+
+	constructor() : super()
+
+	constructor(vararg args : Any) : super(*args)
 
 	protected fun createAdapter()
 	{

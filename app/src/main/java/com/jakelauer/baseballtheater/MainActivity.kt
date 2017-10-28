@@ -15,7 +15,7 @@ class MainActivity : BaseActivity()
     override fun onBindView()
     {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        val fragment = GameListPagerFragment.newInstance(DateTime.now())
+        val fragment = GameListPagerFragment(DateTime.now())
         setMainFragment(fragment)
     }
 
@@ -24,13 +24,13 @@ class MainActivity : BaseActivity()
         {
             R.id.navigation_games ->
             {
-                val fragment = GameListPagerFragment.newInstance(DateTime.now())
+                val fragment = GameListPagerFragment(DateTime.now())
                 setMainFragment(fragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_articles ->
             {
-                val fragment = GameListPagerFragment.newInstance(DateTime.now())
+                val fragment = GameListPagerFragment(DateTime.now())
                 setMainFragment(fragment)
                 return@OnNavigationItemSelectedListener true
             }

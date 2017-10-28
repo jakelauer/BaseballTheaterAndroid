@@ -1,6 +1,6 @@
 package com.jakelauer.baseballtheater.experiences.gamedetail
 
-import android.os.Bundle
+import android.annotation.SuppressLint
 import android.support.v4.widget.SwipeRefreshLayout
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight
@@ -9,7 +9,7 @@ import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.FlexibleListFragment
 import com.jakelauer.baseballtheater.common.listitems.HeaderItem
-import com.jakelauer.baseballtheater.utils.inject
+import com.jakelauer.baseballtheater.utils.Inject
 import libs.bindView
 import java.util.*
 import java.util.concurrent.ExecutionException
@@ -17,27 +17,16 @@ import java.util.concurrent.ExecutionException
 /**
  * Created by Jake on 10/25/2017.
  */
-class GameDetailFragment : FlexibleListFragment<GameDetailFragment.Model>()
+class GameDetailFragment : FlexibleListFragment<GameDetailFragment.Model>
 {
-	var m_game: GameSummary by inject(ARG_GAME_SUMMARY)
+	var m_game: GameSummary by Inject<GameSummary>()
 
 	var m_refreshView: SwipeRefreshLayout by bindView(R.id.GAME_DETAIL_refresh)
 
-	companion object
-	{
-		const val ARG_ITEM_ID = "gamePk"
-		const val ARG_GAME_SUMMARY = "gameSummary"
+	constructor() : super()
 
-		fun newInstance(game: GameSummary): GameDetailFragment
-		{
-			val args = Bundle()
-			args.putInt(ARG_ITEM_ID, game.gamePk)
-			args.putSerializable(ARG_GAME_SUMMARY, game)
-			val fragment = GameDetailFragment()
-			fragment.arguments = args
-			return fragment
-		}
-	}
+	@SuppressLint("ValidFragment")
+	constructor(game: GameSummary) : super(game)
 
 	override fun getLayoutResourceId() = R.layout.game_detail_fragment
 

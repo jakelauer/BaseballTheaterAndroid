@@ -25,8 +25,6 @@ abstract class BaseActivity : AppCompatActivity()
 
         setContentView(layoutResId)
 
-        //ButterKnife.bind(this)
-
         onBindView()
     }
 
