@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/game_list_date_picker"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_today_white_24px"
+        android:title="@string/game_list_menu_calendar"/>
+
+    <item
+        android:id="@+id/game_list_settings"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_settings_white_24px"
+        android:title="@string/game_list_menu_settings"/>
+
+</menu>

@@ -1,7 +1,9 @@
 package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
+import android.preference.PreferenceManager
 import android.support.annotation.RequiresApi
 import android.support.v7.widget.CardView
 import android.view.View
@@ -17,8 +19,10 @@ import libs.bindView
  * Created by Jake on 10/26/2017.
  */
 
-class HighlightItem(highlight: Highlight) : AdapterChildItem<Highlight, HighlightItem.ViewHolder>(highlight)
+class HighlightItem(highlight: Highlight, context: Context) : AdapterChildItem<Highlight, HighlightItem.ViewHolder>(highlight)
 {
+	var m_prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+
 	override fun getLayoutResId() = R.layout.highlight_item
 
 	override fun createViewHolder(view: View) = ViewHolder(view)
@@ -42,6 +46,14 @@ class HighlightItem(highlight: Highlight) : AdapterChildItem<Highlight, Highligh
 		{
 			viewHolder.m_subtitle.text = m_data.bigblurb
 		}
+
+		val hideQualities = !m_prefs.getBoolean("behavior_show_video_quality_options", true)
+		if (hideQualities)
+		{
+			viewHolder.m_qualityHigh.visibility = View.GONE
+			viewHolder.m_qualityMid.visibility = View.GONE
+			viewHolder.m_qualityLow.visibility = View.GONE
+		}
 	}
 
 	@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -60,5 +72,8 @@ class HighlightItem(highlight: Highlight) : AdapterChildItem<Highlight, Highligh
 		var m_thumbnail: ImageView by bindView(R.id.HIGHLIGHT_thumbnail)
 		var m_title: TextView by bindView(R.id.HIGHLIGHT_title)
 		var m_subtitle: TextView by bindView(R.id.HIGHLIGHT_subtitle)
+		var m_qualityLow: TextView by bindView(R.id.HIGHLIGHT_quality_low)
+		var m_qualityMid: TextView by bindView(R.id.HIGHLIGHT_quality_mid)
+		var m_qualityHigh: TextView by bindView(R.id.HIGHLIGHT_quality_high)
 	}
 }

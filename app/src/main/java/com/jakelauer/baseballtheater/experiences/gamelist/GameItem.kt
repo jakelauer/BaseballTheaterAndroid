@@ -1,6 +1,8 @@
 package com.jakelauer.baseballtheater.experiences.gamelist
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import android.view.View
 import android.widget.TextView
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
@@ -44,7 +46,6 @@ class GameItem(model: GameItem.Model) : AdapterChildItem<GameItem.Model, GameIte
 
 		viewHolder.itemView.setOnClickListener {
 			GameDetailActivity.startActivity(m_data.m_game, viewHolder.itemView.context)
-
 		}
 	}
 

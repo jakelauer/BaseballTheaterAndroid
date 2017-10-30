@@ -2,80 +2,14 @@
 
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/game_list_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:contentInsetStart="@dimen/default_padding"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:elevation="4dp"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        tools:background="@color/primary">
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingEnd="@dimen/default_padding">
-
-            <TextView
-                android:id="@+id/game_list_toolbar_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/menuButton"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Oct 5, 2017" />
-
-            <android.support.v7.app.MediaRouteButton
-                android:id="@+id/media_route_button"
-                android:layout_width="@dimen/default_toolbar_icon_size"
-                android:layout_height="@dimen/default_toolbar_icon_size"
-                android:mediaRouteTypes="user"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/main_calendar_trigger"
-                android:layout_width="@dimen/default_toolbar_icon_size"
-                android:layout_height="@dimen/default_toolbar_icon_size"
-                android:layout_gravity="center|end"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/main_settings_trigger"
-                app:layout_constraintTop_toTopOf="parent"
-                android:padding="@dimen/default_padding_small"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                app:srcCompat="@drawable/ic_today_white_24px" />
-
-            <ImageView
-                android:id="@+id/main_settings_trigger"
-                android:layout_width="@dimen/default_toolbar_icon_size"
-                android:layout_height="@dimen/default_toolbar_icon_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:padding="@dimen/default_padding_small"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                app:srcCompat="@drawable/ic_settings_white_24px" />
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.v7.widget.Toolbar>
-
     <android.support.v4.view.ViewPager
         android:id="@+id/game_pager"
-        app:layout_constraintTop_toBottomOf="@id/game_list_toolbar"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="0dp" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

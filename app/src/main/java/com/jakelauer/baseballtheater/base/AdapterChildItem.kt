@@ -1,6 +1,8 @@
 package com.jakelauer.baseballtheater.base
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import android.support.annotation.LayoutRes
 import android.view.View
 import android.widget.ImageView

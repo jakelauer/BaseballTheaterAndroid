@@ -1,6 +1,7 @@
 package com.jakelauer.baseballtheater.common.listitems
 
 import android.content.Context
+import android.support.annotation.StringRes
 import android.view.View
 import android.widget.TextView
 import com.jakelauer.baseballtheater.R
@@ -14,9 +15,9 @@ import libs.bindView
 
 class EmptyListIndicator : AdapterChildItem<String?, EmptyListIndicator.ViewHolder>
 {
-	constructor(context: Context) : super(null)
+	constructor(context: Context, @StringRes message: Int = R.string.game_list_empty) : super(null)
 	{
-		setData(context.getString(R.string.game_list_empty))
+		setData(context.getString(message))
 	}
 
 	constructor(message: String) : super(message)

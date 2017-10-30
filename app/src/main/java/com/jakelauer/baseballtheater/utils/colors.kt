@@ -33,6 +33,7 @@ class TeamColors
 				"bos" -> color = R.color.team_color_bos
 				"chc" -> color = R.color.team_color_chc
 				"chw" -> color = R.color.team_color_chw
+				"cws" -> color = R.color.team_color_chw
 				"cin" -> color = R.color.team_color_cin
 				"cle" -> color = R.color.team_color_cle
 				"col" -> color = R.color.team_color_col
