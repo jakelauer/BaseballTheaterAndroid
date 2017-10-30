@@ -5,7 +5,7 @@ import android.content.Intent
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseActivity
-import com.jakelauer.baseballtheater.utils.Inject
+import com.jakelauer.baseballtheater.base.syringe.syringe
 
 /**
  * Created by Jake on 10/25/2017.
@@ -15,7 +15,7 @@ class GameDetailActivity : BaseActivity()
 	override val layoutResId: Int
 		get() = R.layout.game_detail_activity
 
-	val m_game: GameSummary by Inject<GameSummary>()
+	val m_game: GameSummary by syringe<GameSummary>()
 
 	override fun onBindView()
 	{

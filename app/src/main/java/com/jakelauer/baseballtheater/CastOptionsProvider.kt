@@ -11,7 +11,7 @@ import com.google.android.gms.cast.framework.OptionsProvider
  * Created by Jake on 10/27/2017.
  */
 
-internal class CastOptionsProvider : OptionsProvider
+class CastOptionsProvider : OptionsProvider
 {
 	override fun getCastOptions(context: Context): CastOptions
 	{

@@ -1,20 +1,21 @@
 package com.jakelauer.baseballtheater.experiences.gamelist
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.app.MediaRouteButton
 import android.util.Log
-import android.widget.TextView
-import com.google.android.gms.cast.framework.CastButtonFactory
-import com.google.android.gms.cast.framework.CastContext
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.BaseFragment
-import com.jakelauer.baseballtheater.utils.Inject
+import com.jakelauer.baseballtheater.base.syringe.syringe
+import com.jakelauer.baseballtheater.experiences.settings.SettingsActivity
 import libs.bindView
 import org.joda.time.DateTime
 
@@ -28,36 +29,57 @@ class GameListPagerFragment : BaseFragment<Any>
 	constructor() : super()
 
 	@SuppressLint("ValidFragment")
-	constructor(startingDate: DateTime) : super(startingDate)
+	constructor(initialFragmentDate: DateTime) : super(initialFragmentDate)
 
-	var m_startingDate: DateTime by Inject<DateTime>()
+	var m_initialFragmentDate: DateTime by syringe<DateTime>()
+	var m_startingDate = m_initialFragmentDate
+	var m_currentDate = m_startingDate
 
 	val m_gamePager: ViewPager by bindView(R.id.game_pager)
-	val m_castButton: MediaRouteButton by bindView(R.id.media_route_button)
-	var m_toolbarDate: TextView by bindView(R.id.game_list_toolbar_date)
 
 	lateinit var m_gamePagerAdapter: GameListPagerAdapter
-	lateinit var m_castContext: CastContext
 
 	override fun getLayoutResourceId(): Int = R.layout.game_list_pager_fragment
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
+
+		setHasOptionsMenu(true)
+	}
+
+	override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater)
+	{
+		menuInflater.inflate(R.menu.game_list_options, menu)
+		super.onCreateOptionsMenu(menu, menuInflater)
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean
+	{
+		var handled = super.onOptionsItemSelected(item)
+
+		when (item?.itemId)
+		{
+			R.id.game_list_settings ->
+			{
+				val intent = Intent(context, SettingsActivity::class.java)
+				context.startActivity(intent)
+				handled = true
+			}
+			R.id.game_list_date_picker ->
+			{
+				val newFragment = DatePickerFragment()
+				newFragment.show(childFragmentManager, "datePicker")
+			}
+		}
+		return handled
 	}
 
 	override fun onBindView()
 	{
 		m_gamePagerAdapter = GameListPagerAdapter(fragmentManager)
-		m_gamePager.adapter = m_gamePagerAdapter
-		m_gamePagerAdapter.setDate(m_startingDate)
-		m_gamePager.currentItem = m_gamePagerAdapter.count / 2
-		m_gamePager.addOnPageChangeListener(GameListPagerChangeListener())
 
-		setToolbarDate(m_startingDate)
-
-		CastButtonFactory.setUpMediaRouteButton(context, m_castButton)
-		m_castContext = CastContext.getSharedInstance(context);
+		refreshAdapter()
 	}
 
 	override fun createModel(): Any
@@ -73,14 +95,42 @@ class GameListPagerFragment : BaseFragment<Any>
 	fun setToolbarDate(date: DateTime)
 	{
 		val dateString = date.toString("MMM d, yyyy")
-		m_toolbarDate.text = dateString
+		activity.title = dateString
+	}
+
+	fun refreshWithDate(date: DateTime)
+	{
+
+		m_startingDate = date
+		refreshAdapter()
+	}
+
+	fun refreshAdapter()
+	{
+		m_gamePager.adapter = null
+		m_gamePager.adapter = m_gamePagerAdapter
+		m_gamePager.currentItem = m_gamePagerAdapter.count / 2
+		m_gamePager.addOnPageChangeListener(GameListPagerChangeListener())
+
+		setDate(m_startingDate)
+	}
+
+	fun setDate(date: DateTime)
+	{
+		setToolbarDate(date)
+		m_currentDate = date
+		(activity as BaseActivity).setPref("date", date.toString())
+	}
+
+	fun getCurrentDate(): DateTime
+	{
+		return m_currentDate
 	}
 
 	inner class GameListPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm)
 	{
 		private val m_dayCount = 400
 		private val m_startingPosition = m_dayCount / 2
-		private var m_forceReplaceFlag: Boolean? = false
 
 		override fun getItem(position: Int): Fragment
 		{
@@ -97,13 +147,6 @@ class GameListPagerFragment : BaseFragment<Any>
 			newDate = newDate.plusDays(diff)
 
 			return newDate
-		}
-
-		fun setDate(date: DateTime)
-		{
-			m_forceReplaceFlag = true
-			setToolbarDate(date)
-			(activity as BaseActivity).setPref("date", date.toString())
 		}
 
 		override fun getCount(): Int
@@ -136,7 +179,7 @@ class GameListPagerFragment : BaseFragment<Any>
 				if (diff != 0)
 				{
 					val setToDate = m_gamePagerAdapter.getDateFromPosition(newPosition)
-					m_gamePagerAdapter.setDate(setToDate)
+					setDate(setToDate)
 					Log.d("setPageScrolled", "1")
 				}
 
@@ -148,7 +191,7 @@ class GameListPagerFragment : BaseFragment<Any>
 		{
 			m_currentPage = position
 			val setToDate = m_gamePagerAdapter.getDateFromPosition(position)
-			m_gamePagerAdapter.setDate(setToDate)
+			setDate(setToDate)
 			Log.d("setPageSelected", "1")
 		}
 

@@ -37,7 +37,8 @@ public class GameSummary implements Serializable
 	public LocalDateTime localDateObj()
 	{
 		DateTimeFormatter f = DateTimeFormat.forPattern("yyyy/MM/dd h:m Z");
-		return f.parseDateTime(date + " -0400").toLocalDateTime();
+		LocalDateTime local = f.parseDateTime(date + " -0400").toLocalDateTime();
+		return local;
 	}
 
 	@Attribute(name = "game_type")
@@ -149,7 +150,6 @@ public class GameSummary implements Serializable
 
 	private String getStatusTime()
 	{
-		DateTimeFormatter f = DateTimeFormat.forPattern("h:m Z");
-		return f.print(localDateObj());
+		return localDateObj().toString("HH:mm a");
 	}
 }

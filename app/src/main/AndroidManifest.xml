@@ -8,6 +8,7 @@
     <application
         android:name=".BaseballTheater"
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -37,8 +38,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.GameDetailActivity"
+        <activity android:name=".experiences.gamelist.gamedetail.GameDetailActivity"
             android:label="Game Detail">
+        </activity>
+        <activity
+            android:name=".experiences.settings.SettingsActivity"
+            android:label="Settings">
         </activity>
     </application>
 
