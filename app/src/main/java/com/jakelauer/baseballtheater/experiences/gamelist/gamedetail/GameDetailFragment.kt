@@ -8,6 +8,7 @@ import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection
 import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator
 import com.jakelauer.baseballtheater.R
+import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.FlexibleListFragment
 import com.jakelauer.baseballtheater.common.listitems.HeaderItem
 import com.jakelauer.baseballtheater.base.syringe.syringe
@@ -105,7 +106,7 @@ class GameDetailFragment : FlexibleListFragment<GameDetailFragment.Model>
 					m_adapter?.add(headerItem)
 				}
 
-				val highlightItem = HighlightItem(highlight, context)
+				val highlightItem = HighlightItem(highlight, activity as BaseActivity)
 
 				m_adapter?.add(highlightItem)
 			}

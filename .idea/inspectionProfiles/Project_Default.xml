@@ -2,5 +2,11 @@
   <profile version="1.0">
     <option name="myName" value="Project Default" />
     <inspection_tool class="ObjectPropertyName" enabled="true" level="INFORMATION" enabled_by_default="true" />
+    <inspection_tool class="PrivatePropertyName" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="namePattern" value="m_[a-z][A-Za-z\d]*" />
+    </inspection_tool>
+    <inspection_tool class="PropertyName" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="namePattern" value="m_[a-zA-Za-z\d]*" />
+    </inspection_tool>
   </profile>
 </component>

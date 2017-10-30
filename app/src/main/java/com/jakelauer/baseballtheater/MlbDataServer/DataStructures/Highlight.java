@@ -35,6 +35,17 @@ public class Highlight implements Serializable {
 	@Element(required = false)
 	public String duration;
 
+	public Long durationMilliseconds(){
+		String[] pieces = duration.split(":");
+		int h = Integer.valueOf(pieces[0]);
+		int m = Integer.valueOf(pieces[1]);
+		int s = Integer.valueOf(pieces[2]);
+
+		Long duration = (s * 1000L) + (m * 60 * 1000) + (h * 60 * 60 * 1000);
+
+		return duration;
+	}
+
 	@ElementList(entry = "url", inline = true)
 	public List<String> urls;
 

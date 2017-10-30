@@ -9,7 +9,7 @@ import com.jakelauer.baseballtheater.base.FontCache
 /**
  * Created by Jake on 10/24/2017.
  */
-class TeamNameTextView : TextView
+class BaseballTextView : TextView
 {
 	constructor(context: Context) : super(context)
 	{
