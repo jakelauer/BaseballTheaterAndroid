@@ -131,9 +131,17 @@ public class GameSummary implements Serializable
 		return cityName;
 	}
 
+	public boolean getGameIsOver()
+	{
+		return (status.status.equals("Final")
+				|| status.ind.equals("F")
+				|| status.status.equals("Game Over")
+				|| status.ind.equals("O"));
+	}
+
 	public String getCurrentInning()
 	{
-		if (status.status.equals("Final") || status.ind.equals("F"))
+		if (getGameIsOver())
 		{
 			return status.status;
 		}

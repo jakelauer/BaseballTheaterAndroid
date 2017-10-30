@@ -2,6 +2,7 @@ package com.jakelauer.baseballtheater.base
 
 import android.os.Bundle
 import android.support.annotation.LayoutRes
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,7 @@ import icepick.Icepick
  * Created by Jake on 10/20/2017.
  */
 
-abstract class BaseFragment<TData : Any> : Fragment
+abstract class BaseFragment<TData : Any> : DialogFragment
 {
 	companion object
 	{

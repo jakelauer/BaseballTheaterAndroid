@@ -16,9 +16,13 @@ import com.google.android.gms.cast.CastDevice
 import com.google.android.gms.cast.CastMediaControlIntent
 import com.google.android.gms.cast.framework.CastButtonFactory
 import com.google.android.gms.cast.framework.CastContext
+import com.google.android.gms.cast.framework.CastSession
 import com.jakelauer.baseballtheater.R
 import icepick.Icepick
 import kotlinx.android.synthetic.main.activity_base.*
+import com.google.android.gms.cast.framework.SessionManager
+
+
 
 
 /**
@@ -34,10 +38,12 @@ abstract class BaseActivity : AppCompatActivity()
 
 	private var m_mediaRouteMenuItem: MenuItem? = null
 
-	lateinit var mediaRouter: MediaRouter
-	lateinit var mediaRouteSelector: MediaRouteSelector
-	lateinit var mMediaRouterCallback: MediaRouter.Callback
-	var mCastDevice: CastDevice? = null
+	lateinit var m_mediaRouter: MediaRouter
+	lateinit var m_mediaRouteSelector: MediaRouteSelector
+	lateinit var m_mediaRouterCallback: MediaRouter.Callback
+	lateinit var m_castSessionManager: SessionManager
+	var m_castSession: CastSession? = null
+	var m_castDevice: CastDevice? = null
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -51,26 +57,29 @@ abstract class BaseActivity : AppCompatActivity()
 
 		m_castContext = CastContext.getSharedInstance(this)
 
-		mediaRouter = MediaRouter.getInstance(this)
-		mediaRouteSelector = MediaRouteSelector.Builder()
+		m_mediaRouter = MediaRouter.getInstance(this)
+		m_mediaRouteSelector = MediaRouteSelector.Builder()
 				.addControlCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK)
 				.addControlCategory(CastMediaControlIntent.categoryForCast(getString(R.string.app_id)))
 				.build()
 
-		mMediaRouterCallback = object : MediaRouter.Callback()
+		m_mediaRouterCallback = object : MediaRouter.Callback()
 		{
 			override fun onRouteSelected(router: MediaRouter, route: MediaRouter.RouteInfo)
 			{
 				super.onRouteSelected(router, route)
-				mCastDevice = CastDevice.getFromBundle(route.extras)
+				m_castDevice = CastDevice.getFromBundle(route.extras)
 			}
 
 			override fun onRouteUnselected(router: MediaRouter?, route: MediaRouter.RouteInfo?)
 			{
 				super.onRouteUnselected(router, route)
-				mCastDevice = null
+				m_castDevice = null
 			}
 		}
+
+		m_castSessionManager = CastContext.getSharedInstance(this).sessionManager
+		m_castSession = m_castSessionManager.currentCastSession
 
 		onBindView()
 	}
@@ -81,7 +90,7 @@ abstract class BaseActivity : AppCompatActivity()
 		menuInflater.inflate(R.menu.cast, menu)
 		m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(applicationContext, menu, R.id.media_route_menu_item)
 		val provider = MenuItemCompat.getActionProvider(m_mediaRouteMenuItem) as MediaRouteActionProvider
-		provider.routeSelector = mediaRouteSelector
+		provider.routeSelector = m_mediaRouteSelector
 		return true
 	}
 
@@ -98,7 +107,8 @@ abstract class BaseActivity : AppCompatActivity()
 	override fun onResume()
 	{
 		super.onResume()
-		mediaRouter.addCallback(mediaRouteSelector, mMediaRouterCallback, MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN)
+		m_castSession = m_castSessionManager.currentCastSession
+		m_mediaRouter.addCallback(m_mediaRouteSelector, m_mediaRouterCallback, MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN)
 	}
 
 	override fun onPause()
@@ -106,8 +116,9 @@ abstract class BaseActivity : AppCompatActivity()
 		super.onPause()
 		if (isFinishing)
 		{
-			mediaRouter.removeCallback(mMediaRouterCallback)
+			m_mediaRouter.removeCallback(m_mediaRouterCallback)
 		}
+		m_castSession = null
 	}
 
 	fun setPref(key: String, value: String)

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="@dimen/default_padding_large">
+
+    <TextView
+        android:id="@+id/CAST_CONTROL_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAlignment="center"
+        tools:text="Title"/>
+
+    <TextView
+        android:id="@+id/CAST_CONTROL_subtitle"
+        app:layout_constraintTop_toBottomOf="@id/CAST_CONTROL_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAlignment="center"
+        tools:text="Title"/>
+
+    <com.ohoussein.playpause.PlayPauseView
+        android:id="@+id/CAST_CONTROL_play_pause"
+        app:layout_constraintTop_toBottomOf="@id/CAST_CONTROL_subtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/default_margin_large"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:selectableItemBackground"
+        app:pause_bg="@color/primary"
+        app:play_bg="@color/primary"/>
+
+    <TextView
+        android:id="@+id/CAST_CONTROL_current_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="0:00"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/CAST_CONTROL_seek"/>
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/CAST_CONTROL_seek"
+        app:layout_constraintTop_toBottomOf="@id/CAST_CONTROL_play_pause"
+        app:layout_constraintStart_toEndOf="@id/CAST_CONTROL_current_time"
+        app:layout_constraintEnd_toStartOf="@id/CAST_CONTROL_duration_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_large" />
+
+    <TextView
+        android:id="@+id/CAST_CONTROL_duration_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="0:00"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/CAST_CONTROL_seek" />
+
+</android.support.constraint.ConstraintLayout>

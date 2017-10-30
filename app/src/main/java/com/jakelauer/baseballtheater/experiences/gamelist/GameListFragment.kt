@@ -93,7 +93,7 @@ class GameListFragment : FlexibleListFragment<GameListFragment.Model>
 
 			for (game in games.GameSummaries)
 			{
-				val item = GameItem(GameItem.Model(game))
+				val item = GameItem(GameItem.Model(game), context)
 
 				m_adapter?.add(item)
 			}

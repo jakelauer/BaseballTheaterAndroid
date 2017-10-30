@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.ItemViewHolder
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.GameDetailActivity
+import com.jakelauer.baseballtheater.utils.PreferenceUtils.Companion.BEHAVIOR_HIDE_SCORES
 import com.jakelauer.baseballtheater.utils.TeamColors
 import libs.bindView
 
@@ -17,8 +19,10 @@ import libs.bindView
 /**
  * Created by Jake on 10/22/2017.
  */
-class GameItem(model: GameItem.Model) : AdapterChildItem<GameItem.Model, GameItem.ViewHolder>(model)
+class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameItem.Model, GameItem.ViewHolder>(model)
 {
+	private var m_prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+
 	override fun getLayoutResId(): Int
 	{
 		return R.layout.game_item
@@ -44,6 +48,20 @@ class GameItem(model: GameItem.Model) : AdapterChildItem<GameItem.Model, GameIte
 		viewHolder.m_homeTeamCity.setTextColor(TeamColors.getTeamColor(m_data.m_game.homeFileCode, viewHolder.itemView.context))
 		viewHolder.m_homeTeamName.setTextColor(TeamColors.getTeamColor(m_data.m_game.homeFileCode, viewHolder.itemView.context))
 
+		if (m_prefs.getBoolean(BEHAVIOR_HIDE_SCORES, false))
+		{
+			viewHolder.m_awayTeamScore.text = "▨"
+			viewHolder.m_homeTeamScore.text = "▨"
+		}
+		else
+		{
+			if (m_data.m_game.gameIsOver)
+			{
+				viewHolder.m_homeTeamWon.alpha = if (m_data.m_homeTeamScore > m_data.m_awayTeamScore) 1f else 0f
+				viewHolder.m_awayTeamWon.alpha = if (m_data.m_awayTeamScore > m_data.m_homeTeamScore) 1f else 0f
+			}
+		}
+
 		viewHolder.itemView.setOnClickListener {
 			GameDetailActivity.startActivity(m_data.m_game, viewHolder.itemView.context)
 		}
@@ -54,9 +72,11 @@ class GameItem(model: GameItem.Model) : AdapterChildItem<GameItem.Model, GameIte
 		val m_awayTeamCity: TextView by bindView(R.id.game_away_team_city)
 		val m_awayTeamName: TextView by bindView(R.id.game_away_team_name)
 		val m_awayTeamScore: TextView by bindView(R.id.game_away_team_score)
+		val m_awayTeamWon: ImageView by bindView(R.id.game_away_team_won)
 		val m_homeTeamCity: TextView by bindView(R.id.game_home_team_city)
 		val m_homeTeamName: TextView by bindView(R.id.game_home_team_name)
 		val m_homeTeamScore: TextView by bindView(R.id.game_home_team_score)
+		val m_homeTeamWon: ImageView by bindView(R.id.game_home_team_won)
 		val m_gameStatus: TextView by bindView(R.id.game_status)
 	}
 
