@@ -31,9 +31,9 @@ class GameListPagerFragment : BaseFragment<Any>
 	@SuppressLint("ValidFragment")
 	constructor(initialFragmentDate: DateTime) : super(initialFragmentDate)
 
-	var m_initialFragmentDate: DateTime by syringe<DateTime>()
-	var m_startingDate = m_initialFragmentDate
-	var m_currentDate = m_startingDate
+	var m_initialFragmentDate: DateTime by syringe()
+	lateinit var m_startingDate: DateTime
+	lateinit var m_currentDate: DateTime
 
 	val m_gamePager: ViewPager by bindView(R.id.game_pager)
 
@@ -44,6 +44,9 @@ class GameListPagerFragment : BaseFragment<Any>
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
+
+		m_startingDate = m_initialFragmentDate
+		m_currentDate = m_initialFragmentDate
 
 		setHasOptionsMenu(true)
 	}
@@ -100,7 +103,6 @@ class GameListPagerFragment : BaseFragment<Any>
 
 	fun refreshWithDate(date: DateTime)
 	{
-
 		m_startingDate = date
 		refreshAdapter()
 	}

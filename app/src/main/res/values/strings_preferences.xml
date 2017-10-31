@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="pref_header_highlights">Highlights</string>
+    <string name="pref_header_highlights_summary">Game detail settings</string>
+
+    <string name="pref_title_behavior_favorite_team">Favorite Team</string>
+
+    <string name="pref_header_game_list">Games</string>
+    <string name="pref_header_game_list_summary">Customize the games list</string>
+
+    <string name="pref_title_hide_scores">Hide game scores</string>
+    <string name="pref_title_show_quality_options">Show Video Quality Options</string>
+    <string name="pref_title_video_quality_mobile">Video Quality (Mobile Data)</string>
+    <string name="pref_title_video_quality_wifi">Video Quality (Wifi)</string>
+    <string-array name="video_quality_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="video_quality_keys">
+        <item>Lowest Available</item>
+        <item>Medium</item>
+        <item>Highest Available</item>
+    </string-array>
+
+
+    <string name="pref_title_thumbnail_quality_mobile">Thumbnail Quality (Mobile Data)</string>
+    <string name="pref_title_thumbnail_quality_wifi">Thumbnail Quality (Wifi)</string>
+    <string-array name="thumbnail_quality_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="thumbnail_quality_keys">
+        <item>Lowest</item>
+        <item>Medium</item>
+        <item>Highest (Warning: High data usage)</item>
+    </string-array>
+
+
+    <string name="pref_header_news">News</string>
+    <string name="prefs_news_sources">Select News Sources</string>
+    <string-array name="pref_news_source_defaultvalues">
+        <item>mlb</item>
+        <item>fangraphs</item>
+    </string-array>
+    <string-array name="pref_news_source_values">
+        <item>mlb</item>
+        <item>fangraphs</item>
+        <item>si</item>
+        <item>espn</item>
+        <item>538</item>
+    </string-array>
+    <string-array name="pref_news_source_keys">
+        <item>MLB.com</item>
+        <item>FanGraphs</item>
+        <item>Sports Illustrated</item>
+        <item>ESPN</item>
+        <item>538</item>
+    </string-array>
+</resources>

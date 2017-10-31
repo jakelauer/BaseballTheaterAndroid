@@ -3,7 +3,9 @@ package com.jakelauer.baseballtheater.experiences.gamelist
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.support.v7.widget.CardView
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
@@ -57,10 +59,17 @@ class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameI
 		{
 			if (m_data.m_game.gameIsOver)
 			{
-				viewHolder.m_homeTeamWon.alpha = if (m_data.m_homeTeamScore > m_data.m_awayTeamScore) 1f else 0f
-				viewHolder.m_awayTeamWon.alpha = if (m_data.m_awayTeamScore > m_data.m_homeTeamScore) 1f else 0f
+				val homeWon = (m_data.m_homeTeamScore > m_data.m_awayTeamScore)
+
+				viewHolder.m_homeTeamWon.alpha = if (homeWon) 1f else 0f
+				viewHolder.m_awayTeamWon.alpha = if (!homeWon) 1f else 0f
+
+				viewHolder.m_awayTeamWrapper.alpha = if(homeWon) 0.35F else 1F
+				viewHolder.m_homeTeamWrapper.alpha = if(!homeWon) 0.35F else 1F
 			}
 		}
+
+		viewHolder.m_gameItemContainer.elevation = if(m_data.m_isFavTeam) 20F else 4F
 
 		viewHolder.itemView.setOnClickListener {
 			GameDetailActivity.startActivity(m_data.m_game, viewHolder.itemView.context)
@@ -69,10 +78,15 @@ class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameI
 
 	class ViewHolder(view: View) : ItemViewHolder(view)
 	{
+		val m_gameItemContainer: CardView by bindView(R.id.game_item_container)
+
+		val m_awayTeamWrapper: FrameLayout by bindView(R.id.game_away_team_wrapper)
 		val m_awayTeamCity: TextView by bindView(R.id.game_away_team_city)
 		val m_awayTeamName: TextView by bindView(R.id.game_away_team_name)
 		val m_awayTeamScore: TextView by bindView(R.id.game_away_team_score)
 		val m_awayTeamWon: ImageView by bindView(R.id.game_away_team_won)
+
+		val m_homeTeamWrapper: FrameLayout by bindView(R.id.game_home_team_wrapper)
 		val m_homeTeamCity: TextView by bindView(R.id.game_home_team_city)
 		val m_homeTeamName: TextView by bindView(R.id.game_home_team_name)
 		val m_homeTeamScore: TextView by bindView(R.id.game_home_team_score)
@@ -80,12 +94,9 @@ class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameI
 		val m_gameStatus: TextView by bindView(R.id.game_status)
 	}
 
-	class Model(game: GameSummary)
+	class Model(var m_game: GameSummary, var m_isFavTeam: Boolean)
 	{
-		var m_game: GameSummary = game
-
-		var m_awayTeamScore: String = game.linescore?.runs?.away ?: ""
-		var m_homeTeamScore: String = game.linescore?.runs?.home ?: ""
-
+		var m_awayTeamScore: String = m_game.linescore?.runs?.away ?: ""
+		var m_homeTeamScore: String = m_game.linescore?.runs?.home ?: ""
 	}
 }

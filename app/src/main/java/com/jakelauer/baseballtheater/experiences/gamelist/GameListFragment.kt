@@ -8,6 +8,7 @@ import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummaryCol
 import com.jakelauer.baseballtheater.MlbDataServer.GameSummaryCreator
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.FlexibleListFragment
+import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.base.syringe.syringe
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
 import libs.bindView
@@ -19,16 +20,14 @@ import java.util.concurrent.ExecutionException
 /**
  * Created by Jake on 10/20/2017.
  */
-class GameListFragment : FlexibleListFragment<GameListFragment.Model>
+class GameListFragment : RefreshableListFragment<GameListFragment.Model>
 {
-	var m_date: DateTime by syringe<DateTime>()
-
 	constructor() : super()
 
 	@SuppressLint("ValidFragment")
 	constructor(date: DateTime) : super(date)
 
-	var m_refreshView: SwipeRefreshLayout by bindView(R.id.game_list_refresh)
+	private var m_date: DateTime by syringe()
 
 	override fun getLayoutResourceId(): Int = R.layout.game_list_fragment
 
@@ -66,7 +65,7 @@ class GameListFragment : FlexibleListFragment<GameListFragment.Model>
 		}
 	}
 
-	fun onDataLoaded()
+	private fun onDataLoaded()
 	{
 		m_refreshView.isRefreshing = false
 		m_adapter?.clear()
@@ -93,14 +92,16 @@ class GameListFragment : FlexibleListFragment<GameListFragment.Model>
 
 			for (game in games.GameSummaries)
 			{
-				val item = GameItem(GameItem.Model(game), context)
+				val isFavTeam = favTeamCode == game.awayFileCode || favTeamCode == game.homeFileCode
+				val item = GameItem(GameItem.Model(game, isFavTeam), context)
 
 				m_adapter?.add(item)
 			}
 		}
 		else
 		{
-			m_adapter?.add(EmptyListIndicator(context))
+			val emptyListItem = EmptyListIndicator(EmptyListIndicator.Model(context))
+			m_adapter?.add(emptyListItem)
 		}
 	}
 

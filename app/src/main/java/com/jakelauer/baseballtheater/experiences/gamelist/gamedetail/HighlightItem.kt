@@ -86,7 +86,7 @@ class HighlightItem(highlight: Highlight, activity: BaseActivity) : AdapterChild
 		}
 		else
 		{
-			viewHolder.m_title.setTypeface(viewHolder.m_title.typeface, Typeface.NORMAL)
+			viewHolder.m_title.typeface = Typeface.create(viewHolder.m_title.typeface, Typeface.NORMAL)
 		}
 
 

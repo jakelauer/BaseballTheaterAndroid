@@ -4,8 +4,8 @@ import android.app.Activity
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
-import com.jakelauer.baseballtheater.base.BaseFragment
 import java.io.Serializable
+import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.starProjectedType
 
@@ -13,25 +13,66 @@ import kotlin.reflect.full.starProjectedType
  * Created by Jake on 10/25/2017.
  */
 
+fun <A : Any> Fragment.syringe()
+		: ReadWriteProperty<Fragment, A> = required(m_fragmentArgFinder)
+
+fun <A : Any> Activity.syringe()
+		: ReadWriteProperty<Activity, A> = required(m_activityExtraFinder)
+
 @Suppress("UNCHECKED_CAST")
-class syringe<T>
+private fun <T, V : Any> required(finder: T.(String) -> Any?)
+		= Lazy { t: T,
+				 desc ->
+	t.finder(desc.name) as V
+}
+
+private val m_fragmentArgFinder: Fragment.(String) -> Any?
+	get() = { arguments[it] }
+
+private val m_activityExtraFinder: Activity.(String) -> Any?
+	get() = { intent.extras[it] }
+
+
+open class Lazy<in T, V>(private val initializer: (T, KProperty<*>) -> V) : ReadWriteProperty<T, V>
 {
-	operator fun getValue(activity: Activity, property: KProperty<*>): T =
-			activity.intent.extras[property.name] as T
+	private object EMPTY
 
-	operator fun setValue(activity: Activity, property: KProperty<*>, value: T)
+	private var value: Any? = EMPTY
+
+	override fun getValue(thisRef: T, property: KProperty<*>): V
 	{
+		if (value == EMPTY)
+		{
+			value = initializer(thisRef, property)
+		}
+		@Suppress("UNCHECKED_CAST")
+		return value as V
 	}
 
-	operator fun getValue(fragment: Fragment, property: KProperty<*>): T =
-			fragment.arguments.get(property.name) as T
-
-	operator fun setValue(activity: Fragment, property: KProperty<*>, value: T)
+	override fun setValue(thisRef: T, property: KProperty<*>, value: V)
 	{
-	}
 
+	}
+}
+
+fun Bundle.put(key: String, value: Any)
+{
+	when (value)
+	{
+		is String -> this.putString(key, value)
+		is Int -> this.putInt(key, value)
+		is Parcelable -> this.putParcelable(key, value)
+		is Serializable -> this.putSerializable(key, value)
+		else -> throw TypeCastException("Type not allowed in Bundles")
+	}
+}
+
+class Syringe
+{
 	companion object
 	{
+		val INJECT_MEMBER_PREFIX = "m_"
+
 		fun inject(fragment: Fragment, vararg argList: Any)
 		{
 			return FragmentBundler.doInjection(fragment, *argList)
@@ -82,7 +123,7 @@ class syringe<T>
 										val value = argList[0]
 										if (name != null)
 										{
-											args.put(BaseFragment.INJECT_MEMBER_PREFIX + name, value)
+											args.put(INJECT_MEMBER_PREFIX + name, value)
 										}
 									}
 								}
@@ -92,18 +133,6 @@ class syringe<T>
 
 					fragment.arguments = args
 				}
-			}
-		}
-
-		fun Bundle.put(key: String, value: Any)
-		{
-			when (value)
-			{
-				is String -> this.putString(key, value)
-				is Int -> this.putInt(key, value)
-				is Parcelable -> this.putParcelable(key, value)
-				is Serializable -> this.putSerializable(key, value)
-				else -> throw TypeCastException("Type not allowed in Bundles")
 			}
 		}
 	}

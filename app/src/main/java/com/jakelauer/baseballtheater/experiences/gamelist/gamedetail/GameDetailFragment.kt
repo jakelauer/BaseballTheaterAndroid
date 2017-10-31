@@ -10,6 +10,7 @@ import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.FlexibleListFragment
+import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.common.listitems.HeaderItem
 import com.jakelauer.baseballtheater.base.syringe.syringe
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
@@ -21,11 +22,9 @@ import java.util.concurrent.ExecutionException
 /**
  * Created by Jake on 10/25/2017.
  */
-class GameDetailFragment : FlexibleListFragment<GameDetailFragment.Model>
+class GameDetailFragment : RefreshableListFragment<GameDetailFragment.Model>
 {
-	var m_game: GameSummary by syringe<GameSummary>()
-
-	var m_refreshView: SwipeRefreshLayout by bindView(R.id.GAME_DETAIL_refresh)
+	var m_game: GameSummary by syringe()
 
 	constructor() : super()
 
@@ -113,7 +112,8 @@ class GameDetailFragment : FlexibleListFragment<GameDetailFragment.Model>
 		}
 		else
 		{
-			m_adapter?.add(EmptyListIndicator(context, R.string.highlight_list_empty))
+			val emptyListItem = EmptyListIndicator(EmptyListIndicator.Model(context, R.string.highlight_list_empty, R.drawable.ic_videocam_off_black_24px))
+			m_adapter?.add(emptyListItem)
 		}
 	}
 

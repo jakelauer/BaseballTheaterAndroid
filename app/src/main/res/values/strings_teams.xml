@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="teams_list_values">
+        <item>none</item>
+        <item>ari</item>
+        <item>atl</item>
+        <item>bal</item>
+        <item>bos</item>
+        <item>chc</item>
+        <item>cws</item>
+        <item>cin</item>
+        <item>cle</item>
+        <item>col</item>
+        <item>det</item>
+        <item>mia</item>
+        <item>hou</item>
+        <item>kc</item>
+        <item>ana</item>
+        <item>la</item>
+        <item>mil</item>
+        <item>min</item>
+        <item>nym</item>
+        <item>nyy</item>
+        <item>oak</item>
+        <item>phi</item>
+        <item>pit</item>
+        <item>sd</item>
+        <item>sf</item>
+        <item>sea</item>
+        <item>stl</item>
+        <item>tb</item>
+        <item>tex</item>
+        <item>tor</item>
+        <item>was</item>
+    </string-array>
+
+
+    <string-array name="teams_list_keys">
+        <item>None</item>
+        <item>Arizona Diamondbacks</item>
+        <item>Atlanta Braves</item>
+        <item>Baltimore Orioles</item>
+        <item>Boston Red Sox</item>
+        <item>Chicago Cubs</item>
+        <item>Chicago White Sox</item>
+        <item>Cincinnati Reds</item>
+        <item>Cleveland Indians</item>
+        <item>Colorado Rockies</item>
+        <item>Detroit Tigers</item>
+        <item>Miami Marlins</item>
+        <item>Houston Astros</item>
+        <item>Kansas City Royals</item>
+        <item>Los Angeles Angels of Anaheim</item>
+        <item>Los Angeles Dodgers</item>
+        <item>Milwaukee Brewers</item>
+        <item>Minnesota Twins</item>
+        <item>New York Mets</item>
+        <item>New York Yankees</item>
+        <item>Oakland Athletics</item>
+        <item>Philadelphia Phillies</item>
+        <item>Pittsburgh Pirates</item>
+        <item>San Diego Padres</item>
+        <item>San Francisco Giants</item>
+        <item>Seattle Mariners</item>
+        <item>St. Louis Cardinals</item>
+        <item>Tampa Bay Rays</item>
+        <item>Texas Rangers</item>
+        <item>Toronto Blue Jays</item>
+        <item>Washington Nationals</item>
+    </string-array>
+
+</resources>
