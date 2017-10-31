@@ -21,10 +21,7 @@ fun <A : Any> Activity.syringe()
 
 @Suppress("UNCHECKED_CAST")
 private fun <T, V : Any> required(finder: T.(String) -> Any?)
-		= Lazy { t: T,
-				 desc ->
-	t.finder(desc.name) as V
-}
+		= Lazy { t: T, desc -> t.finder(desc.name) as V }
 
 private val m_fragmentArgFinder: Fragment.(String) -> Any?
 	get() = { arguments[it] }
@@ -51,7 +48,6 @@ open class Lazy<in T, V>(private val initializer: (T, KProperty<*>) -> V) : Read
 
 	override fun setValue(thisRef: T, property: KProperty<*>, value: V)
 	{
-
 	}
 }
 
