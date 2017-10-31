@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:padding="@dimen/default_padding"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:padding="@dimen/default_padding">
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:alpha="0.25"
-        android:layout_gravity="center"
-        app:srcCompat="@drawable/ic_calendar_remove"/>
-
-    <TextView
-        android:id="@+id/EMPTY_LIST_INDICATOR_message"
+    <LinearLayout
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="center"
-        tools:text="@string/game_list_empty"/>
+        android:orientation="vertical">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/EMPTY_LIST_INDICATOR_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:alpha="0.25"
+            tools:srcCompat="@drawable/ic_calendar_remove" />
+
+        <TextView
+            android:id="@+id/EMPTY_LIST_INDICATOR_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            tools:text="@string/game_list_empty" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -32,16 +32,16 @@ import com.google.android.gms.cast.framework.SessionManager
 abstract class BaseActivity : AppCompatActivity()
 {
 	@get:LayoutRes
-	protected abstract val layoutResId: Int
+	protected abstract val m_layoutResId: Int
 
-	lateinit var m_castContext: CastContext
 
 	private var m_mediaRouteMenuItem: MenuItem? = null
 
-	lateinit var m_mediaRouter: MediaRouter
-	lateinit var m_mediaRouteSelector: MediaRouteSelector
-	lateinit var m_mediaRouterCallback: MediaRouter.Callback
-	lateinit var m_castSessionManager: SessionManager
+	private lateinit var m_castContext: CastContext
+	private lateinit var m_mediaRouter: MediaRouter
+	private lateinit var m_mediaRouteSelector: MediaRouteSelector
+	private lateinit var m_mediaRouterCallback: MediaRouter.Callback
+	private lateinit var m_castSessionManager: SessionManager
 	var m_castSession: CastSession? = null
 	var m_castDevice: CastDevice? = null
 
@@ -51,7 +51,7 @@ abstract class BaseActivity : AppCompatActivity()
 
 		Icepick.restoreInstanceState(this, savedInstanceState)
 
-		setContentView(layoutResId)
+		setContentView(m_layoutResId)
 
 		CastButtonFactory.setUpMediaRouteButton(applicationContext, media_route_button)
 

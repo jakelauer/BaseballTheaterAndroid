@@ -12,10 +12,10 @@ import com.jakelauer.baseballtheater.base.syringe.syringe
  */
 class GameDetailActivity : BaseActivity()
 {
-	override val layoutResId: Int
+	override val m_layoutResId: Int
 		get() = R.layout.game_detail_activity
 
-	val m_game: GameSummary by syringe<GameSummary>()
+	val m_game: GameSummary by syringe()
 
 	override fun onBindView()
 	{

@@ -47,4 +47,12 @@
             android:key="display_thumbnail_quality_wifi"
             android:title="@string/pref_title_thumbnail_quality_wifi" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_header_news">
+        <MultiSelectListPreference
+            android:key="news_sources"
+            android:entries="@array/pref_news_source_keys"
+            android:entryValues="@array/pref_news_source_values"
+            android:defaultValue="@array/pref_news_source_defaultvalues"
+            android:title="@string/prefs_news_sources"/>
+    </PreferenceCategory>
 </PreferenceScreen>
