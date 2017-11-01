@@ -16,18 +16,39 @@ import kotlin.reflect.full.starProjectedType
 fun <A : Any> Fragment.syringe()
 		: ReadWriteProperty<Fragment, A> = required(m_fragmentArgFinder)
 
+fun <A : Any?> Fragment.syringeOptional()
+		: ReadWriteProperty<Fragment, A?> = optional(m_fragmentArgOptionalFinder)
+
 fun <A : Any> Activity.syringe()
 		: ReadWriteProperty<Activity, A> = required(m_activityExtraFinder)
 
+fun <A : Any> Activity.syringeOptional()
+		: ReadWriteProperty<Activity, A> = optional(m_activityExtraOptionalFinder)
+
 @Suppress("UNCHECKED_CAST")
-private fun <T, V : Any> required(finder: T.(String) -> Any?)
+private fun <T, V : Any> required(finder: T.(String) -> Any)
 		= Lazy { t: T, desc -> t.finder(desc.name) as V }
 
-private val m_fragmentArgFinder: Fragment.(String) -> Any?
+@Suppress("UNCHECKED_CAST")
+private fun <T, V : Any?> optional(finder: T.(String) -> Any?)
+		= Lazy { t: T, desc -> t.finder(desc.name) as V }
+
+private val m_fragmentArgFinder: Fragment.(String) -> Any
+	get() = { arguments[it] ?: notFound(it) }
+
+private val m_activityExtraFinder: Activity.(String) -> Any
+	get() = { intent.extras[it] ?: notFound(it) }
+
+private val m_fragmentArgOptionalFinder: Fragment.(String) -> Any?
 	get() = { arguments[it] }
 
-private val m_activityExtraFinder: Activity.(String) -> Any?
+private val m_activityExtraOptionalFinder: Activity.(String) -> Any?
 	get() = { intent.extras[it] }
+
+private fun notFound(name: String)
+{
+	throw IllegalArgumentException("No argument found by name $name")
+}
 
 
 open class Lazy<in T, V>(private val initializer: (T, KProperty<*>) -> V) : ReadWriteProperty<T, V>
@@ -38,10 +59,8 @@ open class Lazy<in T, V>(private val initializer: (T, KProperty<*>) -> V) : Read
 
 	override fun getValue(thisRef: T, property: KProperty<*>): V
 	{
-		if (value == EMPTY)
-		{
-			value = initializer(thisRef, property)
-		}
+		value = initializer(thisRef, property)
+
 		@Suppress("UNCHECKED_CAST")
 		return value as V
 	}
@@ -57,6 +76,8 @@ fun Bundle.put(key: String, value: Any)
 	{
 		is String -> this.putString(key, value)
 		is Int -> this.putInt(key, value)
+		is Long -> this.putLong(key, value)
+		is Byte -> this.putByte(key, value)
 		is Parcelable -> this.putParcelable(key, value)
 		is Serializable -> this.putSerializable(key, value)
 		else -> throw TypeCastException("Type not allowed in Bundles")
@@ -67,7 +88,13 @@ class Syringe
 {
 	companion object
 	{
-		val INJECT_MEMBER_PREFIX = "m_"
+		var INJECT_MEMBER_PREFIX = "m_"
+			private set
+
+		fun setup(injectMemberPrefix: String = "m_")
+		{
+			INJECT_MEMBER_PREFIX = injectMemberPrefix
+		}
 
 		fun inject(fragment: Fragment, vararg argList: Any)
 		{
@@ -116,7 +143,7 @@ class Syringe
 									{
 										val parameter = constructor.parameters[i]
 										val name = parameter.name
-										val value = argList[0]
+										val value = argList[i]
 										if (name != null)
 										{
 											args.put(INJECT_MEMBER_PREFIX + name, value)

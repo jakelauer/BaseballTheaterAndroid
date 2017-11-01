@@ -4,11 +4,21 @@
     <item
         android:id="@+id/navigation_games"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_games"/>
+        android:title="@string/title_games" />
 
     <item
         android:id="@+id/navigation_news"
         android:icon="@drawable/ic_newspaper_black_48dp"
-        android:title="@string/title_news"/>
+        android:title="@string/title_news" />
 
+    <!--
+        <item
+            android:id="@+id/navigation_profiling_default"
+            android:icon="@drawable/ic_dashboard_black_24dp"
+            android:title="ProfilingDefault"/>
+        <item
+            android:id="@+id/navigation_profiling_syringe"
+            android:icon="@drawable/ic_dashboard_black_24dp"
+            android:title="ProfilingSyringe"/>
+-->
 </menu>
