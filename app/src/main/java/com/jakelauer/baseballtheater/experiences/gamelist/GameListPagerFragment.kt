@@ -16,7 +16,7 @@ import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.BaseFragment
 import com.jakelauer.baseballtheater.base.syringe.syringe
 import com.jakelauer.baseballtheater.experiences.settings.SettingsActivity
-import libs.bindView
+import libs.ButterKnife.bindView
 import org.joda.time.DateTime
 
 

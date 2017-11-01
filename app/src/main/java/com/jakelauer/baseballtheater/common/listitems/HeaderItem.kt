@@ -7,7 +7,7 @@ import android.widget.TextView
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.ItemViewHolder
-import libs.bindView
+import libs.ButterKnife.bindView
 
 /**
  * Created by Jake on 10/27/2017.

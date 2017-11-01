@@ -1,4 +1,4 @@
-package libs
+package libs.ButterKnife
 
 /**
  * Created by Jake on 10/24/2017.
@@ -134,7 +134,7 @@ private fun viewNotFound(id: Int, desc: KProperty<*>): Nothing =
 @Suppress("UNCHECKED_CAST")
 private fun <T, V : View> required(id: Int, finder: T.(Int) -> View?)
 		= Lazy { t: T,
-				 desc ->
+								  desc ->
 	t.finder(id) as V? ?: viewNotFound(id, desc)
 }
 

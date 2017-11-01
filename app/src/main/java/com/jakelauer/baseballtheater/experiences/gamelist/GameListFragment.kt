@@ -2,16 +2,13 @@ package com.jakelauer.baseballtheater.experiences.gamelist
 
 import android.annotation.SuppressLint
 import android.preference.PreferenceManager
-import android.support.v4.widget.SwipeRefreshLayout
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummaryCollection
 import com.jakelauer.baseballtheater.MlbDataServer.GameSummaryCreator
 import com.jakelauer.baseballtheater.R
-import com.jakelauer.baseballtheater.base.FlexibleListFragment
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.base.syringe.syringe
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
-import libs.bindView
 import org.joda.time.DateTime
 import java.util.*
 import java.util.concurrent.ExecutionException
@@ -34,13 +31,6 @@ class GameListFragment : RefreshableListFragment<GameListFragment.Model>
 	override fun createModel(): Model
 	{
 		return Model()
-	}
-
-	override fun onBindView()
-	{
-		m_refreshView.setOnRefreshListener {
-			loadData()
-		}
 	}
 
 	override fun loadData()

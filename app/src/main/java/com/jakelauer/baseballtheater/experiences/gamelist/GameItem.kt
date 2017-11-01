@@ -15,7 +15,7 @@ import com.jakelauer.baseballtheater.base.ItemViewHolder
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.GameDetailActivity
 import com.jakelauer.baseballtheater.utils.PreferenceUtils.Companion.BEHAVIOR_HIDE_SCORES
 import com.jakelauer.baseballtheater.utils.TeamColors
-import libs.bindView
+import libs.ButterKnife.bindView
 
 
 /**
