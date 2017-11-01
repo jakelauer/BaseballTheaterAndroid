@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/game_list_refresh"
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp">
 

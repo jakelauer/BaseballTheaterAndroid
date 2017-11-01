@@ -9,7 +9,7 @@ import libs.bindView
  */
 abstract class RefreshableListFragment<TData:Any> : FlexibleListFragment<TData>
 {
-	protected var m_refreshView: SwipeRefreshLayout by bindView(R.id.game_list_refresh)
+	protected var m_refreshView: SwipeRefreshLayout by bindView(R.id.refresh)
 
 	constructor() : super()
 
