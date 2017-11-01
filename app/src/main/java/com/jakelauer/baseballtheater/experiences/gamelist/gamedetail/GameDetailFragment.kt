@@ -1,21 +1,16 @@
 package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail
 
 import android.annotation.SuppressLint
-import android.os.Handler
-import android.support.v4.widget.SwipeRefreshLayout
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection
 import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseActivity
-import com.jakelauer.baseballtheater.base.FlexibleListFragment
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.common.listitems.HeaderItem
 import com.jakelauer.baseballtheater.base.syringe.syringe
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
-import kotlinx.android.synthetic.main.game_detail_fragment.*
-import libs.bindView
 import java.util.*
 import java.util.concurrent.ExecutionException
 
@@ -34,13 +29,6 @@ class GameDetailFragment : RefreshableListFragment<GameDetailFragment.Model>
 	override fun getLayoutResourceId() = R.layout.game_detail_fragment
 
 	override fun createModel(): Model = Model()
-
-	override fun onBindView()
-	{
-		m_refreshView.setOnRefreshListener {
-			loadData()
-		}
-	}
 
 	override fun loadData()
 	{

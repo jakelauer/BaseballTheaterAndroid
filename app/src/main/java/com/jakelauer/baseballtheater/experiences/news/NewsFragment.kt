@@ -1,12 +1,19 @@
 package com.jakelauer.baseballtheater.experiences.news
 
-import android.content.SharedPreferences
+import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
-import com.prof.rssparser.Article
-import com.prof.rssparser.Parser
+import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
+import com.jakelauer.baseballtheater.experiences.settings.SettingsActivity
+import libs.RssParser.Article
+import libs.RssParser.Parser
+import org.jsoup.helper.StringUtil
 
 
 /**
@@ -15,9 +22,10 @@ import com.prof.rssparser.Parser
 
 class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 {
-	private var m_urls = ArrayList<String>()
-	private var m_sitesLoaded = 0
+	private lateinit var m_feedUrl: String
+	private var m_url: String = ""
 	private var m_articles = ArrayList<Article>()
+	private var m_isDebug: Boolean = false
 
 	constructor() : super()
 
@@ -25,71 +33,77 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 	{
 		super.onCreate(savedInstanceState)
 
-		val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-		val sources = prefs.getStringSet("news_sources", HashSet<String>())
+		val appFlags = context.applicationInfo.flags
+		m_isDebug = appFlags.and(ApplicationInfo.FLAG_DEBUGGABLE) != 0
 
-		for (source in sources)
-		{
-			val url = getUrlFromSource(source)
-			if (url != null)
-			{
-				m_urls.add(url)
-			}
-		}
+		m_feedUrl = if (m_isDebug) "https://dev.baseball.theater/data/news?feeds=" else "https://dev.baseball.theater/data/news?feeds="
+
+		setHasOptionsMenu(true)
 	}
 
 	override fun getLayoutResourceId() = R.layout.news_fragment
 
 	override fun createModel() = Model()
 
-	override fun loadData()
+	override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater)
 	{
-		m_refreshView.isRefreshing = true
-
-		var urlsToLoad = m_urls.size
-		var articleLists = HashMap<String, ArrayList<Article>>()
-		for (url in m_urls)
-		{
-			val parser = Parser()
-			parser.execute(url)
-			parser.onFinish(object : Parser.OnTaskCompleted
-			{
-				override fun onTaskCompleted(list: ArrayList<Article>)
-				{
-					articleLists.put(url, list)
-					m_sitesLoaded += 1
-
-					if (m_sitesLoaded == urlsToLoad)
-					{
-						finalizeArticles(articleLists)
-					}
-				}
-
-				override fun onError()
-				{
-					urlsToLoad--
-
-					if (m_sitesLoaded == urlsToLoad)
-					{
-						finalizeArticles(articleLists)
-					}
-				}
-			})
-		}
+		menuInflater.inflate(R.menu.news_options, menu)
+		super.onCreateOptionsMenu(menu, menuInflater)
 	}
 
-	private fun finalizeArticles(articleLists: HashMap<String, ArrayList<Article>>)
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean
 	{
-		val articleListList = articleLists.values
-		val allArticles = ArrayList<Article>()
+		var handled = super.onOptionsItemSelected(item)
 
-		articleListList.flatMapTo(allArticles) { it }
+		when (item?.itemId)
+		{
+			R.id.game_list_settings ->
+			{
+				val intent = Intent(context, SettingsActivity::class.java)
+				context.startActivity(intent)
+				handled = true
+			}
+		}
+		return handled
+	}
 
-		allArticles.sortByDescending { it.pubDate }
+	override fun loadData()
+	{
+		val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+		val sources = prefs.getStringSet("news_sources", HashSet<String>())
 
-		m_articles = allArticles
+		val cslFeeds = StringUtil.join(sources, ",") ?: ""
+		m_url = m_feedUrl + cslFeeds
 
-		onFinished()
+		m_refreshView.isRefreshing = true
+
+		val parser = Parser(m_isDebug)
+		parser.execute(m_url)
+		parser.onFinish(object : Parser.OnTaskCompleted
+		{
+			override fun onTaskCompleted(list: ArrayList<Article>)
+			{
+				finalizeArticles(list)
+			}
+
+			override fun onError()
+			{
+				finalizeArticles(null)
+			}
+		})
+	}
+
+	private fun finalizeArticles(articleList: List<Article>?)
+	{
+		activity.runOnUiThread({
+			if (articleList != null)
+			{
+				m_articles.clear()
+				m_articles.addAll(articleList)
+			}
+
+			onFinished()
+		})
 	}
 
 	private fun onFinished()
@@ -97,26 +111,21 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 		m_refreshView.isRefreshing = false
 		m_adapter?.clear()
 
-		for (article in m_articles)
+		if (m_articles.size > 0)
 		{
-			val articleItem = ArticleItem(article, activity)
+			for (article in m_articles)
+			{
+				val articleItem = ArticleItem(article, activity)
 
-			articleItem
-
-			m_adapter?.add(articleItem)
+				m_adapter?.add(articleItem)
+			}
+		}
+		else
+		{
+			val emptyItem = EmptyListIndicator(EmptyListIndicator.Model(context, R.string.article_list_empty, R.drawable.ic_cloud_off_black_24px))
+			m_adapter?.add(emptyItem)
 		}
 	}
-
-	private fun getUrlFromSource(source: String?) = when (source)
-	{
-		"mlb" -> "http://mlb.mlb.com/partnerxml/gen/news/rss/mlb.xml"
-		"fangraphs" -> "http://www.fangraphs.com/blogs/feed/"
-		"si" -> "https://www.si.com/rss/si_mlb.rss"
-		"538" -> "https://fivethirtyeight.com/tag/mlb/feed/"
-		"espn" -> "http://www.espn.com/espn/rss/mlb/news"
-		else -> null
-	}
-
 
 	class Model
 

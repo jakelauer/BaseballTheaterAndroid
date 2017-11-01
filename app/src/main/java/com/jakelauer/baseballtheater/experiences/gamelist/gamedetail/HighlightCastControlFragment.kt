@@ -12,7 +12,7 @@ import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.BaseFragment
 import com.jakelauer.baseballtheater.base.syringe.syringe
 import com.ohoussein.playpause.PlayPauseView
-import libs.bindView
+import libs.ButterKnife.bindView
 import java.text.SimpleDateFormat
 import java.util.*
 

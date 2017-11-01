@@ -11,8 +11,11 @@ import android.widget.TextView
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.ItemViewHolder
-import com.prof.rssparser.Article
-import libs.bindView
+import libs.ButterKnife.bindView
+import libs.RssParser.Article
+import android.support.customtabs.CustomTabsIntent
+
+
 
 
 /**
@@ -28,12 +31,14 @@ class ArticleItem(data: Article, activity: Activity) : AdapterChildItem<Article,
 
 	override fun onBindView(viewHolder: ViewHolder, context: Context)
 	{
-		if (m_data.image != null)
+		val image = m_data.image;
+		if (image != null)
 		{
 			viewHolder.m_thumbnail.visibility = View.VISIBLE
-			viewHolder.m_thumbnail.loadUrl(m_data.image)
+			viewHolder.m_thumbnail.loadUrl(image)
 		}
-		else{
+		else
+		{
 			viewHolder.m_thumbnail.visibility = View.GONE
 		}
 
@@ -47,15 +52,34 @@ class ArticleItem(data: Article, activity: Activity) : AdapterChildItem<Article,
 			viewHolder.m_subtitle.text = m_data.description
 		}
 
-		viewHolder.m_wrapper.setOnClickListener{
-			val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(m_data.link))
-			ContextCompat.startActivity(m_activity, browserIntent, null)
+		val newsFeed = m_data.newsFeed
+		if (newsFeed != null)
+		{
+			var source = NewsFeeds.valueOf(newsFeed)
+
+			when (source)
+			{
+				NewsFeeds.espn -> "ESPN"
+				NewsFeeds.si -> "Sports Illustrated"
+				NewsFeeds.fivethirtyeight -> "538"
+				NewsFeeds.fangraphs -> "FanGraphs"
+				NewsFeeds.mlb -> "MLB.com"
+			}
+
+			viewHolder.m_source.text = "Source: $source"
+		}
+
+		viewHolder.m_wrapper.setOnClickListener {
+			val builder = CustomTabsIntent.Builder()
+			val customTabsIntent = builder.build()
+			customTabsIntent.launchUrl(context, Uri.parse(m_data.link))
 		}
 	}
 
 	class ViewHolder(view: View) : ItemViewHolder(view)
 	{
 		var m_wrapper: View by bindView(R.id.ARTICLE_wrapper)
+		var m_source: TextView by bindView(R.id.ARTICLE_source)
 		var m_thumbnail: ImageView by bindView(R.id.ARTICLE_thumbnail)
 		var m_title: TextView by bindView(R.id.ARTICLE_title)
 		var m_subtitle: TextView by bindView(R.id.ARTICLE_subtitle)

@@ -6,14 +6,17 @@
     <string name="title_notifications">Notifications</string>
 
     <string name="game_list_empty">No games found on this day</string>
-    <string name="highlight_list_empty">No highlights found for this game</string>
     <string name="game_list_menu_calendar">Choose Date</string>
     <string name="game_list_menu_settings">Settings</string>
 
+
+    <string name="highlight_list_empty">No highlights found for this game</string>
     <string name="highlight_quality_low">Low</string>
     <string name="highlight_quality_mid">Mid</string>
     <string name="highlight_quality_high">High</string>
 
     <string name="highlight_recap">Recap</string>
     <string name="highlight_list_title">Highlights</string>
+
+    <string name="article_list_empty">No articles found</string>
 </resources>

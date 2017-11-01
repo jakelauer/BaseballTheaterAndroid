@@ -25,7 +25,7 @@ import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.ItemViewHolder
 import com.jakelauer.baseballtheater.utils.PreferenceUtils.Companion.BEHAVIOR_HIDE_SCORES
 import com.jakelauer.baseballtheater.utils.Utils
-import libs.bindView
+import libs.ButterKnife.bindView
 import java.util.regex.Pattern
 
 

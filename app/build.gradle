@@ -17,7 +17,7 @@ android {
         applicationId "com.jakelauer.baseballtheater"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 30
+        versionCode 32
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -53,7 +53,10 @@ dependencies {
     compile 'com.googlecode.android-query:android-query:0.25.9'
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.github.ohoussein.playpauseview:playpauseview:1.0.1'
-    compile 'com.prof.rssparser:rssparser:1.1'
+    compile 'org.jsoup:jsoup:1.8.1'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.android.support:customtabs:26.1.0'
 }
 kapt {
     generateStubs = true

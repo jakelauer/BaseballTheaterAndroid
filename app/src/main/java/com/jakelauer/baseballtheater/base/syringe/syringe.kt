@@ -2,8 +2,14 @@ package com.jakelauer.baseballtheater.base.syringe
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.IBinder
 import android.os.Parcelable
+import android.support.design.internal.ParcelableSparseArray
 import android.support.v4.app.Fragment
+import android.text.ParcelableSpan
+import android.util.Size
+import android.util.SizeF
+import android.util.SparseArray
 import java.io.Serializable
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -74,12 +80,25 @@ fun Bundle.put(key: String, value: Any)
 {
 	when (value)
 	{
-		is String -> this.putString(key, value)
+		is Array<*> -> this.putSerializable(key, value)
+		is ArrayList<*> -> this.putSerializable(key, value)
+		is Byte -> this.putByte(key, value)
+		is ByteArray -> this.putByteArray(key, value)
+		is Char -> this.putChar(key, value)
+		is CharArray -> this.putCharArray(key, value)
+		is CharSequence -> this.putCharSequence(key, value)
+		is Float -> this.putFloat(key, value)
+		is IBinder -> this.putBinder(key, value)
 		is Int -> this.putInt(key, value)
 		is Long -> this.putLong(key, value)
-		is Byte -> this.putByte(key, value)
 		is Parcelable -> this.putParcelable(key, value)
+		is ParcelableSparseArray -> this.putSparseParcelableArray(key, value)
 		is Serializable -> this.putSerializable(key, value)
+		is Short -> this.putShort(key, value)
+		is ShortArray -> this.putShortArray(key, value)
+		is Size -> this.putSize(key, value)
+		is SizeF -> this.putSizeF(key, value)
+		is String -> this.putString(key, value)
 		else -> throw TypeCastException("Type not allowed in Bundles")
 	}
 }

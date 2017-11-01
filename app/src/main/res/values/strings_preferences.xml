@@ -50,7 +50,7 @@
         <item>fangraphs</item>
         <item>si</item>
         <item>espn</item>
-        <item>538</item>
+        <item>fivethirtyeight</item>
     </string-array>
     <string-array name="pref_news_source_keys">
         <item>MLB.com</item>

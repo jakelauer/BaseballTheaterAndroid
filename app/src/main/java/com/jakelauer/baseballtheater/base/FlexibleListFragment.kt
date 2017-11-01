@@ -3,7 +3,7 @@ package com.jakelauer.baseballtheater.base
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.jakelauer.baseballtheater.R
-import libs.bindView
+import libs.ButterKnife.bindView
 
 /**
  * Created by Jake on 10/20/2017.

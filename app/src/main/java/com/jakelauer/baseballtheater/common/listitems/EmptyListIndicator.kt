@@ -1,7 +1,6 @@
 package com.jakelauer.baseballtheater.common.listitems
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.view.View
@@ -10,7 +9,7 @@ import android.widget.TextView
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.ItemViewHolder
-import libs.bindView
+import libs.ButterKnife.bindView
 
 /**
  * Created by Jake on 10/26/2017.
