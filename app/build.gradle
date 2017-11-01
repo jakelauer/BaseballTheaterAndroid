@@ -4,6 +4,12 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+configurations {
+    all {
+        exclude module: 'xpp3'
+    }
+}
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
@@ -11,8 +17,8 @@ android {
         applicationId "com.jakelauer.baseballtheater"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 29
-        versionName "1.7"
+        versionCode 30
+        versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -47,8 +53,6 @@ dependencies {
     compile 'com.googlecode.android-query:android-query:0.25.9'
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.github.ohoussein.playpauseview:playpauseview:1.0.1'
-    implementation "com.f2prateek.dart:dart:2.0.2"
-    annotationProcessor "com.f2prateek.dart:dart-processor:2.0.2"
     compile 'com.prof.rssparser:rssparser:1.1'
 }
 kapt {
