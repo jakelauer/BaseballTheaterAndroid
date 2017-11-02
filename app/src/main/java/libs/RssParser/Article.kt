@@ -36,7 +36,6 @@ class Article
 
 	override fun toString(): String
 	{
-
 		return "Article{" +
 				"title='" + title + '\'' +
 				", author='" + author + '\'' +
