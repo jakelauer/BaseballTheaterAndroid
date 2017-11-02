@@ -72,11 +72,11 @@ class ProfilingFragmentDefault() : BaseFragment<String>()
 	}
 
 	override fun onBindView()
-	{
+	{/*
 		Log.d("arg1", m_arg1)
 		Log.d("arg2", m_arg2.toString())
 		Log.d("arg3", m_arg3.toString())
 		Log.d("arg4", m_arg4.toString())
-		Log.d("arg5", m_arg5.toString())
+		Log.d("arg5", m_arg5.toString())*/
 	}
 }
