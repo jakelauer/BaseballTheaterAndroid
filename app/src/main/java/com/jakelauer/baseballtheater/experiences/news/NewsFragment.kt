@@ -1,12 +1,12 @@
 package com.jakelauer.baseballtheater.experiences.news
 
 import android.content.Intent
-import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import com.jakelauer.baseballtheater.BuildConfig
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
@@ -25,7 +25,7 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 	private lateinit var m_feedUrl: String
 	private var m_url: String = ""
 	private var m_articles = ArrayList<Article>()
-	private var m_isDebug: Boolean = false
+	private var m_isBeta: Boolean = false
 
 	constructor() : super()
 
@@ -33,10 +33,9 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 	{
 		super.onCreate(savedInstanceState)
 
-		val appFlags = context.applicationInfo.flags
-		m_isDebug = appFlags.and(ApplicationInfo.FLAG_DEBUGGABLE) != 0
+		m_isBeta = BuildConfig.BETA
 
-		m_feedUrl = if (m_isDebug) "https://dev.baseball.theater/data/news?feeds=" else "https://dev.baseball.theater/data/news?feeds="
+		m_feedUrl = if (m_isBeta) "https://dev.baseball.theater/data/news?feeds=" else "https://baseball.theater/data/news?feeds="
 
 		setHasOptionsMenu(true)
 	}
@@ -77,7 +76,7 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 
 		m_refreshView.isRefreshing = true
 
-		val parser = Parser(m_isDebug)
+		val parser = Parser(m_isBeta)
 		parser.execute(m_url)
 		parser.onFinish(object : Parser.OnTaskCompleted
 		{
@@ -115,7 +114,7 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 		{
 			for (article in m_articles)
 			{
-				val articleItem = ArticleItem(article, activity)
+				val articleItem = ArticleItem(article)
 
 				m_adapter?.add(articleItem)
 			}

@@ -19,11 +19,10 @@ import java.util.Observable
 class XMLParser : Observable()
 {
 	private val articles: ArrayList<Article> = ArrayList()
-	internal var currentArticle: Article
+	private var currentArticle: Article
 
 	init
 	{
-
 		currentArticle = Article()
 	}
 
@@ -42,95 +41,69 @@ class XMLParser : Observable()
 
 			while (eventType != XmlPullParser.END_DOCUMENT)
 			{
-
 				if (eventType == XmlPullParser.START_TAG)
 				{
-
 					if (xmlPullParser.name.equals("item", ignoreCase = true))
 					{
-
 						insideItem = true
-
 					}
 					else if (xmlPullParser.name.equals("title", ignoreCase = true))
 					{
-
 						if (insideItem)
 						{
-
 							val title = xmlPullParser.nextText()
 							currentArticle.title = title
 						}
-
 					}
 					else if (xmlPullParser.name.equals("NewsFeed", ignoreCase = true))
 					{
 						if (insideItem)
 						{
-
 							val newsFeed = xmlPullParser.nextText()
 							currentArticle.newsFeed = newsFeed
 						}
-
 					}
 					else if (xmlPullParser.name.equals("link", ignoreCase = true))
 					{
-
 						if (insideItem)
 						{
-
 							val link = xmlPullParser.nextText()
 							currentArticle.link = link
 						}
-
 					}
 					else if (xmlPullParser.name.equals("dc:creator", ignoreCase = true))
 					{
-
 						if (insideItem)
 						{
-
 							val author = xmlPullParser.nextText()
 							currentArticle.author = author
 						}
-
 					}
 					else if (xmlPullParser.name.equals("content:encoded", ignoreCase = true))
 					{
-
 						if (insideItem)
 						{
-
 							val htmlData = xmlPullParser.nextText()
 							val doc = Jsoup.parse(htmlData)
 							try
 							{
-
 								val pic = doc.select("img").first().attr("abs:src")
 								currentArticle.image = pic
-
 							}
 							catch (e: NullPointerException)
 							{
-
 								currentArticle.image = null
-
 							}
-
 							currentArticle.content = htmlData
 						}
-
 					}
 					else if (xmlPullParser.name.equals("description", ignoreCase = true))
 					{
-
 						if (insideItem)
 						{
-
 							val description = xmlPullParser.nextText()
 							currentArticle.description = description
 						}
-
 					}
 					else if (xmlPullParser.name.equals("pubDate", ignoreCase = true))
 					{
@@ -138,28 +111,21 @@ class XMLParser : Observable()
 						val pubDate = DateTime(dateText)
 						currentArticle.pubDate = pubDate
 					}
-
 				}
 				else if (eventType == XmlPullParser.END_TAG && xmlPullParser.name.equals("item", ignoreCase = true))
 				{
-
 					insideItem = false
 					articles.add(currentArticle)
 					currentArticle = Article()
 				}
 				eventType = xmlPullParser.next()
 			}
-
 			triggerObserver()
-
 		}
 		catch (e: Exception)
 		{
-
 			e.printStackTrace()
-
 		}
-
 	}
 
 	private fun triggerObserver()

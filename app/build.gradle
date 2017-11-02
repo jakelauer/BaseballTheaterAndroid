@@ -11,13 +11,15 @@ configurations {
 }
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.jakelauer.baseballtheater"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 32
+        versionCode 33
         versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -25,14 +27,30 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            buildConfigField "boolean", "BETA", "false"
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        betaRelease {
+            buildConfigField "boolean", "BETA", "true"
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+        }
+
+        betaDebug {
+            buildConfigField "boolean", "BETA", "true"
+            signingConfig signingConfigs.debug
+        }
+
+        debug {
+            buildConfigField "boolean", "BETA", "true"
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     compile('org.simpleframework:simple-xml:2.7.1') {
         exclude module: 'stax-api'
     }

@@ -14,17 +14,17 @@ import com.jakelauer.baseballtheater.base.ItemViewHolder
 import libs.ButterKnife.bindView
 import libs.RssParser.Article
 import android.support.customtabs.CustomTabsIntent
-
-
+import org.joda.time.format.PeriodFormatterBuilder
+import org.joda.time.format.PeriodFormatter
+import org.joda.time.DateTime
+import org.joda.time.Period
 
 
 /**
  * Created by Jake on 10/30/2017.
  */
-class ArticleItem(data: Article, activity: Activity) : AdapterChildItem<Article, ArticleItem.ViewHolder>(data)
+class ArticleItem(data: Article) : AdapterChildItem<Article, ArticleItem.ViewHolder>(data)
 {
-	private var m_activity = activity
-
 	override fun getLayoutResId() = R.layout.article_item
 
 	override fun createViewHolder(view: View) = ViewHolder(view)
@@ -69,16 +69,67 @@ class ArticleItem(data: Article, activity: Activity) : AdapterChildItem<Article,
 			viewHolder.m_source.text = "Source: $source"
 		}
 
+		val linkUri = Uri.parse(m_data.link)
+
+		viewHolder.m_metaIcon.loadUrl(getFaviconUrl(linkUri))
+
+		viewHolder.m_timeAgo.text = getTimeAgo(m_data.pubDate)
+
 		viewHolder.m_wrapper.setOnClickListener {
 			val builder = CustomTabsIntent.Builder()
 			val customTabsIntent = builder.build()
-			customTabsIntent.launchUrl(context, Uri.parse(m_data.link))
+			customTabsIntent.launchUrl(context, linkUri)
+		}
+	}
+
+	fun getFaviconUrl(uri: Uri): String
+	{
+		return "http://s2.googleusercontent.com/s2/favicons?domain_url=${uri.host}"
+	}
+
+	fun getTimeAgo(dateTime: DateTime?): String?
+	{
+		if (dateTime == null)
+		{
+			return null
+		}
+
+		var time = dateTime.millis
+		if (time < 1000000000000L)
+		{
+			// if timestamp given in seconds, convert to millis
+			time *= 1000
+		}
+
+		val now = DateTime.now().millis
+		if (time > now || time <= 0)
+		{
+			return null
+		}
+
+		val SECOND_MILLIS = 1000;
+		val MINUTE_MILLIS = 60 * SECOND_MILLIS
+		val HOUR_MILLIS = 60 * MINUTE_MILLIS
+		val DAY_MILLIS = 24 * HOUR_MILLIS
+
+		val diff = now - time
+		return when
+		{
+			diff < MINUTE_MILLIS -> "just now"
+			diff < 2 * MINUTE_MILLIS -> "a minute ago"
+			diff < 50 * MINUTE_MILLIS -> "${diff / MINUTE_MILLIS} minutes ago"
+			diff < 90 * MINUTE_MILLIS -> "an hour ago"
+			diff < 24 * HOUR_MILLIS -> "${diff / HOUR_MILLIS} hours ago"
+			diff < 48 * HOUR_MILLIS -> "yesterday"
+			else -> "${(diff / DAY_MILLIS)} days ago"
 		}
 	}
 
 	class ViewHolder(view: View) : ItemViewHolder(view)
 	{
 		var m_wrapper: View by bindView(R.id.ARTICLE_wrapper)
+		var m_timeAgo: TextView by bindView(R.id.ARTICLE_time_ago)
+		var m_metaIcon: ImageView by bindView(R.id.ARTICLE_meta_icon)
 		var m_source: TextView by bindView(R.id.ARTICLE_source)
 		var m_thumbnail: ImageView by bindView(R.id.ARTICLE_thumbnail)
 		var m_title: TextView by bindView(R.id.ARTICLE_title)
