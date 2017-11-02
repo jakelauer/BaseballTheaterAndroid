@@ -6,13 +6,14 @@ import android.os.IBinder
 import android.os.Parcelable
 import android.support.design.internal.ParcelableSparseArray
 import android.support.v4.app.Fragment
-import android.text.ParcelableSpan
+import android.util.Log
 import android.util.Size
 import android.util.SizeF
-import android.util.SparseArray
 import java.io.Serializable
 import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 import kotlin.reflect.full.starProjectedType
 
 /**
@@ -110,6 +111,8 @@ class Syringe
 		var INJECT_MEMBER_PREFIX = "m_"
 			private set
 
+		var FRAGMENT_CONSTRUCTOR_CACHE: HashMap<String, List<String?>> = HashMap()
+
 		fun setup(injectMemberPrefix: String = "m_")
 		{
 			INJECT_MEMBER_PREFIX = injectMemberPrefix
@@ -126,54 +129,62 @@ class Syringe
 			{
 				fun doInjection(fragment: Fragment, vararg argList: Any)
 				{
-					val args = Bundle()
+					if (argList.isEmpty())
+					{
+						// Nothing to inject
+						return
+					}
 
 					val argumentTypes = argList.map { arg ->
 						arg.javaClass.kotlin.starProjectedType
 					}
 
-					// Loop through all the constructors for this class
-					for (constructor in fragment.javaClass.kotlin.constructors)
+					val argTypesHash = argumentTypes.hashCode()
+					val fragName = fragment.javaClass.name
+					val cacheKey = "$fragName$argTypesHash"
+
+					val cachedNames = FRAGMENT_CONSTRUCTOR_CACHE[cacheKey]
+					if (cachedNames != null)
 					{
-						// Ignore constructors with no parameters
-						if (constructor.parameters.isNotEmpty())
+						fragment.arguments = makeBundle(cachedNames, argList)
+						return
+					}
+
+					val constructors = fragment.javaClass.kotlin.constructors.filter { c -> c.parameters.isNotEmpty() }
+
+					// Loop through all the constructors for this class
+					for (constructor in constructors)
+					{
+						val params = constructor.parameters
+						val constructorParamTypes = params.map { param -> param.type }
+						val constructorParamTypesHash = constructorParamTypes.hashCode()
+
+						if (constructorParamTypesHash == argTypesHash)
 						{
-							val constructorParamTypes = constructor.parameters.map { param -> param.type }
+							val bundleKeys = params.map { it.name }
+							fragment.arguments = makeBundle(bundleKeys, argList)
+							FRAGMENT_CONSTRUCTOR_CACHE.put(cacheKey, bundleKeys)
 
-							// If this constructor has the same number of params as the argument list...
-							if (constructorParamTypes.size == argumentTypes.size)
-							{
-								// Check to make sure they are all the same types as each other
-								var allEqual = true
-								for (i in 0 until argumentTypes.size)
-								{
-									val paramType = constructorParamTypes[i]
-									if (!argumentTypes.contains(paramType))
-									{
-										allEqual = false
-										break
-									}
-								}
-
-								// If they are, add them to the bundle as "m_" + parameterName
-								if (allEqual)
-								{
-									for (i in 0 until argumentTypes.size)
-									{
-										val parameter = constructor.parameters[i]
-										val name = parameter.name
-										val value = argList[i]
-										if (name != null)
-										{
-											args.put(INJECT_MEMBER_PREFIX + name, value)
-										}
-									}
-								}
-							}
+							return
 						}
 					}
 
-					fragment.arguments = args
+					throw IllegalStateException("There was an error creating the bundle")
+				}
+
+				fun makeBundle(bundleKeys: List<String?>, argList: Array<out Any>): Bundle
+				{
+					val args = Bundle()
+					for (i in 0 until bundleKeys.size)
+					{
+						val key = bundleKeys[i]
+								?: throw IllegalStateException("An error occurred determining the name of a key in the bundle")
+
+						val value = argList[i]
+						args.put(INJECT_MEMBER_PREFIX + key, value)
+					}
+
+					return args
 				}
 			}
 		}
