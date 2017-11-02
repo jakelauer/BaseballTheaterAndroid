@@ -44,7 +44,7 @@ class ProfilingFragmentDefault() : BaseFragment<String>()
 			fragment.arguments = args
 
 			val endTime = System.nanoTime()
-			Log.d("TOTAL_TIME", (endTime - startTime).toString())
+			Log.d("TOTAL_TIME", ((endTime - startTime).toDouble()/1000000.0).toString())
 			return fragment
 		}
 	}

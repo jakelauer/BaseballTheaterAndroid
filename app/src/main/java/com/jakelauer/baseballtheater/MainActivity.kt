@@ -40,7 +40,7 @@ class MainActivity : BaseActivity()
 				val fragment = NewsFragment()
 				setMainFragment(fragment)
 				return@OnNavigationItemSelectedListener true
-			}/*
+			}
 			R.id.navigation_profiling_default -> {
 				val fragment = ProfilingFragmentDefault.newInstance("hello!", DateTime.now(), 5, 10.toByte(), 12345L)
 				setMainFragment(fragment)
@@ -50,7 +50,7 @@ class MainActivity : BaseActivity()
 				val fragment = ProfilingFragmentSyringe("hello!", DateTime.now(), 5, 10.toByte(), 12345L)
 				setMainFragment(fragment)
 				return@OnNavigationItemSelectedListener true
-			}*/
+			}
 		}
 		false
 	}

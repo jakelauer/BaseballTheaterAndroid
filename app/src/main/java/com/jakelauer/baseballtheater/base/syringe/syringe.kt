@@ -14,6 +14,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
 
 /**
@@ -118,22 +119,27 @@ class Syringe
 			INJECT_MEMBER_PREFIX = injectMemberPrefix
 		}
 
-		fun inject(fragment: Fragment, vararg argList: Any)
+		fun inject(fragment: Fragment, argList: Array<out Any>)
 		{
-			return FragmentBundler.doInjection(fragment, *argList)
+			FragmentBundler.doInjection(fragment, argList)
 		}
 
 		class FragmentBundler
 		{
 			companion object
 			{
-				fun doInjection(fragment: Fragment, vararg argList: Any)
+				fun doInjection(fragment: Fragment, argList: Array<out Any>)
 				{
+					val startTime = System.nanoTime()
+					var endTime = System.nanoTime()
 					if (argList.isEmpty())
 					{
 						// Nothing to inject
 						return
 					}
+
+					endTime = System.nanoTime()
+					Log.d("TIME_START", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					val argumentTypes = argList.map { arg ->
 						arg.javaClass.kotlin.starProjectedType
@@ -143,6 +149,8 @@ class Syringe
 					val fragName = fragment.javaClass.name
 					val cacheKey = "$fragName$argTypesHash"
 
+					Log.d("TIME_0", ((endTime - startTime).toDouble()/1000000.0).toString())
+
 					val cachedNames = FRAGMENT_CONSTRUCTOR_CACHE[cacheKey]
 					if (cachedNames != null)
 					{
@@ -150,12 +158,19 @@ class Syringe
 						return
 					}
 
-					val constructors = fragment.javaClass.kotlin.constructors.filter { c -> c.parameters.isNotEmpty() }
+					endTime = System.nanoTime()
+					Log.d("TIME_1", ((endTime - startTime).toDouble()/1000000.0).toString())
+					val constructors = fragment.javaClass.kotlin.constructors
 
 					// Loop through all the constructors for this class
 					for (constructor in constructors)
 					{
+						endTime = System.nanoTime()
+						Log.d("TIME_2", ((endTime - startTime).toDouble()/1000000.0).toString())
 						val params = constructor.parameters
+
+						if(params.isEmpty()) continue
+
 						val constructorParamTypes = params.map { param -> param.type }
 						val constructorParamTypesHash = constructorParamTypes.hashCode()
 
@@ -168,18 +183,18 @@ class Syringe
 							return
 						}
 					}
+					endTime = System.nanoTime()
+					Log.d("TOTAL_TIME", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					throw IllegalStateException("There was an error creating the bundle")
 				}
 
-				fun makeBundle(bundleKeys: List<String?>, argList: Array<out Any>): Bundle
+				private fun makeBundle(bundleKeys: List<String?>, argList: Array<out Any>): Bundle
 				{
 					val args = Bundle()
 					for (i in 0 until bundleKeys.size)
 					{
 						val key = bundleKeys[i]
-								?: throw IllegalStateException("An error occurred determining the name of a key in the bundle")
-
 						val value = argList[i]
 						args.put(INJECT_MEMBER_PREFIX + key, value)
 					}

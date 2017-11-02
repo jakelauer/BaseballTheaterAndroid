@@ -30,12 +30,7 @@ abstract class BaseFragment<TData : Any> : DialogFragment
 
 	constructor(vararg argList: Any)
 	{
-		val startTime = System.nanoTime()
-
-		Syringe.inject(this, *argList)
-
-		val endTime = System.nanoTime()
-		Log.d("TOTAL_TIME", (endTime - startTime).toString())
+		Syringe.inject(this, argList)
 	}
 
 	fun getModel() = m_model
