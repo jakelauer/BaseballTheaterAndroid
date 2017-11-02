@@ -16,6 +16,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.jvm.javaType
 
 /**
  * Created by Jake on 10/25/2017.
@@ -130,6 +131,7 @@ class Syringe
 			{
 				fun doInjection(fragment: Fragment, argList: Array<out Any>)
 				{
+					val args = Bundle()
 					val startTime = System.nanoTime()
 					var endTime = System.nanoTime()
 					if (argList.isEmpty())
@@ -142,43 +144,46 @@ class Syringe
 					Log.d("TIME_START", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					val argumentTypes = argList.map { arg ->
-						arg.javaClass.kotlin.starProjectedType
+						arg.javaClass.kotlin.qualifiedName
 					}
-
-					val argTypesHash = argumentTypes.hashCode()
-					val fragName = fragment.javaClass.name
-					val cacheKey = "$fragName$argTypesHash"
-
+					endTime = System.nanoTime()
 					Log.d("TIME_0", ((endTime - startTime).toDouble()/1000000.0).toString())
 
-					val cachedNames = FRAGMENT_CONSTRUCTOR_CACHE[cacheKey]
-					if (cachedNames != null)
-					{
-						fragment.arguments = makeBundle(cachedNames, argList)
-						return
-					}
+					val argTypesHash = argumentTypes.hashCode()
+					endTime = System.nanoTime()
+					Log.d("TIME_01", ((endTime - startTime).toDouble()/1000000.0).toString())
+					val fragName = fragment.javaClass.name
+					endTime = System.nanoTime()
+					Log.d("TIME_02", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					endTime = System.nanoTime()
-					Log.d("TIME_1", ((endTime - startTime).toDouble()/1000000.0).toString())
+					Log.d("TIME_10", ((endTime - startTime).toDouble()/1000000.0).toString())
 					val constructors = fragment.javaClass.kotlin.constructors
 
 					// Loop through all the constructors for this class
 					for (constructor in constructors)
 					{
 						endTime = System.nanoTime()
-						Log.d("TIME_2", ((endTime - startTime).toDouble()/1000000.0).toString())
+						Log.d("TIME_20", ((endTime - startTime).toDouble()/1000000.0).toString())
 						val params = constructor.parameters
 
 						if(params.isEmpty()) continue
 
-						val constructorParamTypes = params.map { param -> param.type }
+						val constructorParamTypes = params.map { param -> param.type.toString() }
 						val constructorParamTypesHash = constructorParamTypes.hashCode()
 
 						if (constructorParamTypesHash == argTypesHash)
 						{
 							val bundleKeys = params.map { it.name }
-							fragment.arguments = makeBundle(bundleKeys, argList)
-							FRAGMENT_CONSTRUCTOR_CACHE.put(cacheKey, bundleKeys)
+
+							for (i in 0 until bundleKeys.size)
+							{
+								val key = bundleKeys[i]
+								val value = argList[i]
+								args.put(INJECT_MEMBER_PREFIX + key, value)
+							}
+
+							fragment.arguments = args
 
 							return
 						}
@@ -187,19 +192,6 @@ class Syringe
 					Log.d("TOTAL_TIME", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					throw IllegalStateException("There was an error creating the bundle")
-				}
-
-				private fun makeBundle(bundleKeys: List<String?>, argList: Array<out Any>): Bundle
-				{
-					val args = Bundle()
-					for (i in 0 until bundleKeys.size)
-					{
-						val key = bundleKeys[i]
-						val value = argList[i]
-						args.put(INJECT_MEMBER_PREFIX + key, value)
-					}
-
-					return args
 				}
 			}
 		}
