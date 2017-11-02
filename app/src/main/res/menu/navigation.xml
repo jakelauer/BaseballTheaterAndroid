@@ -10,12 +10,12 @@
         android:id="@+id/navigation_news"
         android:icon="@drawable/ic_newspaper_black_48dp"
         android:title="@string/title_news" />
-      <!--  <item
+        <item
             android:id="@+id/navigation_profiling_default"
             android:icon="@drawable/ic_dashboard_black_24dp"
             android:title="ProfilingDefault"/>
         <item
             android:id="@+id/navigation_profiling_syringe"
             android:icon="@drawable/ic_dashboard_black_24dp"
-            android:title="ProfilingSyringe"/>-->
+            android:title="ProfilingSyringe"/>
 </menu>

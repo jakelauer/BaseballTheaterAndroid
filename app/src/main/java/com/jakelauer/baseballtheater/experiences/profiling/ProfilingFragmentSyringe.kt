@@ -33,7 +33,6 @@ class ProfilingFragmentSyringe : BaseFragment<String>
 
 	override fun onBindView()
 	{
-		Log.d("TIME_ON_BIND_VIEW", System.nanoTime().toString())
 /*
 		Log.d("arg1", m_arg1)
 		Log.d("arg2", m_arg2.toString())
