@@ -14,8 +14,12 @@
             android:id="@+id/navigation_profiling_default"
             android:icon="@drawable/ic_dashboard_black_24dp"
             android:title="ProfilingDefault"/>
-        <item
-            android:id="@+id/navigation_profiling_syringe"
-            android:icon="@drawable/ic_dashboard_black_24dp"
-            android:title="ProfilingSyringe"/>
+    <item
+        android:id="@+id/navigation_profiling_syringe"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="ProfilingSyringe"/>
+    <item
+        android:id="@+id/navigation_profiling_syringe2"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="ProfilingSyringe"/>
 </menu>

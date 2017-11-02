@@ -7,6 +7,7 @@ import com.jakelauer.baseballtheater.experiences.news.NewsFragment
 import com.jakelauer.baseballtheater.experiences.gamelist.GameListPagerFragment
 import com.jakelauer.baseballtheater.experiences.profiling.ProfilingFragmentDefault
 import com.jakelauer.baseballtheater.experiences.profiling.ProfilingFragmentSyringe
+import com.jakelauer.baseballtheater.experiences.profiling.ProfilingFragmentSyringeTwo
 import kotlinx.android.synthetic.main.activity_base.*
 import org.joda.time.DateTime
 
@@ -48,6 +49,11 @@ class MainActivity : BaseActivity()
 			}
 			R.id.navigation_profiling_syringe -> {
 				val fragment = ProfilingFragmentSyringe("hello!", DateTime.now(), 5, 10.toByte(), 12345L)
+				setMainFragment(fragment)
+				return@OnNavigationItemSelectedListener true
+			}
+			R.id.navigation_profiling_syringe2 -> {
+				val fragment = ProfilingFragmentSyringeTwo("hello!", DateTime.now(), 5, 10.toByte(), 12345L)
 				setMainFragment(fragment)
 				return@OnNavigationItemSelectedListener true
 			}
