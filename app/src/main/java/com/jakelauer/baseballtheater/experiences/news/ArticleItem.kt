@@ -14,6 +14,7 @@ import com.jakelauer.baseballtheater.base.ItemViewHolder
 import libs.ButterKnife.bindView
 import libs.RssParser.Article
 import android.support.customtabs.CustomTabsIntent
+import android.text.Html
 import org.joda.time.format.PeriodFormatterBuilder
 import org.joda.time.format.PeriodFormatter
 import org.joda.time.DateTime
@@ -47,9 +48,9 @@ class ArticleItem(data: Article) : AdapterChildItem<Article, ArticleItem.ViewHol
 			viewHolder.m_title.text = m_data.title
 		}
 
-		if (m_data.description != null)
+		if (m_data.description != null && m_data.description?.indexOf("<table>") == -1)
 		{
-			viewHolder.m_subtitle.text = m_data.description
+			viewHolder.m_subtitle.text = Html.fromHtml(m_data.description)
 		}
 
 		val newsFeed = m_data.newsFeed
@@ -59,11 +60,12 @@ class ArticleItem(data: Article) : AdapterChildItem<Article, ArticleItem.ViewHol
 
 			when (source)
 			{
+				NewsFeeds.mtr -> "MLB Trade Rumors"
 				NewsFeeds.espn -> "ESPN"
-				NewsFeeds.si -> "Sports Illustrated"
 				NewsFeeds.fivethirtyeight -> "538"
 				NewsFeeds.fangraphs -> "FanGraphs"
 				NewsFeeds.mlb -> "MLB.com"
+				NewsFeeds.reddit -> "Reddit"
 			}
 
 			viewHolder.m_source.text = "Source: $source"

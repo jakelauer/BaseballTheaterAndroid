@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="app_background">#FFF</color>
+    <color name="app_background">#EEE</color>
+    <color name="colorActionTextPrimary">#FFF</color>
     <color name="colorPrimary">#ce0f0f</color>
     <color name="colorPrimaryDark">#9b0a0b</color>
     <color name="colorAccent">#ce0f0f</color>
@@ -14,6 +15,7 @@
     <color name="link">#0000FF</color>
     <color name="featuredGame">#eceef9</color>
     <color name="featuredGameCorner">#ffc400</color>
+    <color name="transparent">#00000000</color>
     <color name="featuredTeam">#2979ff</color>
 
     <color name="team_color_ana">#ce1141</color>

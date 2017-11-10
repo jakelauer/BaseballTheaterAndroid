@@ -45,6 +45,7 @@
             android:name=".experiences.settings.SettingsActivity"
             android:label="Settings">
         </activity>
+        <activity android:name=".experiences.nux.NuxActivity" />
     </application>
 
 </manifest>

@@ -29,7 +29,7 @@ import com.google.android.gms.cast.framework.SessionManager
  * Created by Jake on 10/20/2017.
  */
 
-abstract class BaseActivity : AppCompatActivity()
+abstract class BaseActivity(val m_canCast: Boolean) : AppCompatActivity()
 {
 	@get:LayoutRes
 	protected abstract val m_layoutResId: Int
@@ -53,33 +53,36 @@ abstract class BaseActivity : AppCompatActivity()
 
 		setContentView(m_layoutResId)
 
-		CastButtonFactory.setUpMediaRouteButton(applicationContext, media_route_button)
-
-		m_castContext = CastContext.getSharedInstance(this)
-
-		m_mediaRouter = MediaRouter.getInstance(this)
-		m_mediaRouteSelector = MediaRouteSelector.Builder()
-				.addControlCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK)
-				.addControlCategory(CastMediaControlIntent.categoryForCast(getString(R.string.app_id)))
-				.build()
-
-		m_mediaRouterCallback = object : MediaRouter.Callback()
+		if(m_canCast)
 		{
-			override fun onRouteSelected(router: MediaRouter, route: MediaRouter.RouteInfo)
+			CastButtonFactory.setUpMediaRouteButton(applicationContext, media_route_button)
+
+			m_castContext = CastContext.getSharedInstance(this)
+
+			m_mediaRouter = MediaRouter.getInstance(this)
+			m_mediaRouteSelector = MediaRouteSelector.Builder()
+					.addControlCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK)
+					.addControlCategory(CastMediaControlIntent.categoryForCast(getString(R.string.app_id)))
+					.build()
+
+			m_mediaRouterCallback = object : MediaRouter.Callback()
 			{
-				super.onRouteSelected(router, route)
-				m_castDevice = CastDevice.getFromBundle(route.extras)
+				override fun onRouteSelected(router: MediaRouter, route: MediaRouter.RouteInfo)
+				{
+					super.onRouteSelected(router, route)
+					m_castDevice = CastDevice.getFromBundle(route.extras)
+				}
+
+				override fun onRouteUnselected(router: MediaRouter?, route: MediaRouter.RouteInfo?)
+				{
+					super.onRouteUnselected(router, route)
+					m_castDevice = null
+				}
 			}
 
-			override fun onRouteUnselected(router: MediaRouter?, route: MediaRouter.RouteInfo?)
-			{
-				super.onRouteUnselected(router, route)
-				m_castDevice = null
-			}
+			m_castSessionManager = CastContext.getSharedInstance(this).sessionManager
+			m_castSession = m_castSessionManager.currentCastSession
 		}
-
-		m_castSessionManager = CastContext.getSharedInstance(this).sessionManager
-		m_castSession = m_castSessionManager.currentCastSession
 
 		onBindView()
 	}
@@ -87,10 +90,15 @@ abstract class BaseActivity : AppCompatActivity()
 	override fun onCreateOptionsMenu(menu: Menu): Boolean
 	{
 		super.onCreateOptionsMenu(menu)
-		menuInflater.inflate(R.menu.cast, menu)
-		m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(applicationContext, menu, R.id.media_route_menu_item)
-		val provider = MenuItemCompat.getActionProvider(m_mediaRouteMenuItem) as MediaRouteActionProvider
-		provider.routeSelector = m_mediaRouteSelector
+
+		if(m_canCast)
+		{
+			menuInflater.inflate(R.menu.cast, menu)
+			m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(applicationContext, menu, R.id.media_route_menu_item)
+			val provider = MenuItemCompat.getActionProvider(m_mediaRouteMenuItem) as MediaRouteActionProvider
+			provider.routeSelector = m_mediaRouteSelector
+		}
+
 		return true
 	}
 
@@ -107,8 +115,12 @@ abstract class BaseActivity : AppCompatActivity()
 	override fun onResume()
 	{
 		super.onResume()
-		m_castSession = m_castSessionManager.currentCastSession
-		m_mediaRouter.addCallback(m_mediaRouteSelector, m_mediaRouterCallback, MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN)
+
+		if (m_canCast)
+		{
+			m_castSession = m_castSessionManager.currentCastSession
+			m_mediaRouter.addCallback(m_mediaRouteSelector, m_mediaRouterCallback, MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN)
+		}
 	}
 
 	override fun onPause()
@@ -121,24 +133,25 @@ abstract class BaseActivity : AppCompatActivity()
 		m_castSession = null
 	}
 
-	fun setPref(key: String, value: String)
+	public fun setPref(key: String, value: String)
 	{
 		val sharedPref = getPreferences(Context.MODE_PRIVATE)
 		val editor = sharedPref.edit()
 		editor.putString(key, value)
-		editor.commit()
+		editor.apply()
 	}
 
-	fun getPref(key: String): String
+	public fun getPref(key: String): String
 	{
 		val sharedPref = getPreferences(Context.MODE_PRIVATE)
 		return sharedPref.getString(key, "")
 	}
 
-	fun clearPref(key: String)
+	public fun clearPref(key: String)
 	{
 		val sharedPref = getPreferences(Context.MODE_PRIVATE)
 		val editor = sharedPref.edit()
 		editor.remove(key)
+		editor.apply()
 	}
 }

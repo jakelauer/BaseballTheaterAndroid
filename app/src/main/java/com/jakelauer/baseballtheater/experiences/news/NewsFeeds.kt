@@ -8,8 +8,9 @@ package com.jakelauer.baseballtheater.experiences.news
 enum class NewsFeeds(var feedname: String)
 {
 	mlb("mlb"),
+	mtr("mtr"),
 	fangraphs("fangraphs"),
 	fivethirtyeight("fivethirtyeight"),
-	si("si"),
+	reddit("reddit"),
 	espn("espn");
 }

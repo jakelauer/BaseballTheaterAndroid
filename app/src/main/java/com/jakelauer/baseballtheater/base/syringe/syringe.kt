@@ -142,36 +142,39 @@ class Syringe
 					Log.d("TIME_START", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					val argumentTypes = argList.map { arg ->
-						arg.javaClass.kotlin.starProjectedType
+						arg.javaClass.canonicalName
 					}
 
 					val argTypesHash = argumentTypes.hashCode()
 					val fragName = fragment.javaClass.name
 					val cacheKey = "$fragName$argTypesHash"
 
+					endTime = System.nanoTime()
 					Log.d("TIME_0", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					val cachedNames = FRAGMENT_CONSTRUCTOR_CACHE[cacheKey]
 					if (cachedNames != null)
 					{
 						fragment.arguments = makeBundle(cachedNames, argList)
+						endTime = System.nanoTime()
+						Log.d("TIME_15", ((endTime - startTime).toDouble()/1000000.0).toString())
 						return
 					}
 
 					endTime = System.nanoTime()
-					Log.d("TIME_1", ((endTime - startTime).toDouble()/1000000.0).toString())
+					Log.d("TIME_10", ((endTime - startTime).toDouble()/1000000.0).toString())
 					val constructors = fragment.javaClass.kotlin.constructors
 
 					// Loop through all the constructors for this class
 					for (constructor in constructors)
 					{
 						endTime = System.nanoTime()
-						Log.d("TIME_2", ((endTime - startTime).toDouble()/1000000.0).toString())
+						Log.d("TIME_20", ((endTime - startTime).toDouble()/1000000.0).toString())
 						val params = constructor.parameters
 
 						if(params.isEmpty()) continue
 
-						val constructorParamTypes = params.map { param -> param.type }
+						val constructorParamTypes = params.map { param -> param.type.toString() }
 						val constructorParamTypesHash = constructorParamTypes.hashCode()
 
 						if (constructorParamTypesHash == argTypesHash)
@@ -180,11 +183,11 @@ class Syringe
 							fragment.arguments = makeBundle(bundleKeys, argList)
 							FRAGMENT_CONSTRUCTOR_CACHE.put(cacheKey, bundleKeys)
 
+							endTime = System.nanoTime()
+							Log.d("TOTAL_TIME", ((endTime - startTime).toDouble()/1000000.0).toString())
 							return
 						}
 					}
-					endTime = System.nanoTime()
-					Log.d("TOTAL_TIME", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					throw IllegalStateException("There was an error creating the bundle")
 				}

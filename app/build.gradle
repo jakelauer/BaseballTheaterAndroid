@@ -19,8 +19,8 @@ android {
         applicationId "com.jakelauer.baseballtheater"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 33
-        versionName "2.0"
+        versionCode 37
+        versionName "2.0b"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
