@@ -18,7 +18,6 @@
 package libs.RssParser
 
 import org.joda.time.DateTime
-import java.util.*
 
 /**
  * Created by Marco Gomiero on 12/02/2015.

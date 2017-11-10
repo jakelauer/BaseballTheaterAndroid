@@ -10,7 +10,7 @@ import com.jakelauer.baseballtheater.base.syringe.syringe
 /**
  * Created by Jake on 10/25/2017.
  */
-class GameDetailActivity : BaseActivity()
+class GameDetailActivity : BaseActivity(true)
 {
 	override val m_layoutResId: Int
 		get() = R.layout.game_detail_activity

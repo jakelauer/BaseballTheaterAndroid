@@ -107,9 +107,27 @@ class XMLParser : Observable()
 					}
 					else if (xmlPullParser.name.equals("pubDate", ignoreCase = true))
 					{
-						val dateText = xmlPullParser.nextText()
-						val pubDate = DateTime(dateText)
-						currentArticle.pubDate = pubDate
+						try
+						{
+							val dateText = xmlPullParser.nextText()
+							val pubDate = DateTime(dateText)
+							currentArticle.pubDate = pubDate
+						}
+						catch(e: Exception){
+
+						}
+					}
+					else if (xmlPullParser.name.equals("pubDateString", ignoreCase = true))
+					{
+						try
+						{
+							val dateText = xmlPullParser.nextText()
+							val pubDate = DateTime(dateText)
+							currentArticle.pubDate = pubDate
+						}
+						catch(e: Exception){
+
+						}
 					}
 				}
 				else if (eventType == XmlPullParser.END_TAG && xmlPullParser.name.equals("item", ignoreCase = true))

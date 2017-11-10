@@ -21,5 +21,4 @@
     <style name="TeamName" parent="TeamCity">
         <item name="android:alpha">1</item>
     </style>
-
 </resources>

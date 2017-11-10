@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/teams_list_keys"
+        android:entryValues="@array/teams_list_values"
+        android:key="behavior_favorite_team"
+        android:title="@string/pref_title_behavior_favorite_team" />
     <PreferenceCategory android:title="@string/pref_header_game_list">
         <SwitchPreference
             android:defaultValue="false"
             android:key="behavior_hide_scores"
             android:title="@string/pref_title_hide_scores" />
-
-        <ListPreference
-            android:defaultValue="0"
-            android:entries="@array/teams_list_keys"
-            android:entryValues="@array/teams_list_values"
-            android:key="behavior_favorite_team"
-            android:title="@string/pref_title_behavior_favorite_team" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_header_news">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="news_show_in_offseason"
+            android:summary="@string/prefs_show_news_offseason_subtitle"
+            android:title="@string/prefs_show_news_offseason"/>
+        <MultiSelectListPreference
+            android:key="news_sources"
+            android:entries="@array/pref_news_source_keys"
+            android:entryValues="@array/pref_news_source_values"
+            android:defaultValue="@array/pref_news_source_defaultvalues"
+            android:title="@string/prefs_news_sources"/>
+        <MultiSelectListPreference
+            android:key="team_news_sources"
+            android:entries="@array/pref_team_news_source_keys"
+            android:entryValues="@array/pref_team_news_source_values"
+            android:defaultValue="@array/pref_team_news_source_defaultvalues"
+            android:title="@string/prefs_team_news_sources"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_header_highlights">
         <SwitchPreference
@@ -46,13 +64,5 @@
             android:entryValues="@array/thumbnail_quality_values"
             android:key="display_thumbnail_quality_wifi"
             android:title="@string/pref_title_thumbnail_quality_wifi" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_header_news">
-        <MultiSelectListPreference
-            android:key="news_sources"
-            android:entries="@array/pref_news_source_keys"
-            android:entryValues="@array/pref_news_source_values"
-            android:defaultValue="@array/pref_news_source_defaultvalues"
-            android:title="@string/prefs_news_sources"/>
     </PreferenceCategory>
 </PreferenceScreen>

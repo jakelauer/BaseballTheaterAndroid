@@ -16,7 +16,6 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
-import kotlin.reflect.jvm.javaType
 
 /**
  * Created by Jake on 10/25/2017.
@@ -131,7 +130,6 @@ class Syringe
 			{
 				fun doInjection(fragment: Fragment, argList: Array<out Any>)
 				{
-					val args = Bundle()
 					val startTime = System.nanoTime()
 					var endTime = System.nanoTime()
 					if (argList.isEmpty())
@@ -144,17 +142,24 @@ class Syringe
 					Log.d("TIME_START", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					val argumentTypes = argList.map { arg ->
-						arg.javaClass.kotlin.qualifiedName
+						arg.javaClass.canonicalName
 					}
+
+					val argTypesHash = argumentTypes.hashCode()
+					val fragName = fragment.javaClass.name
+					val cacheKey = "$fragName$argTypesHash"
+
 					endTime = System.nanoTime()
 					Log.d("TIME_0", ((endTime - startTime).toDouble()/1000000.0).toString())
 
-					val argTypesHash = argumentTypes.hashCode()
-					endTime = System.nanoTime()
-					Log.d("TIME_01", ((endTime - startTime).toDouble()/1000000.0).toString())
-					val fragName = fragment.javaClass.name
-					endTime = System.nanoTime()
-					Log.d("TIME_02", ((endTime - startTime).toDouble()/1000000.0).toString())
+					val cachedNames = FRAGMENT_CONSTRUCTOR_CACHE[cacheKey]
+					if (cachedNames != null)
+					{
+						fragment.arguments = makeBundle(cachedNames, argList)
+						endTime = System.nanoTime()
+						Log.d("TIME_15", ((endTime - startTime).toDouble()/1000000.0).toString())
+						return
+					}
 
 					endTime = System.nanoTime()
 					Log.d("TIME_10", ((endTime - startTime).toDouble()/1000000.0).toString())
@@ -175,23 +180,29 @@ class Syringe
 						if (constructorParamTypesHash == argTypesHash)
 						{
 							val bundleKeys = params.map { it.name }
+							fragment.arguments = makeBundle(bundleKeys, argList)
+							FRAGMENT_CONSTRUCTOR_CACHE.put(cacheKey, bundleKeys)
 
-							for (i in 0 until bundleKeys.size)
-							{
-								val key = bundleKeys[i]
-								val value = argList[i]
-								args.put(INJECT_MEMBER_PREFIX + key, value)
-							}
-
-							fragment.arguments = args
-
+							endTime = System.nanoTime()
+							Log.d("TOTAL_TIME", ((endTime - startTime).toDouble()/1000000.0).toString())
 							return
 						}
 					}
-					endTime = System.nanoTime()
-					Log.d("TOTAL_TIME", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					throw IllegalStateException("There was an error creating the bundle")
+				}
+
+				private fun makeBundle(bundleKeys: List<String?>, argList: Array<out Any>): Bundle
+				{
+					val args = Bundle()
+					for (i in 0 until bundleKeys.size)
+					{
+						val key = bundleKeys[i]
+						val value = argList[i]
+						args.put(INJECT_MEMBER_PREFIX + key, value)
+					}
+
+					return args
 				}
 			}
 		}

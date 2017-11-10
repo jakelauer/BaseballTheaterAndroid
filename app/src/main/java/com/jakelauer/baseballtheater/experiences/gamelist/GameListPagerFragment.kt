@@ -1,6 +1,5 @@
 package com.jakelauer.baseballtheater.experiences.gamelist
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -14,8 +13,8 @@ import android.view.MenuItem
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.BaseFragment
-import com.jakelauer.baseballtheater.base.syringe.syringe
 import com.jakelauer.baseballtheater.experiences.settings.SettingsActivity
+import com.jakelauer.baseballtheater.utils.DateTimeUtils
 import libs.ButterKnife.bindView
 import org.joda.time.DateTime
 
@@ -24,14 +23,9 @@ import org.joda.time.DateTime
  * Created by Jake on 10/20/2017.
  */
 
-class GameListPagerFragment : BaseFragment<Any>
+class GameListPagerFragment : BaseFragment<Any>()
 {
-	constructor() : super()
-
-	@SuppressLint("ValidFragment")
-	constructor(initialFragmentDate: DateTime) : super(initialFragmentDate)
-
-	var m_initialFragmentDate: DateTime by syringe()
+	lateinit var m_initialFragmentDate: DateTime
 	lateinit var m_startingDate: DateTime
 	lateinit var m_currentDate: DateTime
 
@@ -45,6 +39,8 @@ class GameListPagerFragment : BaseFragment<Any>
 	{
 		super.onCreate(savedInstanceState)
 
+		val dateString = (activity as BaseActivity).getPref("date")
+		m_initialFragmentDate = if (dateString != "") DateTime(dateString) else DateTimeUtils.getDefaultDate()
 		m_startingDate = m_initialFragmentDate
 		m_currentDate = m_initialFragmentDate
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/NUX_logo"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:tint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_logo"/>
+
+    <TextView
+        android:id="@+id/NUX_header"
+        app:layout_constraintTop_toBottomOf="@id/NUX_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorPrimary"
+        android:padding="@dimen/default_padding"
+        android:text="Favorite Team"/>
+
+    <ListView
+        android:id="@+id/NUX_fav_team_spinner"
+        app:layout_constraintTop_toBottomOf="@id/NUX_header"
+        app:layout_constraintBottom_toTopOf="@id/NUX_skip"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:choiceMode="singleChoice"
+        android:drawSelectorOnTop="true"
+        android:listSelector="@color/colorAccent2"
+        android:entries="@array/teams_list_keys"
+        />
+
+    <Button
+        android:id="@+id/NUX_skip"
+        android:enabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:background="@color/transparent"
+        android:textColor="@color/primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.25"
+        android:text="Next"/>
+
+</android.support.constraint.ConstraintLayout>

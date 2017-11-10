@@ -8,12 +8,14 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.jakelauer.baseballtheater.BaseballTheater
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.ItemViewHolder
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.GameDetailActivity
-import com.jakelauer.baseballtheater.utils.PreferenceUtils.Companion.BEHAVIOR_HIDE_SCORES
+import com.jakelauer.baseballtheater.utils.PrefUtils
+import com.jakelauer.baseballtheater.utils.PrefUtils.Companion.BEHAVIOR_HIDE_SCORES
 import com.jakelauer.baseballtheater.utils.TeamColors
 import libs.ButterKnife.bindView
 
@@ -23,8 +25,6 @@ import libs.ButterKnife.bindView
  */
 class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameItem.Model, GameItem.ViewHolder>(model)
 {
-	private var m_prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-
 	override fun getLayoutResId(): Int
 	{
 		return R.layout.game_item
@@ -50,7 +50,7 @@ class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameI
 		viewHolder.m_homeTeamCity.setTextColor(TeamColors.getTeamColor(m_data.m_game.homeFileCode, viewHolder.itemView.context))
 		viewHolder.m_homeTeamName.setTextColor(TeamColors.getTeamColor(m_data.m_game.homeFileCode, viewHolder.itemView.context))
 
-		if (m_prefs.getBoolean(BEHAVIOR_HIDE_SCORES, false))
+		if (PrefUtils.getBoolean(context, BEHAVIOR_HIDE_SCORES))
 		{
 			viewHolder.m_awayTeamScore.text = "▨"
 			viewHolder.m_homeTeamScore.text = "▨"
@@ -64,12 +64,12 @@ class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameI
 				viewHolder.m_homeTeamWon.alpha = if (homeWon) 1f else 0f
 				viewHolder.m_awayTeamWon.alpha = if (!homeWon) 1f else 0f
 
-				viewHolder.m_awayTeamWrapper.alpha = if(homeWon) 0.35F else 1F
-				viewHolder.m_homeTeamWrapper.alpha = if(!homeWon) 0.35F else 1F
+				viewHolder.m_awayTeamWrapper.alpha = if (homeWon) 0.35F else 1F
+				viewHolder.m_homeTeamWrapper.alpha = if (!homeWon) 0.35F else 1F
 			}
 		}
 
-		viewHolder.m_gameItemContainer.elevation = if(m_data.m_isFavTeam) 20F else 4F
+		viewHolder.m_gameItemContainer.elevation = if (m_data.m_isFavTeam) 20F else 4F
 
 		viewHolder.itemView.setOnClickListener {
 			GameDetailActivity.startActivity(m_data.m_game, viewHolder.itemView.context)

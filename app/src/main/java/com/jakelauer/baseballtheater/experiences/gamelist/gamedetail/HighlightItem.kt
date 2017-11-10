@@ -23,7 +23,8 @@ import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.ItemViewHolder
-import com.jakelauer.baseballtheater.utils.PreferenceUtils.Companion.BEHAVIOR_HIDE_SCORES
+import com.jakelauer.baseballtheater.utils.PrefUtils
+import com.jakelauer.baseballtheater.utils.PrefUtils.Companion.BEHAVIOR_HIDE_SCORES
 import com.jakelauer.baseballtheater.utils.Utils
 import libs.ButterKnife.bindView
 import java.util.regex.Pattern
@@ -75,7 +76,7 @@ class HighlightItem(highlight: Highlight, activity: BaseActivity) : AdapterChild
 		{
 			viewHolder.m_title.setTypeface(viewHolder.m_title.typeface, Typeface.BOLD)
 
-			if (m_prefs.getBoolean(BEHAVIOR_HIDE_SCORES, false))
+			if (PrefUtils.getBoolean(context, BEHAVIOR_HIDE_SCORES))
 			{
 				viewHolder.m_subtitle.visibility = View.GONE
 			}

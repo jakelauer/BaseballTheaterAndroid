@@ -40,23 +40,47 @@
 
 
     <string name="pref_header_news">News</string>
-    <string name="prefs_news_sources">Select News Sources</string>
+    <string name="prefs_show_news_offseason">Default to News tab during offseason</string>
+    <string name="prefs_show_news_offseason_subtitle">Requires Restart</string>
+    <string name="prefs_news_sources">MLB News Sources</string>
+    <string name="prefs_team_news_sources">Team News Sources</string>
+
+    
     <string-array name="pref_news_source_defaultvalues">
-        <item>mlb</item>
         <item>fangraphs</item>
+        <item>espn</item>
+        <item>fivethirtyeight</item>
     </string-array>
     <string-array name="pref_news_source_values">
         <item>mlb</item>
         <item>fangraphs</item>
-        <item>si</item>
+        <item>mtr</item>
         <item>espn</item>
         <item>fivethirtyeight</item>
+        <item>reddit</item>
     </string-array>
     <string-array name="pref_news_source_keys">
         <item>MLB.com</item>
         <item>FanGraphs</item>
-        <item>Sports Illustrated</item>
+        <item>MLB Trade Rumors</item>
         <item>ESPN</item>
         <item>538</item>
+        <item>Reddit (r/baseball)</item>
+    </string-array>
+
+
+    <string-array name="pref_team_news_source_defaultvalues">
+        <item>mlb_fav_team</item>
+        <item>mtr_fav_team</item>
+    </string-array>
+    <string-array name="pref_team_news_source_keys">
+        <item>MLB.com</item>
+        <item>MLB Trade Rumors</item>
+        <item>Reddit (Team Subreddit)</item>
+    </string-array>
+    <string-array name="pref_team_news_source_values">
+        <item>mlb_fav_team</item>
+        <item>mtr_fav_team</item>
+        <item>reddit_fav_team</item>
     </string-array>
 </resources>

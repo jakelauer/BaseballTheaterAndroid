@@ -2,7 +2,6 @@
 <resources>
 
     <string-array name="teams_list_values">
-        <item>none</item>
         <item>ari</item>
         <item>atl</item>
         <item>bal</item>
@@ -37,7 +36,6 @@
 
 
     <string-array name="teams_list_keys">
-        <item>None</item>
         <item>Arizona Diamondbacks</item>
         <item>Atlanta Braves</item>
         <item>Baltimore Orioles</item>

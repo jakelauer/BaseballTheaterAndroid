@@ -1,27 +1,49 @@
 package com.jakelauer.baseballtheater
 
+import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
 import android.util.Log
 import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.experiences.news.NewsFragment
 import com.jakelauer.baseballtheater.experiences.gamelist.GameListPagerFragment
 import com.jakelauer.baseballtheater.experiences.profiling.ProfilingFragmentDefault
 import com.jakelauer.baseballtheater.experiences.profiling.ProfilingFragmentSyringe
-import com.jakelauer.baseballtheater.experiences.profiling.ProfilingFragmentSyringeTwo
+import com.jakelauer.baseballtheater.utils.DateTimeUtils
+import com.jakelauer.baseballtheater.utils.PrefUtils
 import kotlinx.android.synthetic.main.activity_base.*
 import org.joda.time.DateTime
 
 
-class MainActivity : BaseActivity()
+class MainActivity : BaseActivity(true)
 {
 	override val m_layoutResId: Int
 		get() = R.layout.activity_base
 
 	override fun onBindView()
 	{
+		PreferenceManager.setDefaultValues(this, R.xml.settings, true)
+
+		val showNewsInOffseason = PrefUtils.getBoolean(this, PrefUtils.NEWS_SHOW_IN_OFFSEASON)
+		val isOffseason = DateTimeUtils.getIsOffseason()
+		val newsFirst = showNewsInOffseason && isOffseason
+
+		val menuId = if (newsFirst) R.menu.navigation_news_first else R.menu.navigation
+
+		navigation.inflateMenu(menuId)
 		navigation.setOnNavigationItemSelectedListener(m_onNavigationItemSelectedListener)
-		val fragment = GameListPagerFragment(DateTime.now())
-		clearPref("date")
+
+		val fragment: Fragment
+		if (newsFirst)
+		{
+			fragment = NewsFragment()
+			navigation.menu.findItem(R.id.navigation_news).isChecked = true
+		}
+		else
+		{
+			clearPref("date")
+			fragment = GameListPagerFragment()
+		}
 		setMainFragment(fragment)
 	}
 
@@ -30,9 +52,7 @@ class MainActivity : BaseActivity()
 		{
 			R.id.navigation_games ->
 			{
-				val dateString = getPref("date")
-				val date = if (dateString != "") DateTime(dateString) else DateTime.now()
-				val fragment = GameListPagerFragment(date)
+				val fragment = GameListPagerFragment()
 				setMainFragment(fragment)
 				return@OnNavigationItemSelectedListener true
 			}
@@ -42,21 +62,16 @@ class MainActivity : BaseActivity()
 				setMainFragment(fragment)
 				return@OnNavigationItemSelectedListener true
 			}
-			R.id.navigation_profiling_default -> {
-				val fragment = ProfilingFragmentDefault.newInstance("hello!", DateTime.now(), 5, 10.toByte(), 12345L)
-				setMainFragment(fragment)
-				return@OnNavigationItemSelectedListener true
-			}
-			R.id.navigation_profiling_syringe -> {
-				val fragment = ProfilingFragmentSyringe("hello!", DateTime.now(), 5, 10.toByte(), 12345L)
-				setMainFragment(fragment)
-				return@OnNavigationItemSelectedListener true
-			}
-			R.id.navigation_profiling_syringe2 -> {
-				val fragment = ProfilingFragmentSyringeTwo("hello!", DateTime.now(), 5, 10.toByte(), 12345L)
-				setMainFragment(fragment)
-				return@OnNavigationItemSelectedListener true
-			}
+		/*R.id.navigation_profiling_default -> {
+			val fragment = ProfilingFragmentDefault.newInstance("hello!", DateTime.now(), 5, 10.toByte(), 12345L)
+			setMainFragment(fragment)
+			return@OnNavigationItemSelectedListener true
+		}
+		R.id.navigation_profiling_syringe -> {
+			val fragment = ProfilingFragmentSyringe("hello!", DateTime.now(), 5, 10.toByte(), 12345L)
+			setMainFragment(fragment)
+			return@OnNavigationItemSelectedListener true
+		}*/
 		}
 		false
 	}
