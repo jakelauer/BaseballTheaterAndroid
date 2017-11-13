@@ -65,14 +65,6 @@ public class JsonDownloader extends AsyncTask<String, Integer, String>
         return result.toString("UTF-8");
     }
 
-    @Override
-    protected void onProgressUpdate(Integer... values)
-    {
-        super.onProgressUpdate(values);
-        double progress = 1 - ((double) values[0] / (double) 1024);
-        mListener.onDownloadProgress(progress);
-    }
-
     protected void onPostExecute(String jsonString)
     {
         mListener.onDownloadComplete(jsonString);

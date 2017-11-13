@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/teams_list_keys"
-        android:entryValues="@array/teams_list_values"
-        android:key="behavior_favorite_team"
-        android:title="@string/pref_title_behavior_favorite_team" />
+    <Preference
+        android:layout="@layout/patreon_preference"
+        android:key="patreon"
+        android:title="Support on Patreon"
+        android:summary="Help support development of this project! Your contributions help keep things running, and enable further feature development."
+        />
     <PreferenceCategory android:title="@string/pref_header_game_list">
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/teams_list_keys"
+            android:entryValues="@array/teams_list_values"
+            android:key="behavior_favorite_team"
+            android:title="@string/pref_title_behavior_favorite_team" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="behavior_hide_scores"
+            android:summary="@string/pref_subtitle_hide_Scores"
             android:title="@string/pref_title_hide_scores" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_header_news">
@@ -17,19 +24,25 @@
             android:defaultValue="true"
             android:key="news_show_in_offseason"
             android:summary="@string/prefs_show_news_offseason_subtitle"
-            android:title="@string/prefs_show_news_offseason"/>
+            android:title="@string/prefs_show_news_offseason" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="news_keep_read_items"
+            android:title="@string/prefs_title_hide_read_items"
+            android:summary="@string/prefs_summary_hide_read_items"
+            />
         <MultiSelectListPreference
-            android:key="news_sources"
+            android:defaultValue="@array/pref_news_source_defaultvalues"
             android:entries="@array/pref_news_source_keys"
             android:entryValues="@array/pref_news_source_values"
-            android:defaultValue="@array/pref_news_source_defaultvalues"
-            android:title="@string/prefs_news_sources"/>
+            android:key="news_sources"
+            android:title="@string/prefs_news_sources" />
         <MultiSelectListPreference
-            android:key="team_news_sources"
+            android:defaultValue="@array/pref_team_news_source_defaultvalues"
             android:entries="@array/pref_team_news_source_keys"
             android:entryValues="@array/pref_team_news_source_values"
-            android:defaultValue="@array/pref_team_news_source_defaultvalues"
-            android:title="@string/prefs_team_news_sources"/>
+            android:key="team_news_sources"
+            android:title="@string/prefs_team_news_sources" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_header_highlights">
         <SwitchPreference
@@ -39,30 +52,16 @@
 
         <ListPreference
             android:defaultValue="0"
-            android:entries="@array/video_quality_keys"
-            android:entryValues="@array/video_quality_values"
-            android:key="display_video_quality_mobile"
-            android:title="@string/pref_title_video_quality_mobile" />
-
-        <ListPreference
-            android:defaultValue="0"
-            android:entries="@array/thumbnail_quality_keys"
-            android:entryValues="@array/thumbnail_quality_values"
-            android:key="display_thumbnail_quality_mobile"
-            android:title="@string/pref_title_thumbnail_quality_mobile" />
+            android:entries="@array/quality_keys"
+            android:entryValues="@array/quality_values"
+            android:key="display_quality_mobile"
+            android:title="@string/pref_title_quality_mobile" />
 
         <ListPreference
             android:defaultValue="1"
-            android:entries="@array/video_quality_keys"
-            android:entryValues="@array/video_quality_values"
-            android:key="display_video_quality_wifi"
-            android:title="@string/pref_title_video_quality_wifi" />
-
-        <ListPreference
-            android:defaultValue="1"
-            android:entries="@array/thumbnail_quality_keys"
-            android:entryValues="@array/thumbnail_quality_values"
-            android:key="display_thumbnail_quality_wifi"
-            android:title="@string/pref_title_thumbnail_quality_wifi" />
+            android:entries="@array/quality_keys"
+            android:entryValues="@array/quality_values"
+            android:key="display_quality_wifi"
+            android:title="@string/pref_title_quality_wifi" />
     </PreferenceCategory>
 </PreferenceScreen>

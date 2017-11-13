@@ -10,33 +10,21 @@
     <string name="pref_header_game_list_summary">Customize the games list</string>
 
     <string name="pref_title_hide_scores">Hide game scores</string>
+    <string name="pref_subtitle_hide_Scores">Hides scores and results</string>
     <string name="pref_title_show_quality_options">Show Video Quality Options</string>
-    <string name="pref_title_video_quality_mobile">Video Quality (Mobile Data)</string>
-    <string name="pref_title_video_quality_wifi">Video Quality (Wifi)</string>
-    <string-array name="video_quality_values">
+    <string name="pref_title_quality_mobile">Quality (Mobile Data)</string>
+    <string name="pref_title_quality_wifi">Quality (Wifi)</string>
+    <string-array name="quality_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>
-    <string-array name="video_quality_keys">
+    <string-array name="quality_keys">
         <item>Lowest Available</item>
         <item>Medium</item>
         <item>Highest Available</item>
     </string-array>
 
-
-    <string name="pref_title_thumbnail_quality_mobile">Thumbnail Quality (Mobile Data)</string>
-    <string name="pref_title_thumbnail_quality_wifi">Thumbnail Quality (Wifi)</string>
-    <string-array name="thumbnail_quality_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-    <string-array name="thumbnail_quality_keys">
-        <item>Lowest</item>
-        <item>Medium</item>
-        <item>Highest (Warning: High data usage)</item>
-    </string-array>
 
 
     <string name="pref_header_news">News</string>
@@ -44,6 +32,8 @@
     <string name="prefs_show_news_offseason_subtitle">Requires Restart</string>
     <string name="prefs_news_sources">MLB News Sources</string>
     <string name="prefs_team_news_sources">Team News Sources</string>
+    <string name="prefs_title_hide_read_items">Keep read articles in list</string>
+    <string name="prefs_summary_hide_read_items">Articles will show as dimmed after reading (requires restart)</string>
 
     
     <string-array name="pref_news_source_defaultvalues">

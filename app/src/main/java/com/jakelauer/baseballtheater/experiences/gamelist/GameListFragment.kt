@@ -9,6 +9,7 @@ import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.base.syringe.syringe
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
+import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.GameDetailActivity
 import org.joda.time.DateTime
 import java.util.*
 import java.util.concurrent.ExecutionException
@@ -83,7 +84,11 @@ class GameListFragment : RefreshableListFragment<GameListFragment.Model>
 			for (game in games.GameSummaries)
 			{
 				val isFavTeam = favTeamCode == game.awayFileCode || favTeamCode == game.homeFileCode
-				val item = GameItem(GameItem.Model(game, isFavTeam), context)
+				val item = GameItem(GameItem.Model(game, isFavTeam))
+
+				item.setClickListener({ _, _ ->
+					GameDetailActivity.startActivity(game, context)
+				})
 
 				m_adapter?.add(item)
 			}

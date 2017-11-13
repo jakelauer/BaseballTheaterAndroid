@@ -18,6 +18,7 @@ class PrefUtils
 		val NEWS_SHOW_IN_OFFSEASON = "news_show_in_offseason"
 		val SEEN_NUX = "seen_nux";
 		val ARTICLES_SEEN = "articles_seen"
+		val ARTICLES_KEEP_READ = "news_keep_read_items"
 
 		private fun getApplication(context: Context): BaseballTheater
 		{
