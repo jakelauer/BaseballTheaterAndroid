@@ -3,7 +3,9 @@ package com.jakelauer.baseballtheater.base
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.jakelauer.baseballtheater.R
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator
 import libs.ButterKnife.bindView
+
 
 /**
  * Created by Jake on 10/20/2017.
@@ -29,5 +31,7 @@ abstract class FlexibleListFragment<TData : Any> : BaseFragment<TData>
 		createAdapter()
 		m_parentList.adapter = m_adapter
 		m_parentList.layoutManager = LinearLayoutManager(context)
+
+		m_parentList.itemAnimator = SlideInRightAnimator()
 	}
 }

@@ -17,6 +17,8 @@ abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData
 	var m_data = data
 		private set
 
+	var m_clickListener: ItemClickListener? = null
+
 	@LayoutRes
 	abstract fun getLayoutResId(): Int
 
@@ -28,6 +30,11 @@ abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData
 			//ButterKnife.bind(it, it.itemView)
 			onBindView(it, it.itemView.context)
 		}
+	}
+
+	fun setClickListener(listener: ItemClickListener)
+	{
+		m_clickListener = listener
 	}
 
 	protected fun setData(data: TData)
@@ -46,3 +53,5 @@ abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData
 				.into(this)
 	}
 }
+
+typealias ItemClickListener = (view: View, position: Int) -> Unit

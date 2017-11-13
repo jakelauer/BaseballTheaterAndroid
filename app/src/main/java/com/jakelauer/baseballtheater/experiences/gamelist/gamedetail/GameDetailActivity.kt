@@ -2,6 +2,7 @@ package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseActivity
@@ -16,6 +17,13 @@ class GameDetailActivity : BaseActivity(true)
 		get() = R.layout.game_detail_activity
 
 	val m_game: GameSummary by syringe()
+
+	override fun onCreate(savedInstanceState: Bundle?)
+	{
+		super.onCreate(savedInstanceState)
+
+		setShowBackButton(true)
+	}
 
 	override fun onBindView()
 	{

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import com.jakelauer.baseballtheater.experiences.nux.NuxActivity
 import com.jakelauer.baseballtheater.utils.PrefUtils
 
+
 /**
  * Created by Jake on 1/21/2017.
  */
@@ -21,6 +22,11 @@ class SplashActivity : AppCompatActivity()
 		val activityToStart = if (seenNux) MainActivity::class.java else NuxActivity::class.java
 
 		val intent = Intent(this, activityToStart)
+		if (!seenNux)
+		{
+			intent.flags = intent.flags or Intent.FLAG_ACTIVITY_NO_HISTORY
+		}
+
 		startActivity(intent)
 		finish()
 	}

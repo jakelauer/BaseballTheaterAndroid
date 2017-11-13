@@ -20,6 +20,11 @@ class MainActivity : BaseActivity(true)
 	override val m_layoutResId: Int
 		get() = R.layout.activity_base
 
+	fun resetTitle()
+	{
+		title = "Baseball Theater"
+	}
+
 	override fun onBindView()
 	{
 		PreferenceManager.setDefaultValues(this, R.xml.settings, true)
@@ -33,6 +38,8 @@ class MainActivity : BaseActivity(true)
 		navigation.inflateMenu(menuId)
 		navigation.setOnNavigationItemSelectedListener(m_onNavigationItemSelectedListener)
 
+		clearPref("date")
+
 		val fragment: Fragment
 		if (newsFirst)
 		{
@@ -41,7 +48,6 @@ class MainActivity : BaseActivity(true)
 		}
 		else
 		{
-			clearPref("date")
 			fragment = GameListPagerFragment()
 		}
 		setMainFragment(fragment)

@@ -13,7 +13,7 @@ import android.view.ViewGroup
 class ComplexAdapter : RecyclerView.Adapter<ItemViewHolder>
 {
 	var m_currentViewType = 0
-	val m_items: MutableList<AdapterChildItem<*, ItemViewHolder>> = ArrayList()
+	val m_items: MutableList<AdapterItem> = ArrayList()
 	val m_classToViewtype: HashMap<Class<*>, Int> = HashMap()
 	val m_typeToLayout: HashMap<Int, Int> = HashMap()
 	val m_inflater: LayoutInflater
@@ -31,21 +31,25 @@ class ComplexAdapter : RecyclerView.Adapter<ItemViewHolder>
 
 	override fun getItemViewType(position: Int): Int
 	{
-		val item = m_items.get(position)
-		val viewType = m_classToViewtype.get(item.javaClass)
+		val item = m_items[position]
+		val viewType = m_classToViewtype[item.javaClass]
 		return viewType ?: -1
 	}
 
 	override fun onBindViewHolder(holder: ItemViewHolder, position: Int)
 	{
-		val item = m_items.get(position)
+		val item = m_items[position]
 		val itemViewHolder = item.createViewHolder(holder.itemView)
 		item.bindView(itemViewHolder)
+
+		holder.itemView.setOnClickListener {
+			item.m_clickListener?.invoke(holder.itemView, position)
+		}
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ItemViewHolder
 	{
-		val layoutId = m_typeToLayout.get(viewType)
+		val layoutId = m_typeToLayout[viewType]
 
 		layoutId?.let {
 			val view = LayoutInflater.from(parent?.context).inflate(it, parent, false)
@@ -68,6 +72,12 @@ class ComplexAdapter : RecyclerView.Adapter<ItemViewHolder>
 		notifyDataSetChanged()
 	}
 
+	fun removeAt(position: Int)
+	{
+		m_items.removeAt(position)
+		notifyItemRemoved(position)
+	}
+
 	fun clear()
 	{
 		m_classToViewtype.clear()
@@ -75,3 +85,5 @@ class ComplexAdapter : RecyclerView.Adapter<ItemViewHolder>
 		notifyDataSetChanged()
 	}
 }
+
+typealias AdapterItem = AdapterChildItem<*, ItemViewHolder>

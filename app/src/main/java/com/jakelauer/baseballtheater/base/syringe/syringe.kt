@@ -131,14 +131,13 @@ class Syringe
 				fun doInjection(fragment: Fragment, argList: Array<out Any>)
 				{
 					val startTime = System.nanoTime()
-					var endTime = System.nanoTime()
 					if (argList.isEmpty())
 					{
 						// Nothing to inject
 						return
 					}
 
-					endTime = System.nanoTime()
+					var endTime = System.nanoTime()
 					Log.d("TIME_START", ((endTime - startTime).toDouble()/1000000.0).toString())
 
 					val argumentTypes = argList.map { arg ->

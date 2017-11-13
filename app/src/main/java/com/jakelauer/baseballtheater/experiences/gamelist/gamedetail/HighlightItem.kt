@@ -156,9 +156,9 @@ class HighlightItem(highlight: Highlight, activity: BaseActivity) : AdapterChild
 		var urlIndex = 2
 
 		val prefKey = if (Utils.isWifiAvailable(context))
-			"display_video_quality_wifi"
+			"display_quality_wifi"
 		else
-			"display_video_quality_mobile"
+			"display_quality_mobile"
 
 		val qualitySetting = m_prefs.getString(prefKey, "1")
 		when (qualitySetting)

@@ -30,12 +30,6 @@ public class JsonLoader
                     downloadListener.onDownloadComplete(null);
                 }
             }
-
-            @Override
-            public void onDownloadProgress(Double progress)
-            {
-                downloadListener.onDownloadProgress(progress);
-            }
         });
 
         jsonDownloader.execute(url);

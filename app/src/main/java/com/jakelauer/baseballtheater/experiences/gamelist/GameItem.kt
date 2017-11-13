@@ -1,29 +1,32 @@
 package com.jakelauer.baseballtheater.experiences.gamelist
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import android.graphics.Color
+import android.graphics.Shader
 import android.support.v7.widget.CardView
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import com.jakelauer.baseballtheater.BaseballTheater
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.ItemViewHolder
-import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.GameDetailActivity
 import com.jakelauer.baseballtheater.utils.PrefUtils
 import com.jakelauer.baseballtheater.utils.PrefUtils.Companion.BEHAVIOR_HIDE_SCORES
 import com.jakelauer.baseballtheater.utils.TeamColors
 import libs.ButterKnife.bindView
+import android.graphics.drawable.shapes.OvalShape
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.LinearGradient
+
+
 
 
 /**
  * Created by Jake on 10/22/2017.
  */
-class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameItem.Model, GameItem.ViewHolder>(model)
+class GameItem(model: GameItem.Model) : AdapterChildItem<GameItem.Model, GameItem.ViewHolder>(model)
 {
 	override fun getLayoutResId(): Int
 	{
@@ -46,9 +49,9 @@ class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameI
 		viewHolder.m_gameStatus.text = m_data.m_game.currentInning
 
 		viewHolder.m_awayTeamCity.setTextColor(TeamColors.getTeamColor(m_data.m_game.awayFileCode, viewHolder.itemView.context))
-		viewHolder.m_awayTeamName.setTextColor(TeamColors.getTeamColor(m_data.m_game.awayFileCode, viewHolder.itemView.context))
+		viewHolder.m_awayTeamName.setTextColor(TeamColors.getTeamColorSecondary(m_data.m_game.awayFileCode, viewHolder.itemView.context))
 		viewHolder.m_homeTeamCity.setTextColor(TeamColors.getTeamColor(m_data.m_game.homeFileCode, viewHolder.itemView.context))
-		viewHolder.m_homeTeamName.setTextColor(TeamColors.getTeamColor(m_data.m_game.homeFileCode, viewHolder.itemView.context))
+		viewHolder.m_homeTeamName.setTextColor(TeamColors.getTeamColorSecondary(m_data.m_game.homeFileCode, viewHolder.itemView.context))
 
 		if (PrefUtils.getBoolean(context, BEHAVIOR_HIDE_SCORES))
 		{
@@ -70,10 +73,6 @@ class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameI
 		}
 
 		viewHolder.m_gameItemContainer.elevation = if (m_data.m_isFavTeam) 20F else 4F
-
-		viewHolder.itemView.setOnClickListener {
-			GameDetailActivity.startActivity(m_data.m_game, viewHolder.itemView.context)
-		}
 	}
 
 	class ViewHolder(view: View) : ItemViewHolder(view)
@@ -98,5 +97,17 @@ class GameItem(model: GameItem.Model, context: Context) : AdapterChildItem<GameI
 	{
 		var m_awayTeamScore: String = m_game.linescore?.runs?.away ?: ""
 		var m_homeTeamScore: String = m_game.linescore?.runs?.home ?: ""
+	}
+
+	class ShaderFactory : ShapeDrawable.ShaderFactory()
+	{
+		override fun resize(width: Int, height: Int): Shader
+		{
+			return LinearGradient(0f, 0f, width.toFloat(), height.toFloat(),
+					intArrayOf(0xF44336, 0xFFB74D, 0xFFE082, 0xAED581, 0x4CAF50, 0xAED581, 0xFFE082, 0xFFB74D, 0xF44336),
+					floatArrayOf(0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1.0f),
+					Shader.TileMode.REPEAT)
+		}
+
 	}
 }

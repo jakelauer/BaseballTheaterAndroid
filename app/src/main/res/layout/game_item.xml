@@ -1,158 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/game_item_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_margin"
-    android:foreground="?attr/selectableItemBackground">
+    android:layout_marginBottom="@dimen/default_margin_small"
+    android:layout_marginEnd="@dimen/default_margin"
+    android:layout_marginStart="@dimen/default_margin"
+    android:layout_marginTop="@dimen/default_margin_small"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="10dp">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/game_away_team_wrapper"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/default_padding">
 
-            <LinearLayout
+            <FrameLayout
+                android:id="@+id/game_away_team_wrapper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.jakelauer.baseballtheater.common.BaseballTextView
-                    android:id="@+id/game_away_team_city"
-                    style="@style/TeamName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="Chicago" />
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:alpha="0.6">
+                    android:orientation="vertical">
 
                     <com.jakelauer.baseballtheater.common.BaseballTextView
-                        android:id="@+id/game_away_team_name"
+                        android:id="@+id/game_away_team_city"
                         style="@style/TeamName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Cubs" />
-                </LinearLayout>
+                        tools:text="Chicago" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center"
-                android:orientation="horizontal">
-
-                <com.jakelauer.baseballtheater.common.BaseballTextView
-                    android:id="@+id/game_away_team_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textDefault"
-                    android:textSize="22sp"
-                    tools:text="7" />
-
-                <ImageView
-                    android:id="@+id/game_away_team_won"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginEnd="-10dp"
-                    android:layout_marginStart="-5dp"
-                    android:alpha="0"
-                    android:src="@drawable/ic_arrow_drop_left_black_24dp" />
-            </LinearLayout>
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:background="#000000" />
-
-            <TextView
-                android:id="@+id/game_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@color/app_background"
-                android:padding="3dp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textSize="12sp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/game_home_team_wrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.jakelauer.baseballtheater.common.BaseballTextView
-                    android:id="@+id/game_home_team_city"
-                    style="@style/TeamName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="New York" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.6">
-
-                    <com.jakelauer.baseballtheater.common.BaseballTextView
-                        android:id="@+id/game_home_team_name"
-                        style="@style/TeamName"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="Yankees" />
+                        android:alpha="0.6">
+
+                        <com.jakelauer.baseballtheater.common.BaseballTextView
+                            android:id="@+id/game_away_team_name"
+                            style="@style/TeamName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="Cubs" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center"
-                android:orientation="horizontal">
-
-                <com.jakelauer.baseballtheater.common.BaseballTextView
-                    android:id="@+id/game_home_team_score"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center"
-                    android:textColor="@color/textDefault"
-                    android:textSize="22sp"
-                    tools:text="7" />
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/game_home_team_won"
+                    <com.jakelauer.baseballtheater.common.BaseballTextView
+                        android:id="@+id/game_away_team_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/textDefault"
+                        android:textSize="22sp"
+                        tools:text="7" />
+
+                    <ImageView
+                        android:id="@+id/game_away_team_won"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginEnd="-10dp"
+                        android:layout_marginStart="-5dp"
+                        android:alpha="0"
+                        android:src="@drawable/ic_arrow_drop_left_black_24dp" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/game_status_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/game_away_team_wrapper">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="#000000" />
+
+                <TextView
+                    android:id="@+id/game_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginEnd="-10dp"
-                    android:layout_marginStart="-5dp"
-                    android:alpha="0"
-                    android:src="@drawable/ic_arrow_drop_left_black_24dp" />
-            </LinearLayout>
-        </FrameLayout>
-    </LinearLayout>
+                    android:layout_gravity="center"
+                    android:background="@color/cardview_light_background"
+                    android:padding="3dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                    android:textSize="12sp" />
+            </FrameLayout>
 
+            <FrameLayout
+                android:id="@+id/game_home_team_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/game_status_wrapper">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.jakelauer.baseballtheater.common.BaseballTextView
+                        android:id="@+id/game_home_team_city"
+                        style="@style/TeamName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="New York" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.6">
+
+                        <com.jakelauer.baseballtheater.common.BaseballTextView
+                            android:id="@+id/game_home_team_name"
+                            style="@style/TeamName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="Yankees" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center"
+                    android:orientation="horizontal">
+
+                    <com.jakelauer.baseballtheater.common.BaseballTextView
+                        android:id="@+id/game_home_team_score"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|center"
+                        android:textColor="@color/textDefault"
+                        android:textSize="22sp"
+                        tools:text="7" />
+
+                    <ImageView
+                        android:id="@+id/game_home_team_won"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginEnd="-10dp"
+                        android:layout_marginStart="-5dp"
+                        android:alpha="0"
+                        android:src="@drawable/ic_arrow_drop_left_black_24dp" />
+                </LinearLayout>
+            </FrameLayout>
+        </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
 </android.support.v7.widget.CardView>
 

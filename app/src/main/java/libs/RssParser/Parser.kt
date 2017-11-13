@@ -96,10 +96,11 @@ class Parser(val m_isDebug: Boolean = false) : AsyncTask<String, Void, String>()
 
 	}
 
+	@Suppress("UNCHECKED_CAST")
 	override fun update(observable: Observable, data: Any)
 	{
 		articles = data as ArrayList<Article>
-		onComplete!!.onTaskCompleted(articles)
+		onComplete?.onTaskCompleted(articles)
 
 	}
 

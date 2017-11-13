@@ -23,8 +23,6 @@ import kotlinx.android.synthetic.main.activity_base.*
 import com.google.android.gms.cast.framework.SessionManager
 
 
-
-
 /**
  * Created by Jake on 10/20/2017.
  */
@@ -33,7 +31,6 @@ abstract class BaseActivity(val m_canCast: Boolean) : AppCompatActivity()
 {
 	@get:LayoutRes
 	protected abstract val m_layoutResId: Int
-
 
 	private var m_mediaRouteMenuItem: MenuItem? = null
 
@@ -53,7 +50,7 @@ abstract class BaseActivity(val m_canCast: Boolean) : AppCompatActivity()
 
 		setContentView(m_layoutResId)
 
-		if(m_canCast)
+		if (m_canCast)
 		{
 			CastButtonFactory.setUpMediaRouteButton(applicationContext, media_route_button)
 
@@ -87,11 +84,30 @@ abstract class BaseActivity(val m_canCast: Boolean) : AppCompatActivity()
 		onBindView()
 	}
 
+	fun setShowBackButton(showBack: Boolean)
+	{
+		if (showBack)
+		{
+			setupActionBar()
+		}
+	}
+
+	private fun setupActionBar()
+	{
+		val actionBar = supportActionBar
+		if (actionBar != null)
+		{
+			// Show the Up button in the action bar.
+			actionBar.setDisplayHomeAsUpEnabled(true)
+			actionBar.setHomeButtonEnabled(true)
+		}
+	}
+
 	override fun onCreateOptionsMenu(menu: Menu): Boolean
 	{
 		super.onCreateOptionsMenu(menu)
 
-		if(m_canCast)
+		if (m_canCast)
 		{
 			menuInflater.inflate(R.menu.cast, menu)
 			m_mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(applicationContext, menu, R.id.media_route_menu_item)
@@ -100,6 +116,19 @@ abstract class BaseActivity(val m_canCast: Boolean) : AppCompatActivity()
 		}
 
 		return true
+	}
+
+	override fun onOptionsItemSelected(item: MenuItem): Boolean
+	{
+		when (item.itemId)
+		{
+			android.R.id.home ->
+			{
+				this.finish()
+				return true
+			}
+		}
+		return super.onOptionsItemSelected(item)
 	}
 
 	protected abstract fun onBindView()

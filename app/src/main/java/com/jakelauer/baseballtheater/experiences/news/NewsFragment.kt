@@ -1,29 +1,38 @@
 package com.jakelauer.baseballtheater.experiences.news
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.customtabs.CustomTabsIntent
+import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import com.jakelauer.baseballtheater.BuildConfig
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
 import com.jakelauer.baseballtheater.experiences.settings.SettingsActivity
 import com.jakelauer.baseballtheater.utils.PrefUtils
+import libs.ButterKnife.bindView
 import libs.RssParser.Article
 import libs.RssParser.Parser
 import org.jsoup.helper.StringUtil
+import android.view.animation.TranslateAnimation
+import android.view.animation.Animation
+import com.jakelauer.baseballtheater.MainActivity
 
 
 /**
  * Created by Jake on 10/27/2017.
  */
 
-class NewsFragment : RefreshableListFragment<NewsFragment.Model>
+class NewsFragment() : RefreshableListFragment<NewsFragment.Model>()
 {
 	private lateinit var m_feedUrl: String
 	private var m_url: String = ""
@@ -31,7 +40,8 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 	private var m_displayedarticles = ArrayList<Article>()
 	private var m_isBeta: Boolean = false
 
-	constructor() : super()
+	var m_clearSeen: FloatingActionButton by bindView(R.id.NEWS_clear_seen)
+	var m_keepReadItems: Boolean = false
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -43,6 +53,10 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 		m_feedUrl = if (m_isBeta) "https://dev.baseball.theater/data/news?favTeam=$favTeam&feeds=" else "https://baseball.theater/data/news?feeds="
 
 		setHasOptionsMenu(true)
+
+		m_keepReadItems = PrefUtils.getBoolean(context, PrefUtils.ARTICLES_KEEP_READ)
+
+		(activity as MainActivity).resetTitle()
 	}
 
 	override fun onBindView()
@@ -51,6 +65,38 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 
 		val itemTouchHelper = ItemTouchHelper(SwipeListener())
 		itemTouchHelper.attachToRecyclerView(m_parentList)
+
+		m_clearSeen.setOnClickListener({
+			m_adapter.let {
+				val items = it?.m_items
+				if (items != null)
+				{
+					var removed = 0
+					for (i in 0 until items.size)
+					{
+						val fixedI = i - removed
+						val item = items[fixedI]
+						val data = item.m_data as ArticleItem.Data
+						if (data.m_seen)
+						{
+							val itemView = m_parentList.layoutManager.findViewByPosition(fixedI)
+
+							if (itemView != null)
+							{
+								val animation = TranslateAnimation(0f, 500f, 0f, 0f) //May need to check the direction you want.
+								animation.duration = 1000
+								animation.fillAfter = true
+								itemView.startAnimation(animation)
+							}
+
+							it.removeAt(fixedI)
+							m_displayedarticles.removeAt(fixedI)
+							removed++
+						}
+					}
+				}
+			}
+		})
 	}
 
 	override fun getLayoutResourceId() = R.layout.news_fragment
@@ -121,20 +167,48 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 		})
 	}
 
+	fun markAsSeen(position: Int)
+	{
+		val cleared = m_displayedarticles[position]
+
+		val link = cleared.link
+		if (link != null)
+		{
+			val seen = ArrayList<String>(PrefUtils.getStringSet(context, PrefUtils.ARTICLES_SEEN))
+			seen.add(link)
+			PrefUtils.set(context, PrefUtils.ARTICLES_SEEN, seen.toSet())
+
+			m_adapter?.notifyItemChanged(position)
+			m_adapter?.notifyDataSetChanged()
+		}
+	}
+
 	private fun onFinished()
 	{
 		m_refreshView.isRefreshing = false
 		m_adapter?.clear()
 
-		val seen = PrefUtils.getStringSet(context, PrefUtils.ARTICLES_SEEN)
+		val seenItems = PrefUtils.getStringSet(context, PrefUtils.ARTICLES_SEEN)
 
 		if (m_allarticles.size > 0)
 		{
 			for (article in m_allarticles)
 			{
-				if(!seen.contains(article.link))
+				val seen = seenItems.contains(article.link)
+
+				if (!seen || m_keepReadItems)
 				{
-					val articleItem = ArticleItem(article)
+					val articleItem = ArticleItem(ArticleItem.Data(article, seen))
+
+					articleItem.setClickListener({ _, position ->
+						articleItem.setSeen()
+						markAsSeen(position)
+						removeArticle(position)
+
+						val builder = CustomTabsIntent.Builder()
+						val customTabsIntent = builder.build()
+						customTabsIntent.launchUrl(context, Uri.parse(articleItem.m_data.m_article.link))
+					})
 
 					m_displayedarticles.add(article)
 
@@ -147,6 +221,12 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 			val emptyItem = EmptyListIndicator(EmptyListIndicator.Model(context, R.string.article_list_empty, R.drawable.ic_cloud_off_black_24px))
 			m_adapter?.add(emptyItem)
 		}
+	}
+
+	fun removeArticle(position: Int)
+	{
+		m_adapter?.removeAt(position)
+		m_displayedarticles.removeAt(position)
 	}
 
 	class Model
@@ -162,19 +242,10 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>
 		{
 			if (viewHolder != null)
 			{
-				val cleared = m_displayedarticles[viewHolder.adapterPosition]
+				val position = viewHolder.adapterPosition
 
-				val link = cleared.link
-				if(link != null)
-				{
-					val seen = ArrayList<String>(PrefUtils.getStringSet(context, PrefUtils.ARTICLES_SEEN))
-					seen.add(link)
-
-					PrefUtils.set(context, PrefUtils.ARTICLES_SEEN, seen.toSet())
-				}
-
-				m_displayedarticles.removeAt(viewHolder.adapterPosition)
-				m_adapter?.notifyItemRemoved(viewHolder.adapterPosition)
+				markAsSeen(position)
+				removeArticle(position)
 			}
 		}
 
