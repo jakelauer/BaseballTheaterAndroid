@@ -19,8 +19,8 @@ android {
         applicationId "com.jakelauer.baseballtheater"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 38
-        versionName "2.0b"
+        versionCode 40
+        versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -75,7 +75,6 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.android.support:customtabs:26.1.0'
-    compile 'io.reactivex:rxjava:1.1.6'
     compile 'jp.wasabeef:recyclerview-animators:2.2.7'
 }
 kapt {

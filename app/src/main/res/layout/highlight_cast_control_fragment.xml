@@ -7,9 +7,21 @@
     android:padding="@dimen/default_padding_large">
 
     <TextView
+        android:id="@+id/betaflag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textStyle="italic"
+        android:textAlignment="center"
+        android:text="Cast support currently in beta"
+        />
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@id/betaflag"
         android:id="@+id/CAST_CONTROL_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_large"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textAlignment="center"
         tools:text="Title"/>
@@ -29,9 +41,9 @@
         app:layout_constraintTop_toBottomOf="@id/CAST_CONTROL_subtitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/default_margin_large"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_marginTop="@dimen/default_margin_xlarge"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:selectableItemBackground"
@@ -53,7 +65,7 @@
         app:layout_constraintEnd_toStartOf="@id/CAST_CONTROL_duration_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin_large" />
+        android:layout_marginTop="@dimen/default_margin_xlarge" />
 
     <TextView
         android:id="@+id/CAST_CONTROL_duration_time"

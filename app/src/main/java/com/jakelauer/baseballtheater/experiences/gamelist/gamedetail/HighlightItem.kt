@@ -17,6 +17,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaMetadata
+import com.google.android.gms.cast.framework.CastContext
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight
 import com.jakelauer.baseballtheater.MlbDataServer.ProgressListener
 import com.jakelauer.baseballtheater.R
@@ -120,7 +121,9 @@ class HighlightItem(highlight: Highlight, activity: BaseActivity) : AdapterChild
 
 	fun openLink(url: String, context: Context)
 	{
-		val remoteMediaClient = m_activity.m_castSession?.remoteMediaClient
+		val sm = CastContext.getSharedInstance(context).sessionManager
+		val castSession = sm.currentCastSession
+		val remoteMediaClient = castSession?.remoteMediaClient
 		if (remoteMediaClient != null)
 		{
 			val metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
