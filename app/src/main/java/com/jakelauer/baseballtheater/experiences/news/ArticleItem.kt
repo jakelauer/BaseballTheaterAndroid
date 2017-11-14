@@ -50,7 +50,7 @@ class ArticleItem(data: ArticleItem.Data) : AdapterChildItem<ArticleItem.Data, A
 			viewHolder.m_title.text = m_data.m_article.title
 		}
 
-		if (m_data.m_article.description != null && m_data.m_article.description?.indexOf("<table>") == -1)
+		if (m_data.m_article.description != null && m_data.m_article.description?.indexOf("[comments]") == -1)
 		{
 			viewHolder.m_subtitle.text = Html.fromHtml(m_data.m_article.description)
 		}

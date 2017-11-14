@@ -130,9 +130,12 @@ class NewsFragment() : RefreshableListFragment<NewsFragment.Model>()
 		val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 		val teamSources = prefs.getStringSet("team_news_sources", HashSet<String>())
 		val sources = prefs.getStringSet("news_sources", HashSet<String>())
-		sources.addAll(teamSources)
 
-		val cslFeeds = StringUtil.join(sources, ",") ?: ""
+		val allSources = ArrayList<String>()
+		allSources += teamSources
+		allSources += sources
+
+		val cslFeeds = StringUtil.join(allSources, ",") ?: ""
 		m_url = m_feedUrl + cslFeeds
 
 		m_refreshView.isRefreshing = true
@@ -194,6 +197,11 @@ class NewsFragment() : RefreshableListFragment<NewsFragment.Model>()
 		{
 			for (article in m_allarticles)
 			{
+				if (article.link == "")
+				{
+					continue
+				}
+
 				val seen = seenItems.contains(article.link)
 
 				if (!seen || m_keepReadItems)
@@ -203,7 +211,6 @@ class NewsFragment() : RefreshableListFragment<NewsFragment.Model>()
 					articleItem.setClickListener({ _, position ->
 						articleItem.setSeen()
 						markAsSeen(position)
-						removeArticle(position)
 
 						val builder = CustomTabsIntent.Builder()
 						val customTabsIntent = builder.build()

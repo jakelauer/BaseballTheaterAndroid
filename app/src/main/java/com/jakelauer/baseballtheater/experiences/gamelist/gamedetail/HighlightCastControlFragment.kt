@@ -2,9 +2,11 @@ package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
 import com.google.android.gms.cast.MediaStatus
+import com.google.android.gms.cast.framework.CastContext
 import com.google.android.gms.cast.framework.media.RemoteMediaClient
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight
 import com.jakelauer.baseballtheater.R
@@ -46,7 +48,10 @@ class HighlightCastControlFragment : BaseFragment<Any>
 
 	override fun onDestroy()
 	{
-		m_remoteMediaClient?.stop()
+		val sm = CastContext.getSharedInstance(context).sessionManager
+		val castSession = sm.currentCastSession
+		val remoteMediaClient = castSession?.remoteMediaClient
+		remoteMediaClient?.stop()
 		super.onDestroy()
 	}
 
@@ -59,7 +64,7 @@ class HighlightCastControlFragment : BaseFragment<Any>
 
 		m_remoteMediaClient?.addProgressListener({ progressMs: Long, durationMs: Long ->
 			m_seek.max = durationMs.toInt()
-			m_seek.progress = Math.floor(progressMs / m_highlight.durationMilliseconds().toDouble()).toInt()
+			m_seek.progress = progressMs.toInt()
 
 			m_currentTime.text = getDurationFromMs(progressMs)
 		}, 100)
@@ -103,13 +108,19 @@ class HighlightCastControlFragment : BaseFragment<Any>
 
 	inner class SeekChangeListener : SeekBar.OnSeekBarChangeListener
 	{
-		override fun onProgressChanged(p0: SeekBar?, progress: Int, p2: Boolean)
+		var m_dragging = false
+
+		override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean)
 		{
-			m_remoteMediaClient?.seek(progress.toLong())
+			if(fromUser)
+			{
+				m_remoteMediaClient?.seek(progress.toLong())
+			}
 		}
 
 		override fun onStartTrackingTouch(p0: SeekBar?)
 		{
+			m_dragging = true
 		}
 
 		override fun onStopTrackingTouch(p0: SeekBar?)
@@ -122,6 +133,8 @@ class HighlightCastControlFragment : BaseFragment<Any>
 			{
 				m_playPause.change(false)
 			}
+
+
 		}
 	}
 
