@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException
 /**
  * Created by Jake on 10/25/2017.
  */
-class GameDetailFragment : RefreshableListFragment<GameDetailFragment.Model>
+class HighlightsFragment : RefreshableListFragment<HighlightsFragment.Model>
 {
 	var m_game: GameSummary by syringe()
 
@@ -26,7 +26,7 @@ class GameDetailFragment : RefreshableListFragment<GameDetailFragment.Model>
 	@SuppressLint("ValidFragment")
 	constructor(game: GameSummary) : super(game)
 
-	override fun getLayoutResourceId() = R.layout.game_detail_fragment
+	override fun getLayoutResourceId() = R.layout.highlights_fragment
 
 	override fun createModel(): Model = Model()
 

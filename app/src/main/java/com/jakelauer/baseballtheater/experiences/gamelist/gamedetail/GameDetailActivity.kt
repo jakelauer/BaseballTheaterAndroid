@@ -27,7 +27,7 @@ class GameDetailActivity : BaseActivity(true)
 
 	override fun onBindView()
 	{
-		val fragment = GameDetailFragment(m_game)
+		val fragment = GameDetailWrapperFragment(m_game)
 		setMainFragment(fragment)
 	}
 
