@@ -1,4 +1,4 @@
-package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail;
+package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.highlights;
 
 /**
  * Created by Jake on 10/29/2017.

@@ -16,10 +16,8 @@ import libs.ButterKnife.bindView
  * Created by Jake on 11/9/2017.
  */
 
-class NuxFragment : BaseFragment<String>
+class NuxFragment : BaseFragment<String>()
 {
-	constructor() : super()
-
 	var m_listView: ListView by bindView(R.id.NUX_fav_team_spinner)
 	var m_button: Button by bindView(R.id.NUX_skip)
 
@@ -31,7 +29,9 @@ class NuxFragment : BaseFragment<String>
 	{
 		super.onCreate(savedInstanceState)
 
-		m_teamKeys = context.resources.getStringArray(R.array.teams_list_values)
+		context?.let {
+			m_teamKeys = it.resources.getStringArray(R.array.teams_list_values)
+		}
 	}
 
 	override fun createModel(): String
@@ -45,34 +45,41 @@ class NuxFragment : BaseFragment<String>
 
 	override fun onBindView()
 	{
-		val favTeam = PrefUtils.getString(context, PrefUtils.BEHAVIOR_FAVORITE_TEAM)
+		val context = context
 
-		val selectedIndex = m_teamKeys.indexOf(favTeam)
-
-		if (selectedIndex > -1)
+		if(context != null)
 		{
-			m_listView.clearFocus()
-			m_listView.post({
-				m_listView.setSelection(selectedIndex)
-				m_listView.setItemChecked(selectedIndex, true)
+			val favTeam = PrefUtils.getString(context, PrefUtils.BEHAVIOR_FAVORITE_TEAM)
+
+			val selectedIndex = m_teamKeys.indexOf(favTeam)
+
+			if (selectedIndex > -1)
+			{
+				m_listView.clearFocus()
+				m_listView.post({
+					m_listView.setSelection(selectedIndex)
+					m_listView.setItemChecked(selectedIndex, true)
+				})
+			}
+
+			m_listView.onItemClickListener = Listener()
+
+			m_button.setOnClickListener({
+				val intent = Intent(context, MainActivity::class.java)
+				startActivity(intent)
 			})
 		}
-
-		m_listView.onItemClickListener = Listener()
-
-		m_button.setOnClickListener({
-			val intent = Intent(context, MainActivity::class.java)
-			startActivity(intent)
-		})
 	}
 
 	inner class Listener : AdapterView.OnItemClickListener
 	{
 		override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
 		{
-			PrefUtils.set(context, PrefUtils.BEHAVIOR_FAVORITE_TEAM, m_teamKeys[position])
-			m_button.isEnabled = true
-			m_button.alpha = 1f
+			context?.let {
+				PrefUtils.set(it, PrefUtils.BEHAVIOR_FAVORITE_TEAM, m_teamKeys[position])
+				m_button.isEnabled = true
+				m_button.alpha = 1f
+			}
 		}
 	}
 }

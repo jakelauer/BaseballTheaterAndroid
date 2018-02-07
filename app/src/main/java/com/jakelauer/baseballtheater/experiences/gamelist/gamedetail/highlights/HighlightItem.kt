@@ -1,4 +1,4 @@
-package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail
+package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.highlights
 
 import android.content.Context
 import android.content.Intent
@@ -24,6 +24,7 @@ import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.ItemViewHolder
+import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.OpenHighlightAsyncTask
 import com.jakelauer.baseballtheater.utils.PrefUtils
 import com.jakelauer.baseballtheater.utils.PrefUtils.Companion.BEHAVIOR_HIDE_SCORES
 import com.jakelauer.baseballtheater.utils.Utils
@@ -139,7 +140,7 @@ class HighlightItem(highlight: Highlight, activity: BaseActivity) : AdapterChild
 
 			remoteMediaClient.load(mediaInfo)
 
-			val controlFragment = HighlightCastControlFragment(m_data)
+			val controlFragment = HighlightCastControlFragment.newInstance(m_data)
 			controlFragment.show(m_activity.supportFragmentManager, "castControlFragment")
 		}
 		else

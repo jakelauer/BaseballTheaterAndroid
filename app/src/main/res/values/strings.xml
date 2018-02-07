@@ -3,6 +3,7 @@
     <string name="app_id">0E146468</string>
     <string name="title_games">Games</string>
     <string name="title_news">News</string>
+    <string name="title_search">Search</string>
     <string name="title_notifications">Notifications</string>
 
     <string name="game_list_empty">No games found on this day</string>

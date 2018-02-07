@@ -3,6 +3,7 @@ package com.jakelauer.baseballtheater.MlbDataServer.DataStructures;
 import android.text.TextUtils;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -37,8 +38,8 @@ public class GameSummary implements Serializable
 	public LocalDateTime localDateObj()
 	{
 		DateTimeFormatter f = DateTimeFormat.forPattern("yyyy/MM/dd h:m Z");
-		LocalDateTime local = f.parseDateTime(date + " -0400").toLocalDateTime();
-		return local;
+		LocalDateTime convertedTime = f.parseDateTime(date + " -0500").withZone(DateTimeZone.forID("America/Los_Angeles")).toLocalDateTime();
+		return convertedTime.plusHours(12);
 	}
 
 	@Attribute(name = "game_type")
@@ -158,6 +159,6 @@ public class GameSummary implements Serializable
 
 	private String getStatusTime()
 	{
-		return localDateObj().toString("HH:mm a");
+		return localDateObj().toString("hh:mm a");
 	}
 }

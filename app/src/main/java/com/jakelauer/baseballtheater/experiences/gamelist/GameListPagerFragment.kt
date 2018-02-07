@@ -61,9 +61,11 @@ class GameListPagerFragment : BaseFragment<Any>()
 		{
 			R.id.game_list_settings ->
 			{
-				val intent = Intent(context, SettingsActivity::class.java)
-				context.startActivity(intent)
-				handled = true
+				context?.let{
+					val intent = Intent(it, SettingsActivity::class.java)
+					it.startActivity(intent)
+					handled = true
+				}
 			}
 			R.id.game_list_date_picker ->
 			{
@@ -76,8 +78,9 @@ class GameListPagerFragment : BaseFragment<Any>()
 
 	override fun onBindView()
 	{
-		m_gamePagerAdapter = GameListPagerAdapter(fragmentManager)
-
+		fragmentManager?.let {
+			m_gamePagerAdapter = GameListPagerAdapter(it)
+		}
 		refreshAdapter()
 	}
 
@@ -94,7 +97,7 @@ class GameListPagerFragment : BaseFragment<Any>()
 	fun setToolbarDate(date: DateTime)
 	{
 		val dateString = date.toString("MMM d, yyyy")
-		activity.title = dateString
+		activity?.title = dateString
 	}
 
 	fun refreshWithDate(date: DateTime)
@@ -134,7 +137,7 @@ class GameListPagerFragment : BaseFragment<Any>()
 		{
 			val newDate = getDateFromPosition(position)
 
-			return GameListFragment(newDate)
+			return GameListFragment.newInstance(newDate)
 		}
 
 		fun getDateFromPosition(position: Int): DateTime

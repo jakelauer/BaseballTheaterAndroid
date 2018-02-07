@@ -8,12 +8,12 @@ import android.support.customtabs.CustomTabsIntent
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
+import android.view.animation.TranslateAnimation
 import com.jakelauer.baseballtheater.BuildConfig
+import com.jakelauer.baseballtheater.MainActivity
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
@@ -23,16 +23,13 @@ import libs.ButterKnife.bindView
 import libs.RssParser.Article
 import libs.RssParser.Parser
 import org.jsoup.helper.StringUtil
-import android.view.animation.TranslateAnimation
-import android.view.animation.Animation
-import com.jakelauer.baseballtheater.MainActivity
 
 
 /**
  * Created by Jake on 10/27/2017.
  */
 
-class NewsFragment() : RefreshableListFragment<NewsFragment.Model>()
+class NewsFragment : RefreshableListFragment<NewsFragment.Model>()
 {
 	private lateinit var m_feedUrl: String
 	private var m_url: String = ""
@@ -47,16 +44,24 @@ class NewsFragment() : RefreshableListFragment<NewsFragment.Model>()
 	{
 		super.onCreate(savedInstanceState)
 
-		m_isBeta = BuildConfig.BETA
+		val context = context
 
-		val favTeam = PrefUtils.getString(context, PrefUtils.BEHAVIOR_FAVORITE_TEAM)
-		m_feedUrl = if (m_isBeta) "https://dev.baseball.theater/data/news?favTeam=$favTeam&feeds=" else "https://baseball.theater/data/news?feeds="
+		if(context != null)
+		{
+			m_isBeta = BuildConfig.BETA
 
-		setHasOptionsMenu(true)
+			val favTeam = PrefUtils.getString(context, PrefUtils.BEHAVIOR_FAVORITE_TEAM)
+			m_feedUrl = if (m_isBeta) "https://dev.baseball.theater/data/news?favTeam=$favTeam&feeds=" else "https://baseball.theater/data/news?favTeam=$favTeam&feeds="
 
-		m_keepReadItems = PrefUtils.getBoolean(context, PrefUtils.ARTICLES_KEEP_READ)
+			setHasOptionsMenu(true)
 
-		(activity as MainActivity).resetTitle()
+			m_keepReadItems = PrefUtils.getBoolean(context, PrefUtils.ARTICLES_KEEP_READ)
+
+			(activity as MainActivity).resetTitle()
+		}
+		else{
+			throw Exception("Context is null")
+		}
 	}
 
 	override fun onBindView()
@@ -118,7 +123,7 @@ class NewsFragment() : RefreshableListFragment<NewsFragment.Model>()
 			R.id.game_list_settings ->
 			{
 				val intent = Intent(context, SettingsActivity::class.java)
-				context.startActivity(intent)
+				context?.startActivity(intent)
 				handled = true
 			}
 		}
@@ -158,7 +163,7 @@ class NewsFragment() : RefreshableListFragment<NewsFragment.Model>()
 
 	private fun finalizeArticles(articleList: List<Article>?)
 	{
-		activity.runOnUiThread({
+		activity?.runOnUiThread({
 			m_allarticles.clear()
 			m_displayedarticles.clear()
 			if (articleList != null)
@@ -172,17 +177,19 @@ class NewsFragment() : RefreshableListFragment<NewsFragment.Model>()
 
 	fun markAsSeen(position: Int)
 	{
-		val cleared = m_displayedarticles[position]
+		context?.let {
+			val cleared = m_displayedarticles[position]
 
-		val link = cleared.link
-		if (link != null)
-		{
-			val seen = ArrayList<String>(PrefUtils.getStringSet(context, PrefUtils.ARTICLES_SEEN))
-			seen.add(link)
-			PrefUtils.set(context, PrefUtils.ARTICLES_SEEN, seen.toSet())
+			val link = cleared.link
+			if (link != null)
+			{
+				val seen = ArrayList<String>(PrefUtils.getStringSet(it, PrefUtils.ARTICLES_SEEN))
+				seen.add(link)
+				PrefUtils.set(it, PrefUtils.ARTICLES_SEEN, seen.toSet())
 
-			m_adapter?.notifyItemChanged(position)
-			m_adapter?.notifyDataSetChanged()
+				m_adapter?.notifyItemChanged(position)
+				m_adapter?.notifyDataSetChanged()
+			}
 		}
 	}
 
@@ -191,42 +198,44 @@ class NewsFragment() : RefreshableListFragment<NewsFragment.Model>()
 		m_refreshView.isRefreshing = false
 		m_adapter?.clear()
 
-		val seenItems = PrefUtils.getStringSet(context, PrefUtils.ARTICLES_SEEN)
+		context?.let {
+			val seenItems = PrefUtils.getStringSet(it, PrefUtils.ARTICLES_SEEN)
 
-		if (m_allarticles.size > 0)
-		{
-			for (article in m_allarticles)
+			if (m_allarticles.size > 0)
 			{
-				if (article.link == "")
+				for (article in m_allarticles)
 				{
-					continue
-				}
+					if (article.link == "")
+					{
+						continue
+					}
 
-				val seen = seenItems.contains(article.link)
+					val seen = seenItems.contains(article.link)
 
-				if (!seen || m_keepReadItems)
-				{
-					val articleItem = ArticleItem(ArticleItem.Data(article, seen))
+					if (!seen || m_keepReadItems)
+					{
+						val articleItem = ArticleItem(ArticleItem.Data(article, seen))
 
-					articleItem.setClickListener({ _, position ->
-						articleItem.setSeen()
-						markAsSeen(position)
+						articleItem.setClickListener({ _, position ->
+							articleItem.setSeen()
+							markAsSeen(position)
 
-						val builder = CustomTabsIntent.Builder()
-						val customTabsIntent = builder.build()
-						customTabsIntent.launchUrl(context, Uri.parse(articleItem.m_data.m_article.link))
-					})
+							val builder = CustomTabsIntent.Builder()
+							val customTabsIntent = builder.build()
+							customTabsIntent.launchUrl(it, Uri.parse(articleItem.m_data.m_article.link))
+						})
 
-					m_displayedarticles.add(article)
+						m_displayedarticles.add(article)
 
-					m_adapter?.add(articleItem)
+						m_adapter?.add(articleItem)
+					}
 				}
 			}
-		}
-		else
-		{
-			val emptyItem = EmptyListIndicator(EmptyListIndicator.Model(context, R.string.article_list_empty, R.drawable.ic_cloud_off_black_24px))
-			m_adapter?.add(emptyItem)
+			else
+			{
+				val emptyItem = EmptyListIndicator(EmptyListIndicator.Model(it, R.string.article_list_empty, R.drawable.ic_cloud_off_black_24px))
+				m_adapter?.add(emptyItem)
+			}
 		}
 	}
 

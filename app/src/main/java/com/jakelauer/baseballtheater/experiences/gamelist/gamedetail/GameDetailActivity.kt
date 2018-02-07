@@ -6,7 +6,6 @@ import android.os.Bundle
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseActivity
-import com.jakelauer.baseballtheater.base.syringe.syringe
 
 /**
  * Created by Jake on 10/25/2017.
@@ -15,8 +14,6 @@ class GameDetailActivity : BaseActivity(true)
 {
 	override val m_layoutResId: Int
 		get() = R.layout.game_detail_activity
-
-	val m_game: GameSummary by syringe()
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -27,7 +24,8 @@ class GameDetailActivity : BaseActivity(true)
 
 	override fun onBindView()
 	{
-		val fragment = GameDetailWrapperFragment(m_game)
+		val game = intent.getSerializableExtra("m_game") as GameSummary
+		val fragment = GameDetailWrapperFragment.newInstance(game)
 		setMainFragment(fragment)
 	}
 

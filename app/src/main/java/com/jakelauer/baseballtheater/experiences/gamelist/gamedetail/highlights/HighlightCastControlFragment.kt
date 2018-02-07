@@ -1,8 +1,7 @@
-package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail
+package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.highlights
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
 import com.google.android.gms.cast.MediaStatus
@@ -12,7 +11,7 @@ import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.BaseFragment
-import com.jakelauer.baseballtheater.base.syringe.syringe
+import com.jakelauer.baseballtheater.base.Syringe
 import com.ohoussein.playpause.PlayPauseView
 import libs.ButterKnife.bindView
 import java.text.SimpleDateFormat
@@ -22,10 +21,10 @@ import java.util.*
  * Created by Jake on 10/29/2017.
  */
 
-class HighlightCastControlFragment : BaseFragment<Any>
+class HighlightCastControlFragment : BaseFragment<Any>()
 {
 	var m_remoteMediaClient: RemoteMediaClient? = null
-	private var m_highlight by syringe<Highlight>()
+	private var m_highlight: Highlight by Syringe()
 
 	private var m_title: TextView by bindView(R.id.CAST_CONTROL_title)
 	private var m_subtitle: TextView by bindView(R.id.CAST_CONTROL_subtitle)
@@ -33,11 +32,6 @@ class HighlightCastControlFragment : BaseFragment<Any>
 	private var m_seek: SeekBar by bindView(R.id.CAST_CONTROL_seek)
 	private var m_currentTime: TextView by bindView(R.id.CAST_CONTROL_current_time)
 	private var m_durationTime: TextView by bindView(R.id.CAST_CONTROL_duration_time)
-
-	constructor() : super()
-
-	@SuppressLint("ValidFragment")
-	constructor(highlight: Highlight) : super(highlight)
 
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
@@ -48,11 +42,13 @@ class HighlightCastControlFragment : BaseFragment<Any>
 
 	override fun onDestroy()
 	{
-		val sm = CastContext.getSharedInstance(context).sessionManager
-		val castSession = sm.currentCastSession
-		val remoteMediaClient = castSession?.remoteMediaClient
-		remoteMediaClient?.stop()
-		super.onDestroy()
+		context?.let {
+			val sm = CastContext.getSharedInstance(it).sessionManager
+			val castSession = sm.currentCastSession
+			val remoteMediaClient = castSession?.remoteMediaClient
+			remoteMediaClient?.stop()
+			super.onDestroy()
+		}
 	}
 
 	override fun onBindView()
@@ -173,7 +169,14 @@ class HighlightCastControlFragment : BaseFragment<Any>
 		override fun onQueueStatusUpdated()
 		{
 		}
-
 	}
 
+	companion object
+	{
+		fun newInstance(highlight: Highlight): HighlightCastControlFragment{
+			return HighlightCastControlFragment().apply {
+				m_highlight = highlight
+			}
+		}
+	}
 }

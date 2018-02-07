@@ -10,12 +10,9 @@
         android:id="@+id/navigation_games"
         android:icon="@drawable/ic_view_list_black_24px"
         android:title="@string/title_games" />
-<!--    <item
-        android:id="@+id/navigation_profiling_default"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="ProfilingDefault" />
+
     <item
-        android:id="@+id/navigation_profiling_syringe"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="ProfilingSyringe" />-->
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/ic_search_black_48px"
+        android:title="@string/title_search" />
 </menu>

@@ -7,13 +7,9 @@ import libs.ButterKnife.bindView
 /**
  * Created by Jake on 10/30/2017.
  */
-abstract class RefreshableListFragment<TData:Any> : FlexibleListFragment<TData>
+abstract class RefreshableListFragment<out TData:Any> : FlexibleListFragment<TData>()
 {
 	protected var m_refreshView: SwipeRefreshLayout by bindView(R.id.refresh)
-
-	constructor() : super()
-
-	constructor(vararg args : Any) : super(*args)
 
 	override fun onBindView()
 	{

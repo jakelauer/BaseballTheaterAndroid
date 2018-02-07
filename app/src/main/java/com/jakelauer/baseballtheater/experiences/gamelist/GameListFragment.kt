@@ -1,13 +1,12 @@
 package com.jakelauer.baseballtheater.experiences.gamelist
 
-import android.annotation.SuppressLint
 import android.preference.PreferenceManager
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummaryCollection
 import com.jakelauer.baseballtheater.MlbDataServer.GameSummaryCreator
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
-import com.jakelauer.baseballtheater.base.syringe.syringe
+import com.jakelauer.baseballtheater.base.Syringe
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.GameDetailActivity
 import org.joda.time.DateTime
@@ -18,14 +17,9 @@ import java.util.concurrent.ExecutionException
 /**
  * Created by Jake on 10/20/2017.
  */
-class GameListFragment : RefreshableListFragment<GameListFragment.Model>
+class GameListFragment : RefreshableListFragment<GameListFragment.Model>()
 {
-	constructor() : super()
-
-	@SuppressLint("ValidFragment")
-	constructor(date: DateTime) : super(date)
-
-	private var m_date: DateTime by syringe()
+	private var m_date: DateTime by Syringe()
 
 	override fun getLayoutResourceId(): Int = R.layout.game_list_fragment
 
@@ -87,7 +81,9 @@ class GameListFragment : RefreshableListFragment<GameListFragment.Model>
 				val item = GameItem(GameItem.Model(game, isFavTeam))
 
 				item.setClickListener({ _, _ ->
-					GameDetailActivity.startActivity(game, context)
+					context?.let {
+						GameDetailActivity.startActivity(game, it)
+					}
 				})
 
 				m_adapter?.add(item)
@@ -95,8 +91,10 @@ class GameListFragment : RefreshableListFragment<GameListFragment.Model>
 		}
 		else
 		{
-			val emptyListItem = EmptyListIndicator(EmptyListIndicator.Model(context))
-			m_adapter?.add(emptyListItem)
+			context?.let {
+				val emptyListItem = EmptyListIndicator(EmptyListIndicator.Model(it))
+				m_adapter?.add(emptyListItem)
+			}
 		}
 	}
 
@@ -110,5 +108,13 @@ class GameListFragment : RefreshableListFragment<GameListFragment.Model>
 		}
 
 		fun getGames() = m_games
+	}
+
+	companion object
+	{
+		fun newInstance(date: DateTime): GameListFragment =
+				GameListFragment().apply {
+					m_date = date
+				}
 	}
 }

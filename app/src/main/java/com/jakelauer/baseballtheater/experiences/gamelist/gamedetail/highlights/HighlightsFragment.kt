@@ -1,6 +1,5 @@
-package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail
+package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.highlights
 
-import android.annotation.SuppressLint
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection
@@ -8,23 +7,18 @@ import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
-import com.jakelauer.baseballtheater.common.listitems.HeaderItem
-import com.jakelauer.baseballtheater.base.syringe.syringe
+import com.jakelauer.baseballtheater.base.Syringe
 import com.jakelauer.baseballtheater.common.listitems.EmptyListIndicator
+import com.jakelauer.baseballtheater.common.listitems.HeaderItem
 import java.util.*
 import java.util.concurrent.ExecutionException
 
 /**
  * Created by Jake on 10/25/2017.
  */
-class HighlightsFragment : RefreshableListFragment<HighlightsFragment.Model>
+class HighlightsFragment : RefreshableListFragment<HighlightsFragment.Model>()
 {
-	var m_game: GameSummary by syringe()
-
-	constructor() : super()
-
-	@SuppressLint("ValidFragment")
-	constructor(game: GameSummary) : super(game)
+	var m_game: GameSummary by Syringe()
 
 	override fun getLayoutResourceId() = R.layout.highlights_fragment
 
@@ -89,8 +83,10 @@ class HighlightsFragment : RefreshableListFragment<HighlightsFragment.Model>
 				{
 					pastSpecialHighlights = true
 
-					val headerItem = HeaderItem(R.string.highlight_list_title, context)
-					m_adapter?.add(headerItem)
+					context?.let {
+						val headerItem = HeaderItem(R.string.highlight_list_title, it)
+						m_adapter?.add(headerItem)
+					}
 				}
 
 				val highlightItem = HighlightItem(highlight, activity as BaseActivity)
@@ -100,8 +96,10 @@ class HighlightsFragment : RefreshableListFragment<HighlightsFragment.Model>
 		}
 		else
 		{
-			val emptyListItem = EmptyListIndicator(EmptyListIndicator.Model(context, R.string.highlight_list_empty, R.drawable.ic_videocam_off_black_24px))
-			m_adapter?.add(emptyListItem)
+			context?.let {
+				val emptyListItem = EmptyListIndicator(EmptyListIndicator.Model(it, R.string.highlight_list_empty, R.drawable.ic_videocam_off_black_24px))
+				m_adapter?.add(emptyListItem)
+			}
 		}
 	}
 
@@ -113,6 +111,15 @@ class HighlightsFragment : RefreshableListFragment<HighlightsFragment.Model>
 		fun updateHighlights(highlights: HighlightsCollection?)
 		{
 			m_highlights = highlights
+		}
+	}
+
+	companion object
+	{
+		fun newInstance(game: GameSummary): HighlightsFragment{
+			return HighlightsFragment().apply{
+				m_game = game
+			}
 		}
 	}
 }

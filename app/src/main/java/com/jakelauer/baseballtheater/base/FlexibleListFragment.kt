@@ -11,19 +11,23 @@ import libs.ButterKnife.bindView
  * Created by Jake on 10/20/2017.
  */
 
-abstract class FlexibleListFragment<TData : Any> : BaseFragment<TData>
+abstract class FlexibleListFragment<out TData : Any> : BaseFragment<TData>()
 {
 	val m_parentList: RecyclerView by bindView(R.id.common_list)
 
 	var m_adapter: ComplexAdapter? = null
 
-	constructor() : super()
-
-	constructor(vararg args : Any) : super(*args)
-
-	protected fun createAdapter()
+	private fun createAdapter()
 	{
-		m_adapter = ComplexAdapter(context)
+		val context = context
+		if (context != null)
+		{
+			m_adapter = ComplexAdapter(context)
+		}
+		else
+		{
+			throw Exception("Context is null")
+		}
 	}
 
 	override fun beforeOnBindView()
