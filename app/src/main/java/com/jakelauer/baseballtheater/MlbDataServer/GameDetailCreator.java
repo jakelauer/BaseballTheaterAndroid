@@ -17,23 +17,27 @@ public class GameDetailCreator
 {
     private static final String UrlBase = "http://gd2.mlb.com";
 
-    private String directoryUrl;
-    private String highlightsXmlUrl;
+    private String m_directoryUrl;
+    private String m_highlightsXmlUrl;
     private String gameCenterXmlUrl;
     private String gameSummaryXmlUrl;
+    private String boxScoreUrl;
+    private String inningsUrl;
     private String url;
     private Class<Object> classType;
 
 
     public GameDetailCreator(String directory, Boolean directoryIsFullyQualified)
     {
-        this.directoryUrl = directoryIsFullyQualified
+        m_directoryUrl = directoryIsFullyQualified
                 ? directory
                 : UrlBase + directory;
 
-        this.highlightsXmlUrl = this.directoryUrl + "/media/mobile.xml";
-        this.gameCenterXmlUrl = this.directoryUrl + "/gamecenter.xml";
-        this.gameSummaryXmlUrl = this.directoryUrl + "/linescore.xml";
+        m_highlightsXmlUrl = m_directoryUrl + "/media/mobile.xml";
+        gameCenterXmlUrl = m_directoryUrl + "/gamecenter.xml";
+        gameSummaryXmlUrl = m_directoryUrl + "/linescore.xml";
+        boxScoreUrl = m_directoryUrl + "/boxscore.xml";
+        inningsUrl = m_directoryUrl + "/inning/inning_all.xml";
     }
 
     public void getHighlights(final ProgressListener<HighlightsCollection> progressListener)
@@ -81,7 +85,7 @@ public class GameDetailCreator
             }
         };
 
-        getDetailItem(this.highlightsXmlUrl, baseProgressListener, HighlightsCollection.class);
+        getDetailItem(this.m_highlightsXmlUrl, baseProgressListener, HighlightsCollection.class);
     }
 
     public void getGameCenter(ProgressListener<GameCenter> progressListener)
@@ -92,6 +96,14 @@ public class GameDetailCreator
     public void getGameSummary(ProgressListener<GameSummary> progressListener)
     {
         getDetailItem(this.gameSummaryXmlUrl, progressListener, GameSummary.class);
+    }
+
+    public void getBoxscore(){
+
+    }
+
+    public void getInnings(){
+
     }
 
     private <T> void getDetailItem(String url, ProgressListener progressListener, Class<T> classType)
