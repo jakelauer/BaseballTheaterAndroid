@@ -58,7 +58,7 @@ class BoxScoreFragment : BaseFragment<String>()
 			m_webView.clearCache(true)
 			m_webView.clearHistory()
 			m_webView.isHorizontalScrollBarEnabled = false
-			m_webView.loadUrl("http://dev.baseball.theater/game/" + dateString + "/" + m_game.gamePk + "?app=true")
+			m_webView.loadUrl("http://beta.baseball.theater/game/" + dateString + "/" + m_game.gamePk + "?app=true")
 		}
 	}
 

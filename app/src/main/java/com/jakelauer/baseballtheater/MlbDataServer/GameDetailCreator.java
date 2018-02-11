@@ -4,6 +4,7 @@ import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameCenter;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection;
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.InningsGame;
 import com.jakelauer.baseballtheater.MlbDataServer.Utils.XmlLoader;
 
 import java.util.ArrayList;
@@ -15,100 +16,97 @@ import java.util.List;
 
 public class GameDetailCreator
 {
-    private static final String UrlBase = "http://gd2.mlb.com";
+	private static final String UrlBase = "http://gd2.mlb.com";
 
-    private String m_directoryUrl;
-    private String m_highlightsXmlUrl;
-    private String gameCenterXmlUrl;
-    private String gameSummaryXmlUrl;
-    private String boxScoreUrl;
-    private String inningsUrl;
-    private String url;
-    private Class<Object> classType;
+	private String m_directoryUrl;
+	private String m_highlightsXmlUrl;
+	private String gameCenterXmlUrl;
+	private String gameSummaryXmlUrl;
+	private String boxScoreUrl;
+	private String inningsUrl;
+	private String url;
+	private Class<Object> classType;
 
 
-    public GameDetailCreator(String directory, Boolean directoryIsFullyQualified)
-    {
-        m_directoryUrl = directoryIsFullyQualified
-                ? directory
-                : UrlBase + directory;
+	public GameDetailCreator(String directory, Boolean directoryIsFullyQualified)
+	{
+		m_directoryUrl = directoryIsFullyQualified
+				? directory
+				: UrlBase + directory;
 
-        m_highlightsXmlUrl = m_directoryUrl + "/media/mobile.xml";
-        gameCenterXmlUrl = m_directoryUrl + "/gamecenter.xml";
-        gameSummaryXmlUrl = m_directoryUrl + "/linescore.xml";
-        boxScoreUrl = m_directoryUrl + "/boxscore.xml";
-        inningsUrl = m_directoryUrl + "/inning/inning_all.xml";
-    }
+		m_highlightsXmlUrl = m_directoryUrl + "/media/mobile.xml";
+		gameCenterXmlUrl = m_directoryUrl + "/gamecenter.xml";
+		gameSummaryXmlUrl = m_directoryUrl + "/linescore.xml";
+		boxScoreUrl = m_directoryUrl + "/boxscore.xml";
+		inningsUrl = m_directoryUrl + "/inning/inning_all.xml";
+	}
 
-    public void getHighlights(final ProgressListener<HighlightsCollection> progressListener)
-    {
-        ProgressListener baseProgressListener = new ProgressListener()
-        {
-            @Override
-            public void onProgressFinished(Object objectInstance)
-            {
-                HighlightsCollection hc = (HighlightsCollection) objectInstance;
+	public void getHighlights(final ProgressListener<HighlightsCollection> progressListener)
+	{
+		ProgressListener baseProgressListener = new ProgressListener()
+		{
+			@Override
+			public void onProgressFinished(Object objectInstance)
+			{
+				HighlightsCollection hc = (HighlightsCollection) objectInstance;
 
-                if (hc != null && hc.highlights != null)
-                {
-                    for (Highlight highlight : hc.highlights)
-                    {
-                        for (String url : highlight.urls)
-                        {
-                            if (url.contains("1200K"))
-                            {
-                                List<String> urls = new ArrayList<>();
+				if (hc != null && hc.highlights != null)
+				{
+					for (Highlight highlight : hc.highlights)
+					{
+						for (String url : highlight.urls)
+						{
+							if (url.contains("1200K"))
+							{
+								List<String> urls = new ArrayList<>();
 
-                                urls.add(url);
+								urls.add(url);
 
-                                String url2500 = url.replace("1200K", "2500K");
-                                String url1800 = url.replace("1200K", "1800K");
+								String url2500 = url.replace("1200K", "2500K");
+								String url1800 = url.replace("1200K", "1800K");
 
-                                if (!urls.contains(url1800))
-                                {
-                                    urls.add(url1800);
-                                }
+								if (!urls.contains(url1800))
+								{
+									urls.add(url1800);
+								}
 
-                                if (!urls.contains(url2500))
-                                {
-                                    urls.add(url2500);
-                                }
+								if (!urls.contains(url2500))
+								{
+									urls.add(url2500);
+								}
 
-                                highlight.urls = urls;
-                                break;
-                            }
-                        }
-                    }
-                }
+								highlight.urls = urls;
+								break;
+							}
+						}
+					}
+				}
 
-                progressListener.onProgressFinished(hc);
-            }
-        };
+				progressListener.onProgressFinished(hc);
+			}
+		};
 
-        getDetailItem(this.m_highlightsXmlUrl, baseProgressListener, HighlightsCollection.class);
-    }
+		getDetailItem(this.m_highlightsXmlUrl, baseProgressListener, HighlightsCollection.class);
+	}
 
-    public void getGameCenter(ProgressListener<GameCenter> progressListener)
-    {
-        getDetailItem(this.gameCenterXmlUrl, progressListener, GameCenter.class);
-    }
+	public void getGameCenter(ProgressListener<GameCenter> progressListener)
+	{
+		getDetailItem(this.gameCenterXmlUrl, progressListener, GameCenter.class);
+	}
 
-    public void getGameSummary(ProgressListener<GameSummary> progressListener)
-    {
-        getDetailItem(this.gameSummaryXmlUrl, progressListener, GameSummary.class);
-    }
+	public void getGameSummary(ProgressListener<GameSummary> progressListener)
+	{
+		getDetailItem(this.gameSummaryXmlUrl, progressListener, GameSummary.class);
+	}
 
-    public void getBoxscore(){
+	public void getInnings(ProgressListener<InningsGame> progressListener)
+	{
+		getDetailItem(this.inningsUrl, progressListener, InningsGame.class);
+	}
 
-    }
-
-    public void getInnings(){
-
-    }
-
-    private <T> void getDetailItem(String url, ProgressListener progressListener, Class<T> classType)
-    {
-        XmlLoader<T> xmlLoader = new XmlLoader();
-        xmlLoader.GetXml(url, progressListener, classType);
-    }
+	private <T> void getDetailItem(String url, ProgressListener progressListener, Class<T> classType)
+	{
+		XmlLoader<T> xmlLoader = new XmlLoader();
+		xmlLoader.GetXml(url, progressListener, classType);
+	}
 }

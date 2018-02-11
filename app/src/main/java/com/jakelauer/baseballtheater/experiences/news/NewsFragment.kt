@@ -46,12 +46,12 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>()
 
 		val context = context
 
-		if(context != null)
+		if (context != null)
 		{
 			m_isBeta = BuildConfig.BETA
 
 			val favTeam = PrefUtils.getString(context, PrefUtils.BEHAVIOR_FAVORITE_TEAM)
-			m_feedUrl = if (m_isBeta) "https://dev.baseball.theater/data/news?favTeam=$favTeam&feeds=" else "https://baseball.theater/data/news?favTeam=$favTeam&feeds="
+			m_feedUrl = if (m_isBeta) "https://beta.baseball.theater/data/news?favTeam=$favTeam&feeds=" else "https://baseball.theater/data/news?favTeam=$favTeam&feeds="
 
 			setHasOptionsMenu(true)
 
@@ -59,7 +59,8 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>()
 
 			(activity as MainActivity).resetTitle()
 		}
-		else{
+		else
+		{
 			throw Exception("Context is null")
 		}
 	}
@@ -145,7 +146,7 @@ class NewsFragment : RefreshableListFragment<NewsFragment.Model>()
 
 		m_refreshView.isRefreshing = true
 
-		val parser = Parser(m_isBeta)
+		val parser = Parser()
 		parser.execute(m_url)
 		parser.onFinish(object : Parser.OnTaskCompleted
 		{

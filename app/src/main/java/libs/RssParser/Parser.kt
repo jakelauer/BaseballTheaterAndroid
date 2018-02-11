@@ -32,7 +32,7 @@ import javax.net.ssl.X509TrustManager
 /**
  * Created by marco on 6/17/16.
  */
-class Parser(val m_isDebug: Boolean = false) : AsyncTask<String, Void, String>(), Observer
+class Parser : AsyncTask<String, Void, String?>(), Observer
 {
 	private var xmlParser: XMLParser = XMLParser()
 
@@ -58,7 +58,7 @@ class Parser(val m_isDebug: Boolean = false) : AsyncTask<String, Void, String>()
 	override fun doInBackground(vararg url: String): String?
 	{
 		var response: Response?
-		val client = if (m_isDebug) getUnsafeOkHttpClient() else OkHttpClient()
+		val client = OkHttpClient()
 		val request = Request.Builder()
 				.url(url[0])
 				.build()
@@ -80,13 +80,14 @@ class Parser(val m_isDebug: Boolean = false) : AsyncTask<String, Void, String>()
 		return null
 	}
 
-	override fun onPostExecute(result: String)
+	override fun onPostExecute(result: String?)
 	{
-
 		try
 		{
-			xmlParser.parseXML(result)
-			Log.i("RSS Parser ", "RSS parsed correctly!")
+			result?.let {
+				xmlParser.parseXML(result)
+				Log.i("RSS Parser ", "RSS parsed correctly!")
+			}
 		}
 		catch (e: Exception)
 		{

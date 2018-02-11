@@ -1,11 +1,9 @@
-package com.jakelauer.baseballtheater.MlbDataServer.DataStructures;
+package com.jakelauer.baseballtheater.MlbDataServer.DataStructures.BoxScore;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
-
-import java.util.List;
 
 /**
  * Created by Jake on 2/7/2018.
@@ -67,9 +65,6 @@ public class BoxScoreData
 
 	@Attribute
 	public String status_ind;
-
-	@Element
-	public DetailLinescore linescore;
 
 	@ElementList(name = "pitching")
 	public Pitching pitching;

@@ -15,7 +15,7 @@ import java.util.List;
 public class Linescore implements Serializable
 {
 	@ElementList(name = "inning", inline = true, required = false)
-	public List<Inning> innings;
+	public List<LinescoreInning> linescoreInnings;
 
 	@Element(name = "r")
 	public Runs runs;
@@ -30,9 +30,9 @@ public class Linescore implements Serializable
 	{
 		int startingInning = 0;
 		int inningCount = 9;
-		if (innings.size() > inningCount)
+		if (linescoreInnings.size() > inningCount)
 		{
-			inningCount = innings.size();
+			inningCount = linescoreInnings.size();
 			startingInning = inningCount - 9;
 		}
 
