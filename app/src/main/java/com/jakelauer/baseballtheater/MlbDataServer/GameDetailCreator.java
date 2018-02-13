@@ -4,7 +4,7 @@ import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameCenter;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight;
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection;
-import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.InningsGame;
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.PlayByPlay;
 import com.jakelauer.baseballtheater.MlbDataServer.Utils.XmlLoader;
 
 import java.util.ArrayList;
@@ -99,9 +99,9 @@ public class GameDetailCreator
 		getDetailItem(this.gameSummaryXmlUrl, progressListener, GameSummary.class);
 	}
 
-	public void getInnings(ProgressListener<InningsGame> progressListener)
+	public void getInnings(ProgressListener<PlayByPlay> progressListener)
 	{
-		getDetailItem(this.inningsUrl, progressListener, InningsGame.class);
+		getDetailItem(this.inningsUrl, progressListener, PlayByPlay.class);
 	}
 
 	private <T> void getDetailItem(String url, ProgressListener progressListener, Class<T> classType)

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="GAME_DETAIL_inning_header_top">Top %1$s</string>
+    <string name="GAME_DETAIL_inning_header_bottom">Bottom %1$s</string>
+</resources>

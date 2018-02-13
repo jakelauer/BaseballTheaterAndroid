@@ -19,7 +19,7 @@ android {
         applicationId "com.jakelauer.baseballtheater"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 51
+        versionCode 52
         versionName "2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -76,6 +76,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.android.support:customtabs:27.0.2'
     compile 'jp.wasabeef:recyclerview-animators:2.2.7'
+    compile "com.android.support:support-core-utils:27.0.2"
+    compile 'com.android.support.constraint:constraint-layout:1.1.0-beta4'
 }
 kapt {
     generateStubs = true

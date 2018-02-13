@@ -1,36 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="@dimen/default_padding"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:animateLayoutChanges="true">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/PLAY_BY_PLAY_ITEM_icon"
-            android:src="@drawable/ic_play_circle_filled_black_24px"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/default_padding_small"
-            tools:ignore="RtlSymmetry" />
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/PLAY_BY_PLAY_ITEM_icon"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        app:layout_constraintTop_toTopOf="@id/PLAY_BY_PLAY_ITEM_result"
+        app:layout_constraintBottom_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
+        android:padding="@dimen/default_padding_small"
+        android:src="@drawable/ic_play_circle_filled_black_24px"
+        tools:ignore="RtlSymmetry" />
 
     <TextView
         android:id="@+id/PLAY_BY_PLAY_ITEM_result"
-        tools:text="Starlin Castro singles to center, Anthony Rizzo Scores. Ben Zobrist to third on error by 2B Jose Altuve."
-        app:layout_constraintStart_toEndOf="@id/PLAY_BY_PLAY_ITEM_icon"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:paddingStart="@dimen/default_padding_small"
-        android:layout_height="wrap_content" />
+        android:paddingTop="@dimen/default_padding_small"
+        android:paddingBottom="@dimen/default_padding_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/PLAY_BY_PLAY_ITEM_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Starlin Castro singles to center." />
+
+    <LinearLayout
+        android:id="@+id/PLAY_BY_PLAYER_pitches_container"
+        android:animateLayoutChanges="true"
+        app:layout_constraintTop_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
+        app:layout_constraintBottom_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:clipChildren="true">
+
+        <include layout="@layout/play_by_play_pitches_item" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="@dimen/default_margin_small"
         android:background="@color/light_accent"
-        android:layout_marginTop="@dimen/default_margin"
-        app:layout_constraintTop_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
-        />
+        app:layout_constraintTop_toBottomOf="@id/PLAY_BY_PLAYER_pitches_container" />
 
 </android.support.constraint.ConstraintLayout>

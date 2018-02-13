@@ -1,12 +1,13 @@
 package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.playbyplay
 
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
-import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.InningsGame
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.InningHalf
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.PlayByPlay
 import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.base.Syringe
-import java.util.concurrent.ExecutionException
+import com.jakelauer.baseballtheater.common.listitems.HeaderItem
 
 /**
  * Created by Jake on 2/7/2018.
@@ -29,31 +30,61 @@ class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 			gdc.getInnings {
 				getModel().updatePlayByPlay(it)
 				onDataLoaded()
+				m_refreshView.isRefreshing = false
 			}
 		}
 		catch (e: Exception)
 		{
 			e.printStackTrace()
+			m_refreshView.isRefreshing = false
 		}
 	}
 
-	fun onDataLoaded()
+	private fun onDataLoaded()
 	{
-		val innings = getModel().m_inningsGame
-		if (innings != null)
+		val playByPlayData = getModel().m_playByPlay
+		if (playByPlayData != null)
 		{
+			renderInnings(playByPlayData)
+		}
+	}
 
+	private fun renderInnings(playByPlayData: PlayByPlay)
+	{
+		val context = context ?: throw Exception("Context cannot be null")
+
+		val inningsDec = playByPlayData.innings.sortedByDescending { a -> a.num }
+
+		for (inning in inningsDec)
+		{
+			val topHeader = context.getString(R.string.GAME_DETAIL_inning_header_top, inning.num)
+			val bottomHeader = context.getString(R.string.GAME_DETAIL_inning_header_bottom, inning.num)
+
+			m_adapter?.add(HeaderItem(bottomHeader))
+			renderHalfInning(inning.bottom)
+
+			m_adapter?.add(HeaderItem(topHeader))
+			renderHalfInning(inning.top)
+		}
+	}
+
+	private fun renderHalfInning(halfInning: InningHalf)
+	{
+		for (batter in halfInning.atbat)
+		{
+			val listItem = BatterItem(batter)
+			m_adapter?.add(listItem)
 		}
 	}
 
 	inner class Model
 	{
-		var m_inningsGame: InningsGame? = null
+		var m_playByPlay: PlayByPlay? = null
 			private set
 
-		fun updatePlayByPlay(inningsGame: InningsGame)
+		fun updatePlayByPlay(playByPlay: PlayByPlay)
 		{
-			m_inningsGame = inningsGame
+			m_playByPlay = playByPlay
 		}
 	}
 
