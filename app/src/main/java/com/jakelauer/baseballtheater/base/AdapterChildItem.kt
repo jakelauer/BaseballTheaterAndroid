@@ -27,7 +27,6 @@ abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData
 	fun bindView(viewHolder: TViewHolder)
 	{
 		viewHolder.let {
-			//ButterKnife.bind(it, it.itemView)
 			onBindView(it, it.itemView.context)
 		}
 	}
@@ -35,11 +34,6 @@ abstract class AdapterChildItem<TData, TViewHolder : ItemViewHolder>(data: TData
 	fun setClickListener(listener: ItemClickListener)
 	{
 		m_clickListener = listener
-	}
-
-	protected fun setData(data: TData)
-	{
-		m_data = data
 	}
 
 	abstract fun onBindView(viewHolder: TViewHolder, context: Context)

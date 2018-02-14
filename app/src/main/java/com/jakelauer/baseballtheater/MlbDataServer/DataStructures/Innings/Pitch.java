@@ -6,55 +6,55 @@ import org.simpleframework.xml.Root;
 @Root(name = "pitch", strict = false)
 public class Pitch
 {
-	@Attribute
+	@Attribute(required = false)
 	public String ax;
 
-	@Attribute
+	@Attribute(required = false)
 	public String ay;
 
-	@Attribute
+	@Attribute(required = false)
 	public String az;
 
-	@Attribute
+	@Attribute(required = false)
 	public String break_angle;
 
-	@Attribute
+	@Attribute(required = false)
 	public String break_length;
 
-	@Attribute
+	@Attribute(required = false)
 	public String break_y;
 
-	@Attribute
+	@Attribute(required = false)
 	public String cc;
 
-	@Attribute
+	@Attribute(required = false)
 	public String code;
 
-	@Attribute
+	@Attribute(required = false)
 	public String des;
 
-	@Attribute
+	@Attribute(required = false)
 	public String end_speed;
 
-	@Attribute
+	@Attribute(required = false)
 	public String event_num;
 
-	@Attribute
+	@Attribute(required = false)
 	public String id;
 
-	@Attribute
+	@Attribute(required = false)
 	public String mt;
 
-	@Attribute
+	@Attribute(required = false)
 	public String pfx_x;
 
-	@Attribute
+	@Attribute(required = false)
 	public String pfx_z;
 
-	@Attribute
+	@Attribute(required = false)
 	public String pitch_type;
 
-	public String get_pitch_type_detail()
+	public String getPitchTypeDetail()
 	{
 		String detail = "Unknown pitch";
 		switch (pitch_type)
@@ -105,69 +105,69 @@ public class Pitch
 		return detail;
 	}
 
-	@Attribute
+	@Attribute(required = false)
 	public String play_guid;
 
-	@Attribute
+	@Attribute(required = false)
 	public String px;
 
-	@Attribute
+	@Attribute(required = false)
 	public String pz;
 
-	@Attribute
+	@Attribute(required = false)
 	public String spin_dir;
 
-	@Attribute
+	@Attribute(required = false)
 	public String spin_rate;
 
-	@Attribute
+	@Attribute(required = false)
 	public String start_speed;
 
-	@Attribute
+	@Attribute(required = false)
 	public String sv_id;
 
-	@Attribute
+	@Attribute(required = false)
 	public String sz_bot;
 
-	@Attribute
+	@Attribute(required = false)
 	public String sz_top;
 
-	@Attribute
+	@Attribute(required = false)
 	public String tfs;
 
-	@Attribute
+	@Attribute(required = false)
 	public String tfs_zulu;
 
-	@Attribute
+	@Attribute(required = false)
 	public String type;
 
-	@Attribute
+	@Attribute(required = false)
 	public String type_confidence;
 
-	@Attribute
+	@Attribute(required = false)
 	public String vx0;
 
-	@Attribute
+	@Attribute(required = false)
 	public String vy0;
 
-	@Attribute
+	@Attribute(required = false)
 	public String vz0;
 
-	@Attribute
+	@Attribute(required = false)
 	public String x;
 
-	@Attribute
+	@Attribute(required = false)
 	public String x0;
 
-	@Attribute
+	@Attribute(required = false)
 	public String y;
 
-	@Attribute
+	@Attribute(required = false)
 	public String y0;
 
-	@Attribute
+	@Attribute(required = false)
 	public String z0;
 
-	@Attribute
+	@Attribute(required = false)
 	public String zone;
 }

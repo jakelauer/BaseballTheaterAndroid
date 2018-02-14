@@ -31,7 +31,7 @@
         tools:text="Starlin Castro singles to center." />
 
     <LinearLayout
-        android:id="@+id/PLAY_BY_PLAYER_pitches_container"
+        android:id="@+id/PLAY_BY_PLAY_pitches_container"
         android:animateLayoutChanges="true"
         app:layout_constraintTop_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
         app:layout_constraintBottom_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
@@ -48,6 +48,6 @@
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/default_margin_small"
         android:background="@color/light_accent"
-        app:layout_constraintTop_toBottomOf="@id/PLAY_BY_PLAYER_pitches_container" />
+        app:layout_constraintTop_toBottomOf="@id/PLAY_BY_PLAY_pitches_container" />
 
 </android.support.constraint.ConstraintLayout>

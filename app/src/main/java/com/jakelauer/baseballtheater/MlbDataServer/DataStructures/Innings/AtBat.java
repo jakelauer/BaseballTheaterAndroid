@@ -65,6 +65,6 @@ public class AtBat
 	@Attribute
 	public String away_team_runs;
 
-	@ElementList(name = "pitch", inline = true, required = false)
-	public List<Pitch> pitch;
+	@ElementList(required = false, inline = true, entry = "pitch")
+	public List<Pitch> pitches;
 }

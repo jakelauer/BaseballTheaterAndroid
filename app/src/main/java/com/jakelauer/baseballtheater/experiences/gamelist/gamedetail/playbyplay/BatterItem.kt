@@ -3,14 +3,16 @@ package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.playbyplay
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.AppCompatImageView
+import android.support.v7.widget.RecyclerView
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.AtBat
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.Pitch
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
+import com.jakelauer.baseballtheater.base.ComplexAdapter
 import com.jakelauer.baseballtheater.base.ItemViewHolder
 import libs.ButterKnife.bindView
 
@@ -20,6 +22,7 @@ import libs.ButterKnife.bindView
 class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(data)
 {
 	private var m_isExpanded = false
+	private lateinit var m_pitchListAdapter: ArrayAdapter<PitchListItem>
 
 	override fun getLayoutResId() = R.layout.play_by_play_item
 
@@ -27,16 +30,29 @@ class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(d
 
 	override fun onBindView(viewHolder: ViewHolder, context: Context)
 	{
+		m_pitchListAdapter = ArrayAdapter(context, R.layout.pitch_list_item)
+		viewHolder.m_pitchListContainer.adapter = m_pitchListAdapter
+
 		viewHolder.m_resultText.text = m_data.des
 
 		setListeners(viewHolder)
+
+		addPitchLocations(context)
+		addPitchList()
 	}
 
-	fun createPitchLocations()
+	fun addPitchLocations(context: Context)
 	{
-		for (pitch in m_data.pitch)
+		for (pitch in m_data.pitches)
 		{
 
+		}
+	}
+
+	fun addPitchList()
+	{
+		m_data.pitches.forEachIndexed {
+			i, pitch -> m_pitchListAdapter.add(PitchListItem(PitchListItem.Data(pitch, i)))
 		}
 	}
 
@@ -74,6 +90,8 @@ class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(d
 	{
 		val m_playIcon: AppCompatImageView by bindView(R.id.PLAY_BY_PLAY_ITEM_icon)
 		val m_resultText: TextView by bindView(R.id.PLAY_BY_PLAY_ITEM_result)
-		val m_pitchesContainer: LinearLayout by bindView(R.id.PLAY_BY_PLAYER_pitches_container)
+		val m_pitchesContainer: LinearLayout by bindView(R.id.PLAY_BY_PLAY_pitches_container)
+		val m_pitchListContainer: ListView by bindView(R.id.PITCHES_pitch_list)
+		val m_strikezoneContainer: ConstraintLayout by bindView(R.id.PITCHES_strikezone_container)
 	}
 }
