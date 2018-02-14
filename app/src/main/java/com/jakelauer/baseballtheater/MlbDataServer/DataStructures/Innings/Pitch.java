@@ -57,49 +57,52 @@ public class Pitch
 	public String getPitchTypeDetail()
 	{
 		String detail = "Unknown pitch";
-		switch (pitch_type)
+		if(pitch_type != null)
 		{
-			case "CH":
-				detail = "Changeup";
-				break;
-			case "CU":
-				detail = "Curve";
-				break;
-			case "EP":
-				detail = "Eephus";
-				break;
-			case "FC":
-				detail = "Cutter";
-				break;
-			case "FF":
-				detail = "Four-seam Fastball";
-				break;
-			case "FO":
-			case "PO":
-				detail = "Pitch Out";
-				break;
-			case "FS":
-			case "SI":
-				detail = "Sinker";
-				break;
-			case "FT":
-				detail = "Two-seam Fastball";
-				break;
-			case "KC":
-				detail = "Knuckle Curve";
-				break;
-			case "KN":
-				detail = "Knuckleball";
-				break;
-			case "SF":
-				detail = "Split-finger Fastball";
-				break;
-			case "SL":
-				detail = "Slider";
-				break;
+			switch (pitch_type)
+			{
+				case "CH":
+					detail = "Changeup";
+					break;
+				case "CU":
+					detail = "Curve";
+					break;
+				case "EP":
+					detail = "Eephus";
+					break;
+				case "FC":
+					detail = "Cutter";
+					break;
+				case "FF":
+					detail = "Four-seam Fastball";
+					break;
+				case "FO":
+				case "PO":
+					detail = "Pitch Out";
+					break;
+				case "FS":
+				case "SI":
+					detail = "Sinker";
+					break;
+				case "FT":
+					detail = "Two-seam Fastball";
+					break;
+				case "KC":
+					detail = "Knuckle Curve";
+					break;
+				case "KN":
+					detail = "Knuckleball";
+					break;
+				case "SF":
+					detail = "Split-finger Fastball";
+					break;
+				case "SL":
+					detail = "Slider";
+					break;
 
-			default:
-				break;
+				default:
+					break;
+			}
 		}
 
 		return detail;

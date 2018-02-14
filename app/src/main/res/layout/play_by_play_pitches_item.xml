@@ -31,11 +31,11 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <ListView
+    <com.jakelauer.baseballtheater.views.NoScrollListView
         android:id="@+id/PITCHES_pitch_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-    </ListView>
+    </com.jakelauer.baseballtheater.views.NoScrollListView>
 
 </LinearLayout>

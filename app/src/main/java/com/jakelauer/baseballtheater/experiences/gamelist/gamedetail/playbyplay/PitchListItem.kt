@@ -20,9 +20,16 @@ class PitchListItem(data: PitchListItem.Data) : AdapterChildItem<PitchListItem.D
 
 	override fun onBindView(viewHolder: ViewHolder, context: Context)
 	{
-		viewHolder.m_pitchIndex.text = m_data.m_index.toString()
+		viewHolder.m_pitchIndex.text = (m_data.m_index + 1).toString()
+
 		viewHolder.m_pitchDesc.text = m_data.m_pitch.des
-		viewHolder.m_pitchInfo.text = m_data.m_pitch.pitchTypeDetail
+
+		val startSpeed = m_data.m_pitch.start_speed ?: ""
+		val pitchTypeDetail =m_data.m_pitch.pitchTypeDetail ?: ""
+
+		viewHolder.m_pitchInfo.text = context.getString(R.string.GAME_DETAIL_pitch_detail,
+				startSpeed,
+				pitchTypeDetail)
 	}
 
 	class ViewHolder(view: View) : ItemViewHolder(view)

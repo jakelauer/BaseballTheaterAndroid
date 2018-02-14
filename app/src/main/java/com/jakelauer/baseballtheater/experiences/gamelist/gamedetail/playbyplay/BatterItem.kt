@@ -3,16 +3,14 @@ package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.playbyplay
 import android.content.Context
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.AppCompatImageView
-import android.support.v7.widget.RecyclerView
 import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.AtBat
-import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.Pitch
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
-import com.jakelauer.baseballtheater.base.ComplexAdapter
+import com.jakelauer.baseballtheater.base.ComplexArrayAdapter
 import com.jakelauer.baseballtheater.base.ItemViewHolder
 import libs.ButterKnife.bindView
 
@@ -22,7 +20,6 @@ import libs.ButterKnife.bindView
 class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(data)
 {
 	private var m_isExpanded = false
-	private lateinit var m_pitchListAdapter: ArrayAdapter<PitchListItem>
 
 	override fun getLayoutResId() = R.layout.play_by_play_item
 
@@ -30,18 +27,14 @@ class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(d
 
 	override fun onBindView(viewHolder: ViewHolder, context: Context)
 	{
-		m_pitchListAdapter = ArrayAdapter(context, R.layout.pitch_list_item)
-		viewHolder.m_pitchListContainer.adapter = m_pitchListAdapter
-
 		viewHolder.m_resultText.text = m_data.des
 
 		setListeners(viewHolder)
 
-		addPitchLocations(context)
-		addPitchList()
+		toggleExpanded(viewHolder, viewHolder.itemView.context, forceExpanded = false)
 	}
 
-	fun addPitchLocations(context: Context)
+	private fun addPitchLocations()
 	{
 		for (pitch in m_data.pitches)
 		{
@@ -49,22 +42,32 @@ class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(d
 		}
 	}
 
-	fun addPitchList()
+	private fun addPitchList(context: Context, viewHolder: ViewHolder)
 	{
-		m_data.pitches.forEachIndexed {
-			i, pitch -> m_pitchListAdapter.add(PitchListItem(PitchListItem.Data(pitch, i)))
+		val pitchList = ArrayList<PitchListItem>()
+		m_data.pitches.forEachIndexed { i, pitch ->
+			pitchList.add(PitchListItem(PitchListItem.Data(pitch, i)))
 		}
+
+		val pitchListAdapter = ComplexArrayAdapter(context, pitchList)
+		viewHolder.m_pitchListContainer.adapter = pitchListAdapter
 	}
 
-	fun setListeners(viewHolder: ViewHolder)
+	private fun setListeners(viewHolder: ViewHolder)
 	{
 		viewHolder.m_playIcon.setOnClickListener({ _ -> })
 
-		viewHolder.m_resultText.setOnClickListener({ _ -> onResultTextClick(viewHolder) })
+		viewHolder.m_resultText.setOnClickListener({ view -> toggleExpanded(viewHolder, view.context) })
 	}
 
-	fun onResultTextClick(viewHolder: ViewHolder)
+	private fun toggleExpanded(viewHolder: ViewHolder, context: Context, forceExpanded: Boolean? = null)
 	{
+		var willExpand = !m_isExpanded
+		if (forceExpanded != null)
+		{
+			willExpand = forceExpanded
+		}
+
 		viewHolder.m_pitchesContainer.clipChildren = false
 
 		TransitionManager.beginDelayedTransition(viewHolder.m_pitchesContainer)
@@ -72,8 +75,11 @@ class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(d
 		val newLp = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0)
 		newLp.topToBottom = R.id.PLAY_BY_PLAY_ITEM_result
 
-		if (!m_isExpanded)
+		if (willExpand)
 		{
+			addPitchList(context, viewHolder)
+			addPitchLocations()
+
 			newLp.bottomToBottom = -1
 		}
 		else
@@ -83,7 +89,7 @@ class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(d
 
 		viewHolder.m_pitchesContainer.layoutParams = newLp
 
-		m_isExpanded = !m_isExpanded
+		m_isExpanded = willExpand
 	}
 
 	class ViewHolder(view: View) : ItemViewHolder(view)

@@ -15,14 +15,14 @@ abstract class FlexibleListFragment<out TData : Any> : BaseFragment<TData>()
 {
 	val m_parentList: RecyclerView by bindView(R.id.common_list)
 
-	var m_adapter: ComplexAdapter? = null
+	var m_adapter: ComplexRecyclerAdapter? = null
 
 	private fun createAdapter()
 	{
 		val context = context
 		if (context != null)
 		{
-			m_adapter = ComplexAdapter(context)
+			m_adapter = ComplexRecyclerAdapter(context)
 		}
 		else
 		{

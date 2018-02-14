@@ -2,4 +2,5 @@
 <resources>
     <string name="GAME_DETAIL_inning_header_top">Top %1$s</string>
     <string name="GAME_DETAIL_inning_header_bottom">Bottom %1$s</string>
+    <string name="GAME_DETAIL_pitch_detail">%1$s MPH %2$s</string>
 </resources>

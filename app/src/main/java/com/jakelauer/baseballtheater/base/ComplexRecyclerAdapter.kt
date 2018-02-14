@@ -10,7 +10,7 @@ import android.view.ViewGroup
  * Created by Jake on 10/21/2017.
  */
 
-class ComplexAdapter : RecyclerView.Adapter<ItemViewHolder>
+class ComplexRecyclerAdapter : RecyclerView.Adapter<ItemViewHolder>
 {
 	var m_currentViewType = 0
 	val m_items: MutableList<AdapterItem> = ArrayList()
