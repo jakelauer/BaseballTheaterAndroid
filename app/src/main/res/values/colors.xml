@@ -19,6 +19,10 @@
     <color name="transparent">#00000000</color>
     <color name="featuredTeam">#2979ff</color>
 
+    <color name="pitch_result_ball">#179727</color>
+    <color name="pitch_result_strike">#a80000</color>
+    <color name="pitch_result_x">#0082ff</color>
+
     <color name="team_color_ana">#BA0021</color>
     <color name="team_color_az">#A71930</color>
     <color name="team_color_ari">#a71930</color>

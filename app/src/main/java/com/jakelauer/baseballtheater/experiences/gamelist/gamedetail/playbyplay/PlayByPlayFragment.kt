@@ -15,6 +15,7 @@ import com.jakelauer.baseballtheater.common.listitems.HeaderItem
 class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 {
 	var m_game: GameSummary by Syringe()
+	var m_expandedItem: BatterItem? = null
 
 	override fun getLayoutResourceId() = R.layout.play_by_play_fragment
 
@@ -42,6 +43,8 @@ class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 
 	private fun onDataLoaded()
 	{
+		m_adapter?.clear()
+		
 		val playByPlayData = getModel().m_playByPlay
 		if (playByPlayData != null)
 		{
@@ -70,9 +73,22 @@ class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 
 	private fun renderHalfInning(halfInning: InningHalf)
 	{
+		val context = context ?: throw Exception("Context cannot be null")
+
 		for (batter in halfInning.atbat)
 		{
 			val listItem = BatterItem(batter)
+
+			listItem.setResultClickListener({ _, _ ->
+				m_expandedItem?.let { expandedItem ->
+					if (expandedItem != listItem)
+					{
+						expandedItem.toggleExpanded(context, false)
+					}
+				}
+				m_expandedItem = listItem
+			})
+
 			m_adapter?.add(listItem)
 		}
 	}

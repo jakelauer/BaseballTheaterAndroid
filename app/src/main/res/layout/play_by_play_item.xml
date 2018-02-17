@@ -28,6 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/PLAY_BY_PLAY_ITEM_icon"
         app:layout_constraintTop_toTopOf="parent"
+        android:background="?android:attr/selectableItemBackground"
         tools:text="Starlin Castro singles to center." />
 
     <LinearLayout

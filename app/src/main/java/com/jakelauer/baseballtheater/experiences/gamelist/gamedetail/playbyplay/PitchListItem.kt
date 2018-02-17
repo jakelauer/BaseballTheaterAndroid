@@ -1,12 +1,14 @@
 package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.playbyplay
 
 import android.content.Context
+import android.graphics.PorterDuff
 import android.view.View
 import android.widget.TextView
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.Pitch
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
 import com.jakelauer.baseballtheater.base.ItemViewHolder
+import com.jakelauer.baseballtheater.utils.Utils
 import libs.ButterKnife.bindView
 
 /**
@@ -21,6 +23,11 @@ class PitchListItem(data: PitchListItem.Data) : AdapterChildItem<PitchListItem.D
 	override fun onBindView(viewHolder: ViewHolder, context: Context)
 	{
 		viewHolder.m_pitchIndex.text = (m_data.m_index + 1).toString()
+		val bg = Utils.getColorFromPitchResult(m_data.m_pitch, context)
+		if(bg != null)
+		{
+			viewHolder.m_pitchIndex.background.setColorFilter(bg, PorterDuff.Mode.SRC_ATOP);
+		}
 
 		viewHolder.m_pitchDesc.text = m_data.m_pitch.des
 
@@ -30,6 +37,8 @@ class PitchListItem(data: PitchListItem.Data) : AdapterChildItem<PitchListItem.D
 		viewHolder.m_pitchInfo.text = context.getString(R.string.GAME_DETAIL_pitch_detail,
 				startSpeed,
 				pitchTypeDetail)
+
+
 	}
 
 	class ViewHolder(view: View) : ItemViewHolder(view)

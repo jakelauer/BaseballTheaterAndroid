@@ -10,11 +10,16 @@
         tools:text="3"
         android:id="@+id/PITCH_LIST_ITEM_pitch_index"
         app:layout_constraintStart_toStartOf="parent"
-        android:minWidth="30dp"
-        android:layout_height="30dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:minWidth="20dp"
+        android:layout_height="20dp"
+        android:textColor="#FFFFFF"
         android:layout_width="wrap_content"
         android:layout_weight="0"
         android:gravity="center"
+        android:layout_margin="5dp"
+        android:background="@drawable/pitch_circle"
         />
 
     <TextView
@@ -27,7 +32,7 @@
         android:layout_height="30dp"
         android:paddingStart="@dimen/default_padding_small"
         android:paddingEnd="@dimen/default_padding_small"
-        />\
+        />
 
     <TextView
         tools:text="95.4 MPH Knuckleball"

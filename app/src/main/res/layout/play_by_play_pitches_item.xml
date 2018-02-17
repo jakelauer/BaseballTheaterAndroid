@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="@dimen/default_padding"
+    android:animateLayoutChanges="true"
     android:orientation="vertical"
-    android:animateLayoutChanges="true">
+    android:padding="@dimen/default_padding">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/PITCHES_strikezone_container"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="250dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/bg_strikezone"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/bg_strikezone">
+        app:layout_constraintStart_toStartOf="parent">
 
         <View
             android:id="@+id/PITCHES_strikezone_box"
@@ -22,20 +21,28 @@
             android:layout_height="0dp"
             android:background="@color/light_accent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_percent=".34"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_default="percent"
             app:layout_constraintWidth_percent=".23" />
+
+        <RelativeLayout
+            android:id="@+id/PITCHES_strikezone_pitches_container"
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
 
     <com.jakelauer.baseballtheater.views.NoScrollListView
         android:id="@+id/PITCHES_pitch_list"
         android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/default_margin"
+        app:layout_constraintTop_toBottomOf="@id/PITCHES_strikezone_container"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-    </com.jakelauer.baseballtheater.views.NoScrollListView>
+        android:orientation="vertical"/>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
