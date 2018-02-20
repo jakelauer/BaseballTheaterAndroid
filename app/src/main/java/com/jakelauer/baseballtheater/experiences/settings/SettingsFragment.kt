@@ -8,9 +8,11 @@ import android.support.customtabs.CustomTabsIntent
 import android.view.MenuItem
 import android.view.View
 import com.jakelauer.baseballtheater.MlbDataServer.PatreonDataCreator
+import com.jakelauer.baseballtheater.MlbDataServer.Utils.DownloadListener
 import com.jakelauer.baseballtheater.R
 import kotlinx.android.synthetic.main.patreon_preference.*
 import org.json.JSONException
+import org.json.JSONObject
 
 
 /**
@@ -36,7 +38,7 @@ class SettingsFragment : PreferenceFragment()
 		SettingsActivity.bindPreferenceSummaryToValue(findPreference("behavior_favorite_team"))
 
 		val patreonDataCreator = PatreonDataCreator()
-		patreonDataCreator.get { response ->
+		patreonDataCreator[DownloadListener { response ->
 			var percentageString: Double? = 0.0
 			try
 			{
@@ -50,7 +52,7 @@ class SettingsFragment : PreferenceFragment()
 			val realPercentage = percentageString!! * 100
 			patreon_progress.progress = realPercentage.toInt()
 			patreon_progress_text.text = "${realPercentage.toInt()}% of goal"
-		}
+		}]
 	}
 
 	override fun onViewCreated(view: View?, savedInstanceState: Bundle?)

@@ -24,7 +24,7 @@ import java.util.*
 class HighlightCastControlFragment : BaseFragment<Any>()
 {
 	var m_remoteMediaClient: RemoteMediaClient? = null
-	private var m_highlight: Highlight by Syringe()
+	private var m_highlight: HighlightItem.HighlightData by Syringe()
 
 	private var m_title: TextView by bindView(R.id.CAST_CONTROL_title)
 	private var m_subtitle: TextView by bindView(R.id.CAST_CONTROL_subtitle)
@@ -56,7 +56,7 @@ class HighlightCastControlFragment : BaseFragment<Any>()
 		m_title.text = m_highlight.headline
 		m_subtitle.text = m_highlight.blurb
 		m_currentTime.text = "00:00:00"
-		m_durationTime.text = getDurationFromMs(m_highlight.durationMilliseconds())
+		m_durationTime.text = getDurationFromMs(m_highlight.durationMilliseconds)
 
 		m_remoteMediaClient?.addProgressListener({ progressMs: Long, durationMs: Long ->
 			m_seek.max = durationMs.toInt()
@@ -108,7 +108,7 @@ class HighlightCastControlFragment : BaseFragment<Any>()
 
 		override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean)
 		{
-			if(fromUser)
+			if (fromUser)
 			{
 				m_remoteMediaClient?.seek(progress.toLong())
 			}
@@ -173,7 +173,8 @@ class HighlightCastControlFragment : BaseFragment<Any>()
 
 	companion object
 	{
-		fun newInstance(highlight: Highlight): HighlightCastControlFragment{
+		fun newInstance(highlight: HighlightItem.HighlightData): HighlightCastControlFragment
+		{
 			return HighlightCastControlFragment().apply {
 				m_highlight = highlight
 			}

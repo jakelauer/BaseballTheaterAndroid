@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.experiences.gamelist.GameListPagerFragment
 import com.jakelauer.baseballtheater.experiences.news.NewsFragment
+import com.jakelauer.baseballtheater.experiences.search.SearchFragment
 import com.jakelauer.baseballtheater.utils.DateTimeUtils
 import com.jakelauer.baseballtheater.utils.PrefUtils
 import kotlinx.android.synthetic.main.activity_base.*
@@ -58,9 +59,17 @@ class MainActivity : BaseActivity(true)
 				setMainFragment(fragment)
 				return@OnNavigationItemSelectedListener true
 			}
+
 			R.id.navigation_news ->
 			{
 				val fragment = NewsFragment()
+				setMainFragment(fragment)
+				return@OnNavigationItemSelectedListener true
+			}
+
+			R.id.navigation_search ->
+			{
+				val fragment = SearchFragment()
 				setMainFragment(fragment)
 				return@OnNavigationItemSelectedListener true
 			}

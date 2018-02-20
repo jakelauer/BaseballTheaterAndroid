@@ -89,7 +89,7 @@ class HighlightsFragment : RefreshableListFragment<HighlightsFragment.Model>()
 					}
 				}
 
-				val highlightItem = HighlightItem(highlight, activity as BaseActivity)
+				val highlightItem = HighlightItem(HighlightItem.HighlightData(highlight), activity as BaseActivity)
 
 				m_adapter?.add(highlightItem)
 			}
@@ -116,8 +116,9 @@ class HighlightsFragment : RefreshableListFragment<HighlightsFragment.Model>()
 
 	companion object
 	{
-		fun newInstance(game: GameSummary): HighlightsFragment{
-			return HighlightsFragment().apply{
+		fun newInstance(game: GameSummary): HighlightsFragment
+		{
+			return HighlightsFragment().apply {
 				m_game = game
 			}
 		}

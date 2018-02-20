@@ -44,7 +44,7 @@ class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 	private fun onDataLoaded()
 	{
 		m_adapter?.clear()
-		
+
 		val playByPlayData = getModel().m_playByPlay
 		if (playByPlayData != null)
 		{

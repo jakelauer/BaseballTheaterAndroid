@@ -13,7 +13,8 @@ import java.util.List;
  */
 
 @Root(name = "media", strict = false)
-public class Highlight implements Serializable {
+public class Highlight implements Serializable
+{
 	@Attribute(required = false)
 	public String type;
 
@@ -35,7 +36,8 @@ public class Highlight implements Serializable {
 	@Element(required = false)
 	public String duration;
 
-	public Long durationMilliseconds(){
+	public Long durationMilliseconds()
+	{
 		String[] pieces = duration.split(":");
 		int h = Integer.valueOf(pieces[0]);
 		int m = Integer.valueOf(pieces[1]);
