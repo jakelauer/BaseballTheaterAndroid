@@ -1,12 +1,9 @@
 package com.jakelauer.baseballtheater.MlbDataServer
 
-import com.google.gson.reflect.TypeToken
 import com.jakelauer.baseballtheater.BuildConfig
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightSearchResult
 import com.jakelauer.baseballtheater.MlbDataServer.Utils.DownloadListener
 import com.jakelauer.baseballtheater.MlbDataServer.Utils.JsonLoader
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 
 
 /**
@@ -20,9 +17,14 @@ class Search
 	{
 		val jsonLoader = JsonLoader()
 		val stringDlListener = DownloadListener<String> { result ->
-			val mapper = jacksonObjectMapper()
-			val resultMapped: List<HighlightSearchResult> = mapper.readValue(result)
-			downloadListener.onDownloadComplete(resultMapped)
+			try
+			{
+				val resultMapped = SearchMapper.map(result)
+				downloadListener.onDownloadComplete(resultMapped.toList())
+			}
+			catch(e: Exception){
+
+			}
 		}
 		jsonLoader.GetJson(getUrl(query), stringDlListener)
 	}

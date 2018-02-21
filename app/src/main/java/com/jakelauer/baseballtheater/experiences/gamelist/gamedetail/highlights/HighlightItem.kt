@@ -216,16 +216,16 @@ class HighlightItem(highlight: HighlightData, activity: BaseActivity)
 
 		constructor(highlightSearchResult: HighlightSearchResult)
 		{
-			recap = highlightSearchResult.Recap ?: false
-			condensed = highlightSearchResult.Condensed ?: false
-			headline = highlightSearchResult.Headline ?: ""
-			blurb = highlightSearchResult.Blurb ?: ""
-			bigblurb = highlightSearchResult.BigBlurb ?: ""
-			thumb = highlightSearchResult.Thumb_m ?: highlightSearchResult.Thumb_l ?: highlightSearchResult.Thumb_s ?: throw Exception("No thumbnail available")
+			recap = highlightSearchResult.recap ?: false
+			condensed = highlightSearchResult.condensed ?: false
+			headline = highlightSearchResult.headline ?: ""
+			blurb = highlightSearchResult.blurb ?: ""
+			bigblurb = highlightSearchResult.bigBlurb ?: ""
+			thumb = highlightSearchResult.thumb_m ?: highlightSearchResult.thumb_l ?: highlightSearchResult.thumb_s ?: throw Exception("No thumbnail available")
 			durationMilliseconds = highlightSearchResult.getDurationMilliseconds()
-			video_l = highlightSearchResult.Video_l
-			video_m = highlightSearchResult.Video_m
-			video_s = highlightSearchResult.Video_s
+			video_l = highlightSearchResult.video_l
+			video_m = highlightSearchResult.video_m
+			video_s = highlightSearchResult.video_s
 
 		}
 	}

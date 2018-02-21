@@ -8,6 +8,7 @@ import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.highlights.HighlightItem
+import com.mancj.materialsearchbar.MaterialSearchBar
 import libs.ButterKnife.bindView
 
 
@@ -17,7 +18,7 @@ import libs.ButterKnife.bindView
 class SearchFragment : RefreshableListFragment<Any>()
 {
 	var m_query: String? = null
-	val m_searchBar: SearchView by bindView(R.id.SEARCH_query)
+	val m_searchBar: MaterialSearchBar by bindView(R.id.SEARCH_query)
 
 	override fun getLayoutResourceId() = R.layout.search_fragment
 
@@ -25,22 +26,25 @@ class SearchFragment : RefreshableListFragment<Any>()
 	{
 		super.onBindView()
 
-		m_searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener
+		m_searchBar.enableSearch()
+		m_searchBar.setOnSearchActionListener(object : MaterialSearchBar.OnSearchActionListener
 		{
-			override fun onQueryTextSubmit(query: String?): Boolean
+			override fun onButtonClicked(buttonCode: Int)
 			{
-				m_query = query
-				loadData()
-				return true
+				m_adapter?.clear()
 			}
 
-			override fun onQueryTextChange(newText: String?): Boolean
+			override fun onSearchStateChanged(enabled: Boolean)
 			{
-				return false
+				m_adapter?.clear()
+			}
+
+			override fun onSearchConfirmed(query: CharSequence)
+			{
+				m_query = query.toString()
+				loadData()
 			}
 		})
-
-		val context = context ?: throw Exception("Context cannot be null")
 	}
 
 	override fun createModel(): Any
@@ -51,6 +55,7 @@ class SearchFragment : RefreshableListFragment<Any>()
 	override fun loadData()
 	{
 		m_query?.let {
+			m_refreshView.isRefreshing = true
 			val s = Search()
 			s.searchHighlights(it, DownloadListener { result -> onLoaded(result) })
 		}
@@ -58,6 +63,7 @@ class SearchFragment : RefreshableListFragment<Any>()
 
 	fun onLoaded(result: List<HighlightSearchResult>?)
 	{
+		m_refreshView.isRefreshing = false
 		m_adapter?.clear()
 
 		if (result != null)

@@ -92,7 +92,7 @@ class Parser : AsyncTask<String, Void, String?>(), Observer
 		catch (e: Exception)
 		{
 			e.printStackTrace()
-			onComplete!!.onError()
+			onComplete?.onError()
 		}
 
 	}
