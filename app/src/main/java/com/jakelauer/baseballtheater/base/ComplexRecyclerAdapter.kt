@@ -84,6 +84,11 @@ class ComplexRecyclerAdapter : RecyclerView.Adapter<ItemViewHolder>
 		m_items.clear()
 		notifyDataSetChanged()
 	}
+
+	fun getItemPosition(item: AdapterChildItem<*, *>): Int
+	{
+		return m_items.indexOf(item)
+	}
 }
 
 typealias AdapterItem = AdapterChildItem<*, ItemViewHolder>

@@ -87,6 +87,12 @@ class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 					}
 				}
 				m_expandedItem = listItem
+
+				val position = m_adapter?.getItemPosition(listItem)
+				if(position != null)
+				{
+					m_parentList.layoutManager.scrollToPosition(position)
+				}
 			})
 
 			m_adapter?.add(listItem)

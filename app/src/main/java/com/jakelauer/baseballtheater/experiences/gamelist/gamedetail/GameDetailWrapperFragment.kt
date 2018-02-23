@@ -34,6 +34,13 @@ class GameDetailWrapperFragment : BaseFragment<String>()
 		return ""
 	}
 
+	override fun onCreate(savedInstanceState: Bundle?)
+	{
+		super.onCreate(savedInstanceState)
+
+		activity?.title = "Game Detail"
+	}
+
 	override fun loadData()
 	{
 	}

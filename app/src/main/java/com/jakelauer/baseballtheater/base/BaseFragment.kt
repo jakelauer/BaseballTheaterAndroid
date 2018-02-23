@@ -6,6 +6,7 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.jakelauer.baseballtheater.MainActivity
 import icepick.Icepick
 
 /**
@@ -14,11 +15,6 @@ import icepick.Icepick
 
 abstract class BaseFragment<out TData : Any> : DialogFragment()
 {
-	companion object
-	{
-		val INJECT_MEMBER_PREFIX = "m_"
-	}
-
 	@LayoutRes
 	abstract fun getLayoutResourceId(): Int
 

@@ -1,5 +1,6 @@
 package com.jakelauer.baseballtheater.experiences.search
 
+import android.os.Bundle
 import android.support.v7.widget.SearchView
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightSearchResult
 import com.jakelauer.baseballtheater.MlbDataServer.Search
@@ -26,25 +27,34 @@ class SearchFragment : RefreshableListFragment<Any>()
 	{
 		super.onBindView()
 
+		setEmpty(false)
 		m_searchBar.enableSearch()
 		m_searchBar.setOnSearchActionListener(object : MaterialSearchBar.OnSearchActionListener
 		{
 			override fun onButtonClicked(buttonCode: Int)
 			{
-				m_adapter?.clear()
+				setEmpty(false)
 			}
 
 			override fun onSearchStateChanged(enabled: Boolean)
 			{
-				m_adapter?.clear()
+				setEmpty(false)
 			}
 
 			override fun onSearchConfirmed(query: CharSequence)
 			{
 				m_query = query.toString()
+				m_searchBar.requestFocus()
 				loadData()
 			}
 		})
+	}
+
+	override fun onCreate(savedInstanceState: Bundle?)
+	{
+		super.onCreate(savedInstanceState)
+
+		activity?.title = "Search"
 	}
 
 	override fun createModel(): Any
@@ -61,19 +71,30 @@ class SearchFragment : RefreshableListFragment<Any>()
 		}
 	}
 
+	fun setEmpty(searchTermSpecified: Boolean)
+	{
+		m_adapter?.clear()
+		m_adapter?.add(SearchEmptyItem(searchTermSpecified))
+	}
+
 	fun onLoaded(result: List<HighlightSearchResult>?)
 	{
 		m_refreshView.isRefreshing = false
-		m_adapter?.clear()
 
-		if (result != null)
+		if (result != null && result.any())
 		{
+			m_adapter?.clear()
+
 			for (highlight in result)
 			{
 				val highlightItem = HighlightItem(HighlightItem.HighlightData(highlight), activity as BaseActivity)
 
 				m_adapter?.add(highlightItem)
 			}
+		}
+		else
+		{
+			setEmpty(true)
 		}
 	}
 }
