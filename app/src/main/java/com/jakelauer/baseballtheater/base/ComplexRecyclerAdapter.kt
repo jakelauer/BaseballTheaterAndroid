@@ -47,12 +47,12 @@ class ComplexRecyclerAdapter : RecyclerView.Adapter<ItemViewHolder>
 		}
 	}
 
-	override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ItemViewHolder
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder
 	{
 		val layoutId = m_typeToLayout[viewType]
 
 		layoutId?.let {
-			val view = LayoutInflater.from(parent?.context).inflate(it, parent, false)
+			val view = LayoutInflater.from(parent.context).inflate(it, parent, false)
 			val vh = ItemViewHolder(view)
 			return vh
 		}

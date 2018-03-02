@@ -46,7 +46,7 @@ class HighlightsFragment : RefreshableListFragment<HighlightsFragment.Model>()
 		}
 	}
 
-	fun onDataLoaded()
+	private fun onDataLoaded()
 	{
 		m_refreshView.isRefreshing = false
 		m_adapter?.clear()
