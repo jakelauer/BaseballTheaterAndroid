@@ -71,31 +71,33 @@ class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 		}
 	}
 
-	private fun renderHalfInning(halfInning: InningHalf)
+	private fun renderHalfInning(halfInning: InningHalf?)
 	{
 		val context = context ?: throw Exception("Context cannot be null")
 
-		for (batter in halfInning.atbat)
-		{
-			val listItem = BatterItem(batter)
+		halfInning?.atbat?.let {
+			for (batter in halfInning.atbat)
+			{
+				val listItem = BatterItem(batter, m_game.isSpringTraining)
 
-			listItem.setResultClickListener({ _, _ ->
-				m_expandedItem?.let { expandedItem ->
-					if (expandedItem != listItem)
-					{
-						expandedItem.toggleExpanded(context, false)
+				listItem.setResultClickListener({ _, _ ->
+					m_expandedItem?.let { expandedItem ->
+						if (expandedItem != listItem)
+						{
+							expandedItem.toggleExpanded(context, false)
+						}
 					}
-				}
-				m_expandedItem = listItem
+					m_expandedItem = listItem
 
-				val position = m_adapter?.getItemPosition(listItem)
-				if(position != null)
-				{
-					m_parentList.layoutManager.scrollToPosition(position)
-				}
-			})
+					val position = m_adapter?.getItemPosition(listItem)
+					if (position != null)
+					{
+						m_parentList.layoutManager.scrollToPosition(position)
+					}
+				})
 
-			m_adapter?.add(listItem)
+				m_adapter?.add(listItem)
+			}
 		}
 	}
 

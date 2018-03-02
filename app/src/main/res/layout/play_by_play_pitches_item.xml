@@ -28,9 +28,9 @@
             app:layout_constraintWidth_default="percent"
             app:layout_constraintWidth_percent=".23" />
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/PITCHES_strikezone_pitches_container"
-            android:layout_width="250dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>

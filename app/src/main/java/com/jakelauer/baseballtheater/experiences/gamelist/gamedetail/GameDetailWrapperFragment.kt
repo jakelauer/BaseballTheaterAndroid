@@ -14,6 +14,7 @@ import com.jakelauer.baseballtheater.base.Syringe
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.boxscore.BoxScoreFragment
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.highlights.HighlightsFragment
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.playbyplay.PlayByPlayFragment
+import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.recap.RecapFragment
 import libs.ButterKnife.bindView
 
 /**
@@ -58,30 +59,62 @@ class GameDetailWrapperFragment : BaseFragment<String>()
 	{
 		override fun getItem(position: Int): Fragment
 		{
-			return when (position) {
-				0 -> HighlightsFragment.newInstance(m_game)
-				1 -> PlayByPlayFragment.newInstance(m_game)
-				2 -> BoxScoreFragment.newInstance(m_game)
-				else -> throw Exception("Page not found")
+			return if (m_game.gameIsOver)
+			{
+				when (position)
+				{
+					0 -> RecapFragment.newInstance(m_game)
+					1 -> HighlightsFragment.newInstance(m_game)
+					2 -> PlayByPlayFragment.newInstance(m_game)
+					3 -> BoxScoreFragment.newInstance(m_game)
+					else -> throw Exception("Page not found")
+				}
 			}
+			else
+			{
+				when (position)
+				{
+					0 -> HighlightsFragment.newInstance(m_game)
+					1 -> PlayByPlayFragment.newInstance(m_game)
+					2 -> BoxScoreFragment.newInstance(m_game)
+					else -> throw Exception("Page not found")
+				}
+			}
+
 		}
 
-		override fun getCount() = 3
+		override fun getCount() = if(m_game.gameIsOver) 4 else 3
 
 		override fun getPageTitle(position: Int): CharSequence
 		{
-			return when(position){
-				0 -> "Highlights"
-				1 -> "Play by Play"
-				2 -> "Box Score"
-				else -> "Not Found"
+			return if (m_game.gameIsOver)
+			{
+				when (position)
+				{
+					0 -> "Recap"
+					1 -> "Highlights"
+					2 -> "Play by Play"
+					3 -> "Box Score"
+					else -> "Not Found"
+				}
+			}
+			else
+			{
+				when (position)
+				{
+					0 -> "Highlights"
+					1 -> "Play by Play"
+					2 -> "Box Score"
+					else -> "Not Found"
+				}
 			}
 		}
 	}
 
 	companion object
 	{
-		fun newInstance(game: GameSummary): GameDetailWrapperFragment{
+		fun newInstance(game: GameSummary): GameDetailWrapperFragment
+		{
 			return GameDetailWrapperFragment().apply {
 				m_game = game
 			}

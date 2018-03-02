@@ -102,6 +102,14 @@ public class GameSummary implements Serializable
 	@Attribute
 	public String away_loss;
 
+	@Attribute
+	public String gameday_sw;
+
+	public boolean getIsSpringTraining()
+	{
+		return this.gameday_sw.equals("Y");
+	}
+
 	public String getAwayTeamCity()
 	{
 		return getCity(awayTeamCity_actual);

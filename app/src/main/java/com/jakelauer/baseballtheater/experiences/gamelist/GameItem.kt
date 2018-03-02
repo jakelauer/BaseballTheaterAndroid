@@ -62,7 +62,7 @@ class GameItem(model: GameItem.Model) : AdapterChildItem<GameItem.Model, GameIte
 		{
 			if (m_data.m_game.gameIsOver)
 			{
-				val homeWon = (m_data.m_homeTeamScore > m_data.m_awayTeamScore)
+				val homeWon = (m_data.m_homeTeamScore.toInt() > m_data.m_awayTeamScore.toInt())
 
 				viewHolder.m_homeTeamWon.alpha = if (homeWon) 1f else 0f
 				viewHolder.m_awayTeamWon.alpha = if (!homeWon) 1f else 0f
@@ -97,17 +97,5 @@ class GameItem(model: GameItem.Model) : AdapterChildItem<GameItem.Model, GameIte
 	{
 		var m_awayTeamScore: String = m_game.linescore?.runs?.away ?: ""
 		var m_homeTeamScore: String = m_game.linescore?.runs?.home ?: ""
-	}
-
-	class ShaderFactory : ShapeDrawable.ShaderFactory()
-	{
-		override fun resize(width: Int, height: Int): Shader
-		{
-			return LinearGradient(0f, 0f, width.toFloat(), height.toFloat(),
-					intArrayOf(0xF44336, 0xFFB74D, 0xFFE082, 0xAED581, 0x4CAF50, 0xAED581, 0xFFE082, 0xFFB74D, 0xF44336),
-					floatArrayOf(0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1.0f),
-					Shader.TileMode.REPEAT)
-		}
-
 	}
 }

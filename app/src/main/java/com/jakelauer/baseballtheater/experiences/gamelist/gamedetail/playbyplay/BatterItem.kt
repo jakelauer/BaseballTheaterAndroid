@@ -8,11 +8,9 @@ import android.support.v7.widget.AppCompatImageView
 import android.transition.TransitionManager
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import android.widget.ListView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.AtBat
 import com.jakelauer.baseballtheater.R
@@ -22,13 +20,14 @@ import com.jakelauer.baseballtheater.base.ItemClickListener
 import com.jakelauer.baseballtheater.base.ItemViewHolder
 import com.jakelauer.baseballtheater.utils.Utils
 import libs.ButterKnife.bindView
+import net.cachapa.expandablelayout.ExpandableLayout
 import java.lang.Float.parseFloat
 
 
 /**
  * Created by Jake on 2/12/2018.
  */
-class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(data)
+class BatterItem(data: AtBat, val m_isSpringTraining: Boolean) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(data)
 {
 	private var m_isExpanded = false
 	private var m_resultClickListener: ItemClickListener? = null
@@ -51,31 +50,41 @@ class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(d
 
 	private fun addPitchLocations(context: Context, viewHolder: ViewHolder)
 	{
-		val minX = 15
-		val maxY = 250
-		val minY = 100
-		val maxX = 250
+		val regularSeason = object : ISizes {
+			override val maxX = 300f
+			override val maxY = 165f
+			override val yOffset = -0.55f
+			override val xOffset = -0.10f
+		}
+
+		val springTraining = object : ISizes {
+			override val maxX = 300f
+			override val maxY = 300f
+			override val yOffset = 0f
+			override val xOffset = -0.13f
+		}
 
 		val container = viewHolder.m_strikezonePitchesContainer
-		val pitchWidth = Utils.dpToPx(20, context)
-		val pitchRadius = pitchWidth / 2
-
 		container.removeAllViews()
 
 		m_data.pitches.forEachIndexed { i, pitch ->
 			val pitchX = parseFloat(pitch.x)
 			val pitchY = parseFloat(pitch.y)
 
-			val leftPct = ((maxX - pitchX - minX)) / (maxX - minX)
-			val topPct = (pitchY - minY) / (maxY - minY)
-			val leftAmt = (leftPct * container.width).toInt() - pitchRadius
-			val topAmt = (topPct * container.height.toFloat()).toInt() - pitchRadius
+			val sizes = if(m_isSpringTraining) springTraining else regularSeason
+
+			val leftPct = 1 - (pitchX / sizes.maxX) + sizes.xOffset
+			val topPct = (pitchY / sizes.maxY) + sizes.yOffset
 
 			val view = TextView(context)
 
-			val params = RelativeLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-			params.leftMargin = leftAmt
-			params.topMargin = topAmt
+			val params = ConstraintLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+			params.topToTop = R.id.PITCHES_strikezone_pitches_container
+			params.bottomToBottom = R.id.PITCHES_strikezone_pitches_container
+			params.startToStart = R.id.PITCHES_strikezone_pitches_container
+			params.endToEnd = R.id.PITCHES_strikezone_pitches_container
+			params.horizontalBias = leftPct
+			params.verticalBias = topPct
 
 			view.text = (i + 1).toString()
 			view.gravity = Gravity.CENTER
@@ -88,7 +97,7 @@ class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(d
 				view.background.setColorFilter(bg, PorterDuff.Mode.SRC_ATOP);
 			}
 
-			container.addView(view, params)
+			container.addView(view, -1, params)
 		}
 	}
 
@@ -131,23 +140,18 @@ class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(d
 
 			TransitionManager.beginDelayedTransition(viewHolder.m_pitchesContainer)
 
-			val newLp = ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0)
-			newLp.topToBottom = R.id.PLAY_BY_PLAY_ITEM_result
-
 			if (willExpand)
 			{
-				addPitchList(context, viewHolder)
+				viewHolder.m_expandable.expand()
 
-				newLp.bottomToBottom = -1
+				addPitchList(context, viewHolder)
 
 				addPitchLocations(context, viewHolder)
 			}
 			else
 			{
-				newLp.bottomToBottom = R.id.PLAY_BY_PLAY_ITEM_result
+				viewHolder.m_expandable.collapse()
 			}
-
-			viewHolder.m_pitchesContainer.layoutParams = newLp
 
 			m_isExpanded = willExpand
 		}
@@ -156,10 +160,19 @@ class BatterItem(data: AtBat) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(d
 	class ViewHolder(view: View) : ItemViewHolder(view)
 	{
 		val m_playIcon: AppCompatImageView by bindView(R.id.PLAY_BY_PLAY_ITEM_icon)
+		val m_expandable: ExpandableLayout by bindView(R.id.PLAY_BY_PLAY_expandable_layout)
 		val m_resultText: TextView by bindView(R.id.PLAY_BY_PLAY_ITEM_result)
 		val m_pitchesContainer: LinearLayout by bindView(R.id.PLAY_BY_PLAY_pitches_container)
 		val m_pitchListContainer: ListView by bindView(R.id.PITCHES_pitch_list)
-		val m_strikezonePitchesContainer: RelativeLayout by bindView(R.id.PITCHES_strikezone_pitches_container)
+		val m_strikezonePitchesContainer: ConstraintLayout by bindView(R.id.PITCHES_strikezone_pitches_container)
 		val m_strikezoneContainer: ConstraintLayout by bindView(R.id.PITCHES_strikezone_container)
+	}
+
+	interface ISizes
+	{
+		val maxY: Float
+		val maxX: Float
+		val yOffset: Float
+		val xOffset: Float
 	}
 }

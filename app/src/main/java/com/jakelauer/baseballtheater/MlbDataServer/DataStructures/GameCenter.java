@@ -10,8 +10,9 @@ import java.io.Serializable;
  * Created by Jake on 1/14/2017.
  */
 
-@Root
-public class GameCenter implements Serializable {
+@Root(name = "game", strict = false)
+public class GameCenter implements Serializable
+{
 	@Attribute
 	public String status;
 
@@ -26,20 +27,8 @@ public class GameCenter implements Serializable {
 
 	@Element
 	public Wrap wrap;
+
+	@Element(name = "recaps")
+	public Wrap recaps;
 }
 
-@Root
-class Wrap implements Serializable{
-	@Element
-	public Mlb mlb;
-}
-
-@Root
-class Mlb implements Serializable
-{
-	@Element
-	public String headline;
-
-	@Element
-	public String blurb;
-}

@@ -12,43 +12,50 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        app:layout_constraintTop_toTopOf="@id/PLAY_BY_PLAY_ITEM_result"
-        app:layout_constraintBottom_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
         android:padding="@dimen/default_padding_small"
         android:src="@drawable/ic_play_circle_filled_black_24px"
+        app:layout_constraintBottom_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
+        app:layout_constraintTop_toTopOf="@id/PLAY_BY_PLAY_ITEM_result"
         tools:ignore="RtlSymmetry" />
 
     <TextView
         android:id="@+id/PLAY_BY_PLAY_ITEM_result"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:paddingBottom="@dimen/default_padding"
         android:paddingStart="@dimen/default_padding_small"
-        android:paddingTop="@dimen/default_padding_small"
-        android:paddingBottom="@dimen/default_padding_small"
+        android:paddingTop="@dimen/default_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/PLAY_BY_PLAY_ITEM_icon"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="?android:attr/selectableItemBackground"
         tools:text="Starlin Castro singles to center." />
 
-    <LinearLayout
-        android:id="@+id/PLAY_BY_PLAY_pitches_container"
-        android:animateLayoutChanges="true"
-        app:layout_constraintTop_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
-        app:layout_constraintBottom_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/PLAY_BY_PLAY_expandable_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:clipChildren="true">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
+        app:el_duration="1000"
+        app:el_expanded="false"
+        app:el_parallax="0.5">
 
-        <include layout="@layout/play_by_play_pitches_item" />
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/PLAY_BY_PLAY_pitches_container"
+            android:animateLayoutChanges="true"
+            android:clipChildren="true"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/play_by_play_pitches_item" />
+        </LinearLayout>
+    </net.cachapa.expandablelayout.ExpandableLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="@dimen/default_margin_small"
         android:background="@color/light_accent"
-        app:layout_constraintTop_toBottomOf="@id/PLAY_BY_PLAY_pitches_container" />
+        app:layout_constraintTop_toBottomOf="@id/PLAY_BY_PLAY_expandable_layout" />
 
 </android.support.constraint.ConstraintLayout>

@@ -13,7 +13,7 @@ class DateTimeUtils
 		fun getDefaultDate(): DateTime
 		{
 			val finalDay2017 = DateTime("2017-11-01")
-			val springTraining2018 = DateTime("2018-02-23")
+			val springTraining2018 = DateTime("2018-02-21")
 			val now = DateTime.now()
 
 			return when
