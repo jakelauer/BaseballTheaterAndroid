@@ -12,12 +12,12 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.AtBat
 import com.jakelauer.baseballtheater.R
-import com.jakelauer.baseballtheater.base.AdapterChildItem
-import com.jakelauer.baseballtheater.base.ComplexArrayAdapter
-import com.jakelauer.baseballtheater.base.ItemClickListener
-import com.jakelauer.baseballtheater.base.ItemViewHolder
+import com.jakelauer.baseballtheater.base.*
+import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.highlights.HighlightItem
 import com.jakelauer.baseballtheater.utils.Utils
 import libs.ButterKnife.bindView
 import net.cachapa.expandablelayout.ExpandableLayout
@@ -27,11 +27,12 @@ import java.lang.Float.parseFloat
 /**
  * Created by Jake on 2/12/2018.
  */
-class BatterItem(data: AtBat, val m_isSpringTraining: Boolean) : AdapterChildItem<AtBat, BatterItem.ViewHolder>(data)
+class BatterItem(data: BatterItem.Data, private val m_isSpringTraining: Boolean, private val m_activity: BaseActivity) : AdapterChildItem<BatterItem.Data, BatterItem.ViewHolder>(data)
 {
 	private var m_isExpanded = false
 	private var m_resultClickListener: ItemClickListener? = null
 	private var m_viewHolder: ViewHolder? = null
+	private var m_relatedHighlight = getRelatedHighlight()
 
 	override fun getLayoutResId() = R.layout.play_by_play_item
 
@@ -41,7 +42,9 @@ class BatterItem(data: AtBat, val m_isSpringTraining: Boolean) : AdapterChildIte
 	{
 		m_viewHolder = viewHolder
 
-		viewHolder.m_resultText.text = m_data.des
+		viewHolder.m_resultText.text = m_data.m_play.des
+
+		viewHolder.m_playIcon.alpha = if (m_relatedHighlight != null) 1f else 0.2f
 
 		setListeners(viewHolder)
 
@@ -50,14 +53,16 @@ class BatterItem(data: AtBat, val m_isSpringTraining: Boolean) : AdapterChildIte
 
 	private fun addPitchLocations(context: Context, viewHolder: ViewHolder)
 	{
-		val regularSeason = object : ISizes {
+		val regularSeason = object : ISizes
+		{
 			override val maxX = 300f
 			override val maxY = 165f
 			override val yOffset = -0.55f
 			override val xOffset = -0.10f
 		}
 
-		val springTraining = object : ISizes {
+		val springTraining = object : ISizes
+		{
 			override val maxX = 300f
 			override val maxY = 300f
 			override val yOffset = 0f
@@ -67,11 +72,11 @@ class BatterItem(data: AtBat, val m_isSpringTraining: Boolean) : AdapterChildIte
 		val container = viewHolder.m_strikezonePitchesContainer
 		container.removeAllViews()
 
-		m_data.pitches.forEachIndexed { i, pitch ->
+		m_data.m_play.pitches.forEachIndexed { i, pitch ->
 			val pitchX = parseFloat(pitch.x)
 			val pitchY = parseFloat(pitch.y)
 
-			val sizes = if(m_isSpringTraining) springTraining else regularSeason
+			val sizes = if (m_isSpringTraining) springTraining else regularSeason
 
 			val leftPct = 1 - (pitchX / sizes.maxX) + sizes.xOffset
 			val topPct = (pitchY / sizes.maxY) + sizes.yOffset
@@ -94,11 +99,49 @@ class BatterItem(data: AtBat, val m_isSpringTraining: Boolean) : AdapterChildIte
 			val bg = Utils.getColorFromPitchResult(pitch, context)
 			if (bg != null)
 			{
-				view.background.setColorFilter(bg, PorterDuff.Mode.SRC_ATOP);
+				view.background.setColorFilter(bg, PorterDuff.Mode.SRC_ATOP)
 			}
 
 			container.addView(view, -1, params)
 		}
+	}
+
+	private fun getSvIdsForPlay(play: AtBat): List<String>
+	{
+		if (play.pitches != null && play.pitches.any())
+		{
+			return play.pitches.map { it.sv_id }
+		}
+
+		return ArrayList()
+	}
+
+	private fun getRelatedHighlight(): Highlight?
+	{
+		val guid = m_data.m_play.play_guid
+		val svIds = this.getSvIdsForPlay(m_data.m_play)
+		val hc = m_data.m_highlights
+		var foundHighlight: Highlight? = null
+
+		if (hc?.highlights != null)
+		{
+			hc.highlights.forEach { highlight ->
+				var found = false
+				if (highlight.keywords != null)
+				{
+					highlight.keywords.forEach({ keyword ->
+						found = found || (keyword.type == "sv_id" && (keyword.value == guid || svIds.indexOf(keyword.value) > -1))
+					})
+				}
+
+				if (found)
+				{
+					foundHighlight = highlight
+				}
+			}
+		}
+
+		return foundHighlight
 	}
 
 	fun setResultClickListener(l: ItemClickListener)
@@ -109,7 +152,7 @@ class BatterItem(data: AtBat, val m_isSpringTraining: Boolean) : AdapterChildIte
 	private fun addPitchList(context: Context, viewHolder: ViewHolder)
 	{
 		val pitchList = ArrayList<PitchListItem>()
-		m_data.pitches.forEachIndexed { i, pitch ->
+		m_data.m_play.pitches.forEachIndexed { i, pitch ->
 			pitchList.add(PitchListItem(PitchListItem.Data(pitch, i)))
 		}
 
@@ -125,6 +168,13 @@ class BatterItem(data: AtBat, val m_isSpringTraining: Boolean) : AdapterChildIte
 			toggleExpanded(view.context)
 			m_resultClickListener?.invoke(view, 0)
 		})
+
+		val rh = m_relatedHighlight
+		if (rh != null)
+		{
+			val hd = HighlightItem.HighlightData(rh)
+			viewHolder.m_playIcon.setOnClickListener(HighlightItem.HighlightClickListener(m_activity, hd, hd.video_m))
+		}
 	}
 
 	fun toggleExpanded(context: Context, forceExpanded: Boolean? = null)
@@ -175,4 +225,6 @@ class BatterItem(data: AtBat, val m_isSpringTraining: Boolean) : AdapterChildIte
 		val yOffset: Float
 		val xOffset: Float
 	}
+
+	class Data(val m_play: AtBat, val m_highlights: HighlightsCollection?)
 }

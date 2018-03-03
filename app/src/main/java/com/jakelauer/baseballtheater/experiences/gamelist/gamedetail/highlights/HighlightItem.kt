@@ -35,12 +35,10 @@ import libs.ButterKnife.bindView
  * Created by Jake on 10/26/2017.
  */
 
-class HighlightItem(highlight: HighlightData, activity: BaseActivity)
+class HighlightItem(highlight: HighlightData, val m_activity: BaseActivity)
 	: AdapterChildItem<HighlightItem.HighlightData, HighlightItem.ViewHolder>(highlight)
 {
-	private var m_prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity)
-
-	private var m_activity = activity
+	private var m_prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(m_activity)
 
 	override fun getLayoutResId() = R.layout.highlight_item
 
@@ -96,41 +94,11 @@ class HighlightItem(highlight: HighlightData, activity: BaseActivity)
 
 	private fun setListeners(viewHolder: ViewHolder)
 	{
-		viewHolder.m_infoWrapper.setOnClickListener(HighlightClickListener(getDefaultUrl()))
+		viewHolder.m_infoWrapper.setOnClickListener(HighlightClickListener(m_activity, m_data, getDefaultUrl()))
 
-		viewHolder.m_qualityLow.setOnClickListener(HighlightClickListener(m_data.video_s))
-		viewHolder.m_qualityMid.setOnClickListener(HighlightClickListener(m_data.video_m))
-		viewHolder.m_qualityHigh.setOnClickListener(HighlightClickListener(m_data.video_l))
-	}
-
-	fun openLink(url: String, context: Context)
-	{
-		val sm = CastContext.getSharedInstance(context).sessionManager
-		val castSession = sm.currentCastSession
-		val remoteMediaClient = castSession?.remoteMediaClient
-		if (remoteMediaClient != null)
-		{
-			val metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
-			metadata.putString(MediaMetadata.KEY_TITLE, m_data.headline)
-			metadata.putString(MediaMetadata.KEY_SUBTITLE, m_data.blurb)
-
-			val mediaInfo = MediaInfo.Builder(url)
-					.setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-					.setContentType("videos/mp4")
-					.setMetadata(metadata)
-					.setStreamDuration(m_data.durationMilliseconds)
-					.build()
-
-			remoteMediaClient.load(mediaInfo)
-
-			val controlFragment = HighlightCastControlFragment.newInstance(m_data)
-			controlFragment.show(m_activity.supportFragmentManager, "castControlFragment")
-		}
-		else
-		{
-			val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-			startActivity(context, browserIntent, null)
-		}
+		viewHolder.m_qualityLow.setOnClickListener(HighlightClickListener(m_activity, m_data, m_data.video_s))
+		viewHolder.m_qualityMid.setOnClickListener(HighlightClickListener(m_activity, m_data, m_data.video_m))
+		viewHolder.m_qualityHigh.setOnClickListener(HighlightClickListener(m_activity, m_data, m_data.video_l))
 	}
 
 	private fun getDefaultUrl(): String
@@ -164,10 +132,8 @@ class HighlightItem(highlight: HighlightData, activity: BaseActivity)
 		var m_qualityHigh: TextView by bindView(R.id.HIGHLIGHT_quality_high)
 	}
 
-	inner class HighlightClickListener(url: String?) : View.OnClickListener
+	class HighlightClickListener(val m_activity: BaseActivity, val m_highlight: HighlightData, val m_url: String?) : View.OnClickListener
 	{
-		private val m_url = url
-
 		override fun onClick(view: View)
 		{
 			val task = OpenHighlightAsyncTask(view.context, ProgressListener {
@@ -184,6 +150,36 @@ class HighlightItem(highlight: HighlightData, activity: BaseActivity)
 				}
 			})
 			task.execute(m_url)
+		}
+
+		private fun openLink(url: String, context: Context)
+		{
+			val sm = CastContext.getSharedInstance(context).sessionManager
+			val castSession = sm.currentCastSession
+			val remoteMediaClient = castSession?.remoteMediaClient
+			if (remoteMediaClient != null)
+			{
+				val metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
+				metadata.putString(MediaMetadata.KEY_TITLE, m_highlight.headline)
+				metadata.putString(MediaMetadata.KEY_SUBTITLE, m_highlight.blurb)
+
+				val mediaInfo = MediaInfo.Builder(url)
+						.setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+						.setContentType("videos/mp4")
+						.setMetadata(metadata)
+						.setStreamDuration(m_highlight.durationMilliseconds)
+						.build()
+
+				remoteMediaClient.load(mediaInfo)
+
+				val controlFragment = HighlightCastControlFragment.newInstance(m_highlight)
+				controlFragment.show(m_activity.supportFragmentManager, "castControlFragment")
+			}
+			else
+			{
+				val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+				startActivity(context, browserIntent, null)
+			}
 		}
 	}
 

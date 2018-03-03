@@ -6,16 +6,13 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v4.view.ViewPager
-import android.view.View
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.BaseFragment
 import com.jakelauer.baseballtheater.base.Syringe
-import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.boxscore.BoxScoreFragment
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.highlights.HighlightsFragment
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.links.LinksFragment
 import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.playbyplay.PlayByPlayFragment
-import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.recap.RecapFragment
 import libs.ButterKnife.bindView
 
 /**

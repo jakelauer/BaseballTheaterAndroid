@@ -27,29 +27,26 @@ class LinksFragment : RefreshableListFragment<Any>()
 
 	override fun loadData()
 	{
-		val context = context ?: throw Exception("Context cannot be null")
-
 		val gameDetailCreator = GameDetailCreator(m_game.gameDataDirectory, false)
 		gameDetailCreator.getGameCenter({ data -> onDataLoaded(data) })
 	}
 
-	fun onDataLoaded(data: GameCenter?)
+	private fun onDataLoaded(data: GameCenter?)
 	{
 
 		m_adapter?.clear()
 
-		val boxScore = LinkItem("Box Score", R.drawable.ic_view_module_white_24px)
+		val boxScore = LinkItem("Box Score", null, R.drawable.ic_view_module_white_24px)
 		boxScore.setClickListener(BoxScoreClickListener())
 		m_adapter?.add(boxScore)
 
 		val cid = data?.recaps?.mlb?.url?.cid
 		if (cid != null)
 		{
-			val recap = LinkItem("Recap", R.drawable.ic_newspaper)
+			val recap = LinkItem("Recap", "mlb.com", R.drawable.ic_newspaper)
 			recap.setClickListener(RecapClickListener(cid))
 			m_adapter?.add(recap)
 		}
-
 	}
 
 	fun openCustomTab(context: Context, url: String)

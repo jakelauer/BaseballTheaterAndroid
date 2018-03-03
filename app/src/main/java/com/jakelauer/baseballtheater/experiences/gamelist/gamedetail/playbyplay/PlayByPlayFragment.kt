@@ -1,13 +1,16 @@
 package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.playbyplay
 
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.GameSummary
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightsCollection
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.InningHalf
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Innings.PlayByPlay
 import com.jakelauer.baseballtheater.MlbDataServer.GameDetailCreator
 import com.jakelauer.baseballtheater.R
+import com.jakelauer.baseballtheater.base.BaseActivity
 import com.jakelauer.baseballtheater.base.RefreshableListFragment
 import com.jakelauer.baseballtheater.base.Syringe
 import com.jakelauer.baseballtheater.common.listitems.HeaderItem
+import java.util.concurrent.ExecutionException
 
 /**
  * Created by Jake on 2/7/2018.
@@ -38,6 +41,22 @@ class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 		{
 			e.printStackTrace()
 			m_refreshView.isRefreshing = false
+		}
+
+		try
+		{
+			gdc.getHighlights {
+				getModel().updateHighlights(it)
+				onDataLoaded()
+			}
+		}
+		catch (e: ExecutionException)
+		{
+			e.printStackTrace()
+		}
+		catch (e: InterruptedException)
+		{
+			e.printStackTrace()
 		}
 	}
 
@@ -78,7 +97,7 @@ class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 		halfInning?.atbat?.let {
 			for (batter in halfInning.atbat)
 			{
-				val listItem = BatterItem(batter, m_game.isSpringTraining)
+				val listItem = BatterItem(BatterItem.Data(batter, getModel().m_highlights), m_game.isSpringTraining, activity as BaseActivity)
 
 				listItem.setResultClickListener({ _, _ ->
 					m_expandedItem?.let { expandedItem ->
@@ -106,9 +125,17 @@ class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 		var m_playByPlay: PlayByPlay? = null
 			private set
 
+		var m_highlights: HighlightsCollection? = null
+			private set
+
 		fun updatePlayByPlay(playByPlay: PlayByPlay)
 		{
 			m_playByPlay = playByPlay
+		}
+
+		fun updateHighlights(highlights: HighlightsCollection?)
+		{
+			m_highlights = highlights
 		}
 	}
 

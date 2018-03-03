@@ -13,7 +13,11 @@ import libs.ButterKnife.bindView
 /**
  * Created by jlauer on 3/1/2018.
  */
-class LinkItem(val m_title: String, @DrawableRes val m_icon: Int, @ColorInt val m_iconColor: Int? = null) : AdapterChildItem<Any, LinkItem.ViewHolder>("")
+class LinkItem(
+		val m_title: String,
+		val m_subtitle: String?,
+		@DrawableRes val m_icon: Int,
+		@ColorInt val m_iconColor: Int? = null) : AdapterChildItem<Any, LinkItem.ViewHolder>("")
 {
 	override fun getLayoutResId() = R.layout.link_item
 
@@ -23,6 +27,7 @@ class LinkItem(val m_title: String, @DrawableRes val m_icon: Int, @ColorInt val 
 	{
 		viewHolder.m_listItem.setIconResId(m_icon)
 		viewHolder.m_listItem.title = m_title
+		viewHolder.m_listItem.subtitle = m_subtitle
 
 		m_iconColor?.let {
 			viewHolder.m_listItem.iconColor = it

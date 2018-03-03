@@ -57,9 +57,8 @@ public class Highlight implements Serializable
 	@Element(name = "thumbnails")
 	public Thumbs thumbs;
 
-	/*[XmlArray("keywords")
-			[XmlArrayItem("keyword")
-	public Keyword[] Keywords;*/
+	@ElementList(entry = "keyword")
+	public List<Keyword> keywords;
 
 	@Attribute(required = false)
 	public boolean condensed;

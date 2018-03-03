@@ -59,6 +59,9 @@ public class AtBat
 	@Attribute
 	public String event;
 
+	@Attribute(required = false)
+	public String play_guid;
+
 	@Attribute
 	public String home_team_runs;
 

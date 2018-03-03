@@ -62,8 +62,8 @@ class ComplexRecyclerAdapter : RecyclerView.Adapter<ItemViewHolder>
 
 	fun add(item: AdapterChildItem<*, *>)
 	{
-		m_classToViewtype.put(item.javaClass, m_currentViewType)
-		m_typeToLayout.put(m_currentViewType, item.getLayoutResId())
+		m_classToViewtype[item.javaClass] = m_currentViewType
+		m_typeToLayout[m_currentViewType] = item.getLayoutResId()
 		m_currentViewType++
 
 		@Suppress("UNCHECKED_CAST")

@@ -13,6 +13,8 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:padding="@dimen/default_padding_small"
+        android:alpha="0.2"
+        android:background="?android:attr/selectableItemBackground"
         android:src="@drawable/ic_play_circle_filled_black_24px"
         app:layout_constraintBottom_toBottomOf="@id/PLAY_BY_PLAY_ITEM_result"
         app:layout_constraintTop_toTopOf="@id/PLAY_BY_PLAY_ITEM_result"
