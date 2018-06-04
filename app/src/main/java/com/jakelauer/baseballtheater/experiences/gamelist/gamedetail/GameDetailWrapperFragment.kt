@@ -46,11 +46,9 @@ class GameDetailWrapperFragment : BaseFragment<String>()
 
 	override fun onBindView()
 	{
-		fragmentManager?.let {
-			val adapter = GameDetailAdapter(it)
-			viewPager.adapter = adapter
-			tabLayout.setupWithViewPager(viewPager)
-		}
+		val adapter = GameDetailAdapter(childFragmentManager)
+		viewPager.adapter = adapter
+		tabLayout.setupWithViewPager(viewPager)
 	}
 
 	inner class GameDetailAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager)
