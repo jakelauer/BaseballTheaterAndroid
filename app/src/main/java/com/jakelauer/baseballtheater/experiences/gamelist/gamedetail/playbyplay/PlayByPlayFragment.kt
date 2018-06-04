@@ -31,10 +31,12 @@ class PlayByPlayFragment : RefreshableListFragment<PlayByPlayFragment.Model>()
 		val gdc = GameDetailCreator(m_game.gameDataDirectory, false)
 		try
 		{
-			gdc.getInnings {
-				getModel().updatePlayByPlay(it)
-				onDataLoaded()
-				m_refreshView.isRefreshing = false
+			gdc.getInnings { innings ->
+				innings?.let {
+					getModel().updatePlayByPlay(it)
+					onDataLoaded()
+					m_refreshView.isRefreshing = false
+				}
 			}
 		}
 		catch (e: Exception)

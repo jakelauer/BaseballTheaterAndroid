@@ -89,7 +89,7 @@ class HighlightsFragment : RefreshableListFragment<HighlightsFragment.Model>()
 					}
 				}
 
-				val highlightItem = HighlightItem(HighlightItem.HighlightData(highlight), activity as BaseActivity)
+				val highlightItem = HighlightItem(HighlightItem.HighlightData(false, highlight), activity as BaseActivity)
 
 				m_adapter?.add(highlightItem)
 			}

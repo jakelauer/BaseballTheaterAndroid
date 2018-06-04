@@ -1,8 +1,6 @@
 package com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.highlights
 
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
@@ -15,11 +13,13 @@ import android.support.v7.widget.CardView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.framework.CastContext
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.Highlight
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightSearchResult
+import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightThumbs
 import com.jakelauer.baseballtheater.MlbDataServer.ProgressListener
 import com.jakelauer.baseballtheater.R
 import com.jakelauer.baseballtheater.base.AdapterChildItem
@@ -29,6 +29,8 @@ import com.jakelauer.baseballtheater.experiences.gamelist.gamedetail.OpenHighlig
 import com.jakelauer.baseballtheater.utils.PrefUtils
 import com.jakelauer.baseballtheater.utils.PrefUtils.Companion.BEHAVIOR_HIDE_SCORES
 import libs.ButterKnife.bindView
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 
 /**
@@ -88,6 +90,17 @@ class HighlightItem(highlight: HighlightData, val m_activity: BaseActivity)
 			viewHolder.m_title.typeface = Typeface.create(viewHolder.m_title.typeface, Typeface.NORMAL)
 		}
 
+		if (m_data.m_showDate)
+		{
+			viewHolder.m_date.visibility = View.VISIBLE
+
+			val fmt = DateTimeFormat.forPattern("MMM d, yyyy")
+			viewHolder.m_date.text = fmt.print(m_data.date)
+		}
+		else
+		{
+			viewHolder.m_date.visibility = View.GONE
+		}
 
 		setListeners(viewHolder)
 	}
@@ -95,10 +108,15 @@ class HighlightItem(highlight: HighlightData, val m_activity: BaseActivity)
 	private fun setListeners(viewHolder: ViewHolder)
 	{
 		viewHolder.m_infoWrapper.setOnClickListener(HighlightClickListener(m_activity, m_data, getDefaultUrl()))
+		viewHolder.m_infoWrapper.setOnLongClickListener(HighlightLongClickListener(getDefaultUrl()))
 
 		viewHolder.m_qualityLow.setOnClickListener(HighlightClickListener(m_activity, m_data, m_data.video_s))
 		viewHolder.m_qualityMid.setOnClickListener(HighlightClickListener(m_activity, m_data, m_data.video_m))
 		viewHolder.m_qualityHigh.setOnClickListener(HighlightClickListener(m_activity, m_data, m_data.video_l))
+
+		viewHolder.m_qualityLow.setOnLongClickListener(HighlightLongClickListener(m_data.video_s))
+		viewHolder.m_qualityMid.setOnLongClickListener(HighlightLongClickListener(m_data.video_m))
+		viewHolder.m_qualityHigh.setOnLongClickListener(HighlightLongClickListener(m_data.video_l))
 	}
 
 	private fun getDefaultUrl(): String
@@ -130,6 +148,34 @@ class HighlightItem(highlight: HighlightData, val m_activity: BaseActivity)
 		var m_qualityLow: TextView by bindView(R.id.HIGHLIGHT_quality_low)
 		var m_qualityMid: TextView by bindView(R.id.HIGHLIGHT_quality_mid)
 		var m_qualityHigh: TextView by bindView(R.id.HIGHLIGHT_quality_high)
+		var m_date: TextView by bindView(R.id.HIGHLIGHT_date)
+	}
+
+	class HighlightLongClickListener(val m_url: String?) : View.OnLongClickListener
+	{
+		override fun onLongClick(nullableView: View?): Boolean
+		{
+			var copied = false
+
+			nullableView?.let {view ->
+				m_url?.let {
+					copyStringToClipboard(view.context, it)
+					copied = true
+				}
+			}
+
+			return copied
+		}
+
+		private fun copyStringToClipboard(context: Context, url: String)
+		{
+			val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+			val clip = ClipData.newPlainText("URL", url)
+			clipboard.primaryClip = clip
+
+			Toast.makeText(context, "Highlight URL copied!", Toast.LENGTH_LONG).show()
+		}
+
 	}
 
 	class HighlightClickListener(val m_activity: BaseActivity, val m_highlight: HighlightData, val m_url: String?) : View.OnClickListener
@@ -185,6 +231,7 @@ class HighlightItem(highlight: HighlightData, val m_activity: BaseActivity)
 
 	class HighlightData
 	{
+		val m_showDate: Boolean
 		val recap: Boolean
 		val condensed: Boolean
 		val blurb: String
@@ -195,34 +242,37 @@ class HighlightItem(highlight: HighlightData, val m_activity: BaseActivity)
 		var video_l: String? = null
 		var video_m: String? = null
 		var video_s: String? = null
+		var date: DateTime? = null
 
-		constructor(highlight: Highlight)
+		constructor(showDate: Boolean, highlight: Highlight, thumbsOverride: HighlightThumbs? = null)
 		{
+			m_showDate = showDate
 			recap = highlight.recap
 			condensed = highlight.condensed
 			blurb = highlight.blurb
 			headline = highlight.headline
 			bigblurb = highlight.bigblurb
-			thumb = highlight.thumbs.thumbs[highlight.thumbs.thumbs.size - 4]
+
+			thumb = if (thumbsOverride != null)
+			{
+				thumbsOverride.med
+			}
+			else
+			{
+				val thumbs = highlight.thumbs?.thumbs ?: highlight.thumbnails
+				thumbs[thumbs.size - 4]
+			}
+
 			durationMilliseconds = highlight.durationMilliseconds()
-			video_l = highlight.urls[highlight.urls.size - 1]
-			video_s = highlight.urls[0]
-			video_m = highlight.urls[highlight.urls.size / 2]
+
+			val urls = highlight.urls ?: highlight.url
+
+			video_l = urls[urls.size - 1]
+			video_s = urls[0]
+			video_m = urls[urls.size / 2]
+
+			date = highlight.dateObj()
 		}
 
-		constructor(highlightSearchResult: HighlightSearchResult)
-		{
-			recap = highlightSearchResult.recap ?: false
-			condensed = highlightSearchResult.condensed ?: false
-			headline = highlightSearchResult.headline ?: ""
-			blurb = highlightSearchResult.blurb ?: ""
-			bigblurb = highlightSearchResult.bigBlurb ?: ""
-			thumb = highlightSearchResult.thumb_m ?: highlightSearchResult.thumb_l ?: highlightSearchResult.thumb_s ?: throw Exception("No thumbnail available")
-			durationMilliseconds = highlightSearchResult.getDurationMilliseconds()
-			video_l = highlightSearchResult.video_l
-			video_m = highlightSearchResult.video_m
-			video_s = highlightSearchResult.video_s
-
-		}
 	}
 }

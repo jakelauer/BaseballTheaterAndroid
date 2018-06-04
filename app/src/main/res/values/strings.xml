@@ -2,7 +2,6 @@
     <string name="app_name">Baseball Theater</string>
     <string name="app_id">0E146468</string>
     <string name="title_games">Games</string>
-    <string name="title_news">News</string>
     <string name="title_search">Search</string>
     <string name="title_notifications">Notifications</string>
 
@@ -19,7 +18,7 @@
     <string name="highlight_recap">Recap</string>
     <string name="highlight_list_title">Highlights</string>
 
-    <string name="article_list_empty">No articles found</string>
     <string name="search_empty">Enter a search term to find games and highlights</string>
     <string name="search_empty_none_found">Nothing found for that query!</string>
+    <string name="search_load_more">Load More</string>
 </resources>

@@ -37,9 +37,33 @@ public class GameSummary implements Serializable
 
 	public LocalDateTime localDateObj()
 	{
-		DateTimeFormatter f = DateTimeFormat.forPattern("yyyy/MM/dd h:m Z");
-		LocalDateTime convertedTime = f.parseDateTime(date + " -0500").withZone(DateTimeZone.forID("America/Los_Angeles")).toLocalDateTime();
+		DateTimeFormatter withoutTzFormatter = DateTimeFormat.forPattern("yyyy/MM/dd h:m");
+		DateTimeFormatter withTzFormatter = DateTimeFormat.forPattern("yyyy/MM/dd h:m Z");
+		DateTimeZone zone = DateTimeZone.forID("America/New_York");
+		DateTimeZone localZone = DateTimeZone.getDefault();
+
+		DateTime parsedDateTime = withoutTzFormatter.parseDateTime(date);
+		int offsetMs = zone.getOffset(parsedDateTime);
+		String offsetString = offsetMsToOffsetString(offsetMs);
+		LocalDateTime convertedTime = withTzFormatter.parseDateTime(date + " " + offsetString).withZone(localZone).toLocalDateTime();
 		return convertedTime.plusHours(12);
+	}
+
+	private String offsetMsToOffsetString(int offsetMs)
+	{
+		int offsetHours = (offsetMs / 1000 / 60 / 60);
+		int offsetHours100 = offsetHours * 100;
+		boolean isNegative = offsetHours < 0;
+		String offsetString = offsetHours100 + "";
+
+		if (Math.abs(offsetHours) < 10)
+		{
+			offsetString = isNegative
+					? "-0" + Math.abs(offsetHours100)
+					: "0" + offsetHours100;
+		}
+
+		return offsetString;
 	}
 
 	@Attribute(name = "game_type")

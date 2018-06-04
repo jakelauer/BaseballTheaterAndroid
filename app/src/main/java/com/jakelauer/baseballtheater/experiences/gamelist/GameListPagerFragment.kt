@@ -29,6 +29,11 @@ class GameListPagerFragment : BaseFragment<Any>()
 	lateinit var m_startingDate: DateTime
 	lateinit var m_currentDate: DateTime
 
+	override fun setRetainInstance(retain: Boolean)
+	{
+		super.setRetainInstance(false)
+	}
+
 	val m_gamePager: ViewPager by bindView(R.id.game_pager)
 
 	lateinit var m_gamePagerAdapter: GameListPagerAdapter
@@ -38,6 +43,8 @@ class GameListPagerFragment : BaseFragment<Any>()
 	override fun onCreate(savedInstanceState: Bundle?)
 	{
 		super.onCreate(savedInstanceState)
+
+		retainInstance = false
 
 		val dateString = (activity as BaseActivity).getPref("date")
 		m_initialFragmentDate = if (dateString != "") DateTime(dateString) else DateTimeUtils.getDefaultDate()
@@ -78,9 +85,7 @@ class GameListPagerFragment : BaseFragment<Any>()
 
 	override fun onBindView()
 	{
-		fragmentManager?.let {
-			m_gamePagerAdapter = GameListPagerAdapter(it)
-		}
+		m_gamePagerAdapter = GameListPagerAdapter(childFragmentManager)
 		refreshAdapter()
 	}
 

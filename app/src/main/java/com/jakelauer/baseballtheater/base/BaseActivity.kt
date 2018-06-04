@@ -162,7 +162,7 @@ abstract class BaseActivity(val m_canCast: Boolean) : AppCompatActivity()
 		m_castSession = null
 	}
 
-	public fun setPref(key: String, value: String)
+	fun setPref(key: String, value: String)
 	{
 		val sharedPref = getPreferences(Context.MODE_PRIVATE)
 		val editor = sharedPref.edit()
@@ -170,13 +170,13 @@ abstract class BaseActivity(val m_canCast: Boolean) : AppCompatActivity()
 		editor.apply()
 	}
 
-	public fun getPref(key: String): String
+	fun getPref(key: String): String
 	{
 		val sharedPref = getPreferences(Context.MODE_PRIVATE)
 		return sharedPref.getString(key, "")
 	}
 
-	public fun clearPref(key: String)
+	fun clearPref(key: String)
 	{
 		val sharedPref = getPreferences(Context.MODE_PRIVATE)
 		val editor = sharedPref.edit()

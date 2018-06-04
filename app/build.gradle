@@ -12,6 +12,12 @@ configurations {
 
 android {
     signingConfigs {
+        release {
+            keyAlias 'bbtk'
+            keyPassword 'jafjad1!'
+            storeFile file('C:/Users/Jake/Documents/Keys/baseball_theater_key.jks')
+            storePassword 'jafjad1!'
+        }
     }
     compileSdkVersion 27
     buildToolsVersion "26.0.2"
@@ -19,8 +25,8 @@ android {
         applicationId "com.jakelauer.baseballtheater"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 59
-        versionName "2.1"
+        versionCode 67
+        versionName "2.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -28,8 +34,8 @@ android {
     buildTypes {
         release {
             buildConfigField "boolean", "BETA", "false"
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            signingConfig signingConfigs.release
         }
 
         betaRelease {
@@ -42,11 +48,13 @@ android {
             buildConfigField "boolean", "BETA", "true"
             signingConfig signingConfigs.debug
             debuggable true
+            minifyEnabled false
         }
 
         debug {
-            buildConfigField "boolean", "BETA", "true"
+            buildConfigField "boolean", "BETA", "false"
             debuggable true
+            minifyEnabled false
         }
     }
 }
@@ -62,8 +70,9 @@ dependencies {
     implementation 'com.android.support:design:27.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:support-vector-drawable:27.1.0'
+    compile 'com.android.support:multidex:1.0.3'
     compile 'com.android.support:mediarouter-v7:27.1.0'
-    compile "com.android.support:support-core-utils:27.1.0"
+    compile 'com.android.support:support-core-utils:27.1.0'
     compile 'com.android.support:customtabs:27.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
     compile 'com.google.android.gms:play-services-cast-framework:11.8.0'
@@ -80,8 +89,8 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.9.1'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'jp.wasabeef:recyclerview-animators:2.2.7'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.2'
-    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0"
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.2'
+    compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0'
     compile 'com.lucasurbas:listitemview:1.0.5'
     implementation 'com.github.mancj:MaterialSearchBar:0.7.5'
 }

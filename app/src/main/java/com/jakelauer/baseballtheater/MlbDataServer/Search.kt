@@ -13,30 +13,24 @@ import com.jakelauer.baseballtheater.MlbDataServer.Utils.JsonLoader
 class Search
 {
 	@Suppress("UNCHECKED_CAST")
-	fun searchHighlights(query: String, downloadListener: DownloadListener<List<HighlightSearchResult>>)
+	fun searchHighlights(downloadListener: DownloadListener<List<HighlightSearchResult>>, query: String, perPage: Int = 20, page: Int = 0)
 	{
 		val jsonLoader = JsonLoader()
 		val stringDlListener = DownloadListener<String> { result ->
-			try
-			{
-				val resultMapped = SearchMapper.map(result)
-				downloadListener.onDownloadComplete(resultMapped.toList())
-			}
-			catch(e: Exception){
-
-			}
+			val resultMapped = SearchMapper.map(result)
+			downloadListener.onDownloadComplete(resultMapped.toList())
 		}
-		jsonLoader.GetJson(getUrl(query), stringDlListener)
+		jsonLoader.GetJson(getUrl(query, perPage, page), stringDlListener)
 	}
 
-	private fun getUrl(query: String): String
+	private fun getUrl(query: String, perPage: Int, page: Int): String
 	{
-		return "$url?query=$query&page=0&perpage=20"
+		return "$url?query=$query&page=$page&perpage=$perPage"
 	}
 
 	companion object
 	{
-		private val url = if (BuildConfig.BETA) "https://beta.baseball.theater/Data/SearchHighlights" else "https://baseball.theater/Data/SearchHighlights"
+		private const val url = "https://search.baseball.theater/api/Search/Highlights"
 	}
 }
 

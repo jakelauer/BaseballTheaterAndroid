@@ -2,6 +2,7 @@ package com.jakelauer.baseballtheater.experiences.search
 
 import android.os.Bundle
 import android.support.v7.widget.SearchView
+import android.view.View
 import com.jakelauer.baseballtheater.MlbDataServer.DataStructures.HighlightSearchResult
 import com.jakelauer.baseballtheater.MlbDataServer.Search
 import com.jakelauer.baseballtheater.MlbDataServer.Utils.DownloadListener
@@ -20,6 +21,11 @@ class SearchFragment : RefreshableListFragment<Any>()
 {
 	var m_query: String? = null
 	val m_searchBar: MaterialSearchBar by bindView(R.id.SEARCH_query)
+
+	val PER_PAGE: Int = 20
+	var m_nextPage: Int = 0
+
+	var m_results: ArrayList<HighlightSearchResult> = ArrayList()
 
 	override fun getLayoutResourceId() = R.layout.search_fragment
 
@@ -43,6 +49,11 @@ class SearchFragment : RefreshableListFragment<Any>()
 
 			override fun onSearchConfirmed(query: CharSequence)
 			{
+				if (query != m_query)
+				{
+					setEmpty(false)
+				}
+
 				m_query = query.toString()
 				m_searchBar.requestFocus()
 				loadData()
@@ -64,16 +75,25 @@ class SearchFragment : RefreshableListFragment<Any>()
 
 	override fun loadData()
 	{
-		m_query?.let {
+		m_query?.let { query ->
 			m_refreshView.isRefreshing = true
 			val s = Search()
-			s.searchHighlights(it, DownloadListener { result -> onLoaded(result) })
+			s.searchHighlights(DownloadListener { result -> onLoaded(result) }, query, PER_PAGE, m_nextPage)
 		}
+
+		m_nextPage++
+	}
+
+	fun reset()
+	{
+		m_results = ArrayList()
+		m_nextPage = 0
 	}
 
 	fun setEmpty(searchTermSpecified: Boolean)
 	{
 		m_adapter?.clear()
+		reset()
 		m_adapter?.add(SearchEmptyItem(searchTermSpecified))
 	}
 
@@ -85,11 +105,27 @@ class SearchFragment : RefreshableListFragment<Any>()
 		{
 			m_adapter?.clear()
 
-			for (highlight in result)
-			{
-				val highlightItem = HighlightItem(HighlightItem.HighlightData(highlight), activity as BaseActivity)
+			val oldResults = m_results
+			m_results = ArrayList(oldResults)
+			m_results.addAll(result)
 
-				m_adapter?.add(highlightItem)
+			for (highlightResult in m_results)
+			{
+				val highlight = highlightResult.highlight
+				if (highlight != null)
+				{
+					val highlightItem = HighlightItem(HighlightItem.HighlightData(true, highlight, highlightResult.thumbnails), activity as BaseActivity)
+
+					m_adapter?.add(highlightItem)
+				}
+			}
+
+			val resultCount = m_results.count()
+			if (resultCount % PER_PAGE == 0 && resultCount > 0)
+			{
+				m_adapter?.add(LoadMoreItem(View.OnClickListener {
+					loadData()
+				}))
 			}
 		}
 		else

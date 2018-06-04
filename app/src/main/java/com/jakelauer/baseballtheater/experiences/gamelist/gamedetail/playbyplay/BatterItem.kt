@@ -172,7 +172,7 @@ class BatterItem(data: BatterItem.Data, private val m_isSpringTraining: Boolean,
 		val rh = m_relatedHighlight
 		if (rh != null)
 		{
-			val hd = HighlightItem.HighlightData(rh)
+			val hd = HighlightItem.HighlightData(false, rh)
 			viewHolder.m_playIcon.setOnClickListener(HighlightItem.HighlightClickListener(m_activity, hd, hd.video_m))
 		}
 	}

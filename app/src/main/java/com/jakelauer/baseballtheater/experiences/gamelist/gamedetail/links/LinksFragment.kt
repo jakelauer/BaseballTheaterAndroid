@@ -72,7 +72,7 @@ class LinksFragment : RefreshableListFragment<Any>()
 		{
 			val fmt = DateTimeFormat.forPattern("yyyyMMdd")
 			val dateString = fmt.print(m_game.dateObj())
-			val url = "http://beta.baseball.theater/game/" + dateString + "/" + m_game.gamePk + "?app=true"
+			val url = "https://baseball.theater/game/" + dateString + "/" + m_game.gamePk + "?app=true"
 			openCustomTab(view.context, url)
 		}
 	}
@@ -81,7 +81,7 @@ class LinksFragment : RefreshableListFragment<Any>()
 	{
 		override fun invoke(view: View, position: Int)
 		{
-			val url = "http://m.mlb.com/news/article/" + m_cid
+			val url = "http://m.mlb.com/news/article/$m_cid"
 			openCustomTab(view.context, url)
 		}
 	}

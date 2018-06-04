@@ -15,7 +15,6 @@ class PrefUtils
 	{
 		val BEHAVIOR_FAVORITE_TEAM = "behavior_favorite_team"
 		val BEHAVIOR_HIDE_SCORES = "behavior_hide_scores"
-		val NEWS_SHOW_IN_OFFSEASON = "news_show_in_offseason"
 		val SEEN_NUX = "seen_nux";
 		val ARTICLES_SEEN = "articles_seen"
 		val ARTICLES_KEEP_READ = "news_keep_read_items"

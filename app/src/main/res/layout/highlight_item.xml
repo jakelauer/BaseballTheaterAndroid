@@ -44,10 +44,20 @@
                 tools:text="Kris Bryant hits 923 Hrs" />
 
             <TextView
+                android:visibility="gone"
+                android:id="@+id/HIGHLIGHT_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                tools:text="Jan 01, 2018"
+                app:layout_constraintTop_toBottomOf="@id/HIGHLIGHT_title"
+                app:layout_constraintStart_toStartOf="@id/HIGHLIGHT_title"
+                app:layout_constraintEnd_toEndOf="@id/HIGHLIGHT_title" />
+
+            <TextView
                 android:id="@+id/HIGHLIGHT_subtitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/HIGHLIGHT_title"
+                app:layout_constraintTop_toBottomOf="@id/HIGHLIGHT_date"
                 app:layout_constraintStart_toStartOf="@id/HIGHLIGHT_title"
                 app:layout_constraintEnd_toEndOf="@id/HIGHLIGHT_title"
                 android:ellipsize="end"

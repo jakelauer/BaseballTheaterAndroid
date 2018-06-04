@@ -19,31 +19,6 @@
             android:summary="@string/pref_subtitle_hide_Scores"
             android:title="@string/pref_title_hide_scores" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_header_news">
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="news_show_in_offseason"
-            android:summary="@string/prefs_show_news_offseason_subtitle"
-            android:title="@string/prefs_show_news_offseason" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="news_keep_read_items"
-            android:title="@string/prefs_title_hide_read_items"
-            android:summary="@string/prefs_summary_hide_read_items"
-            />
-        <MultiSelectListPreference
-            android:defaultValue="@array/pref_news_source_defaultvalues"
-            android:entries="@array/pref_news_source_keys"
-            android:entryValues="@array/pref_news_source_values"
-            android:key="news_sources"
-            android:title="@string/prefs_news_sources" />
-        <MultiSelectListPreference
-            android:defaultValue="@array/pref_team_news_source_defaultvalues"
-            android:entries="@array/pref_team_news_source_keys"
-            android:entryValues="@array/pref_team_news_source_values"
-            android:key="team_news_sources"
-            android:title="@string/prefs_team_news_sources" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_header_highlights">
         <SwitchPreference
             android:defaultValue="true"
